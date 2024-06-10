@@ -13,163 +13,123 @@ import { FaGifts } from "react-icons/fa6";
 
 // import UserPhonenumber from "../checkout/UserPhonenumber";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getDefaultAddress,
-  getDefaultGift,
-  getUserData
-} from "../data";
+import { getDefaultAddress, getDefaultGift, getUserData } from "../data";
 
-import dinamic from 'next/dynamic'
+import dinamic from "next/dynamic";
 import { Button } from "../../../../components/ui/button";
+import { cn } from "../../../../lib/utils/utils";
+import { Label } from "@headlessui/react";
 
+const UserAddressModal = dinamic(() => import("./UserAddressModal"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
+const UserPhonenumberModal = dinamic(() => import("./UserPhonenumberModal"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
+const ScheduleDeliveryModal = dinamic(() => import("./ScheduleDeliveryModal"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
 
-const UserAddressModal=dinamic(()=>import("./UserAddressModal"),{
-  loading:()=><p>Loading...</p>,
-  ssr:false
-})  ;
-const UserPhonenumberModal =dinamic(()=>import("./UserPhonenumberModal"),{
-  loading:()=><p>Loading...</p>,
-  ssr:false
-}) ;
-const ScheduleDeliveryModal =dinamic(()=>import("./ScheduleDeliveryModal"),{
-  loading:()=><p>Loading...</p>,
-  ssr:false
-}) 
-
-const UserGiftModal =dinamic(()=>import("./UserGiftModal"),{
-  loading:()=><p>Loading...</p>,
-  ssr:false
-})
-const CouponDiscountModal =dinamic(()=>import("./CouponDiscountModal"),{
-  loading:()=><p>Loading...</p>,
-  ssr:false
-})
+const UserGiftModal = dinamic(() => import("./UserGiftModal"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
+const CouponDiscountModal = dinamic(() => import("./CouponDiscountModal"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
 
 const CheckoutShippingDetails = () => {
-  const [deliveryType, setDeliveryType] = useState({
-    type: "STANDARD",
-    time: null,
-  });
 
- 
-  
-
-  const openDeliveryModal = () => {
-    document.getElementById("scheduleDeliveryModal").showModal();
-  };
-
-  const handleDeliveryOption = (e) => {
-    const deliveryType = e.currentTarget.dataset.id;
-    if (deliveryType === "STANDARD") {
-      setDeliveryType({ type: "STANDARD", time: null });
-    } else {
-      openDeliveryModal();
-    }
-  };
-
-  const handleSetDeliveryTime = (type, time) => {
-    setDeliveryType({ type, time });
-  };
+  const [paymentMethod,setPaymentMethod]=useState('card')
 
   return (
-    <div className="grid gap-5">
-      <div>
-        <h2 className="self-center font-bold text-xl mb-3">Pagar con</h2>
-        {[
-          {
-            value: "modalAddCard",
-            icon: FaAddressCard,
-            label: "Añadir nueva targeta",
-          },
-          { value: "paypal", icon: SlPaypal, label: "Paypal" },
-          {
-            value: "whatsapp",
-            icon: IoLogoWhatsapp,
-            label: "Pagar con Whatsapp",
-          },
-          {
-            value: "payAtDelivery",
-            icon: TbTruckDelivery,
-            label: "Pagar contra entrega",
-          },
-        ].map((option) => (
-          <div key={option.value} className="flex gap-3 border p-4 rounded-md">
-            <input
-              type="radio"
-              value={option.value}
-              name="paymentOption"
-              className="radio radio-neutral"
-            />
-            <div className="flex gap-2">
-              <option.icon className="text-2xl" />
-              <p>{option.label}</p>
+    <div className="space-y-10 ">
+      <section>
+        <h2 className=" font-bold text-xl mb-3 flex items-center">
+          {" "}
+          <span className=" rounded-full bg-primary text-white text-base font-semibold px-2 mr-2">
+            1
+          </span>
+          Selecciona to metodo de pago{" "}
+        </h2>
+
+        <div className="">
+          {[
+            {
+              value: "card",
+              icon: FaAddressCard,
+              label: "Nueva targeta",
+              tw:'#3B82F6'
+            },
+            {
+              value: "whatsapp",
+              icon: IoLogoWhatsapp,
+              label: "Whatsapp Link",
+              tw:'#22C55E'
+            },
+            {
+              value: "delivery",
+              icon: TbTruckDelivery,
+              label: "Pagar al entregar",
+              tw:'#EAB308'
+            },
+          ].map((option) => (
+            <div
+             style={{ 
+              borderColor: option.value === paymentMethod ? option.tw : 'lightGray',
+             }}              key={option.value}
+              className={cn('flex border py-2 px-6 rounded-md',  `border-[${option.tw}]`)}
+            >
+              <input
+                id={option.value}
+                type="radio"
+                value={option.value}
+                name="paymentOption"
+                checked={option.value === paymentMethod}
+                className="hidden"
+                onChange={(e)=>setPaymentMethod(e.target.value)}
+              />
+              <label htmlFor={option.value} className="flex items-center gap-4">
+                <option.icon style={{color:option.value === paymentMethod ? option.tw : 'black'}} className="text-2xl  items-center" />
+                <p  style={{color:option.value === paymentMethod ? option.tw : 'black'}} className="text-sm font-medium">{option.label}</p>
+              </label>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
 
       {/* DELIVERY TIME */}
-      <div>
-        <h2 className="self-center font-bold text-xl mb-3">
-          Tiempo de entrega
+      <section>
+        <h2 className=" font-bold text-xl mb-3 flex items-center">
+          {" "}
+          <span className=" rounded-full bg-primary text-white text-base font-semibold px-2 mr-2">
+            2
+          </span>
+          Escoje tu metodo de entrega{" "}
         </h2>
-        <div className="flex gap-4">
-          <Button
-            data-id="STANDARD"
-            className={` bg-transparent w-full text-primary border-2 border-primary p-6 hover:text-secondary rounded-xl ${
-              deliveryType.type === "STANDARD" ? "btn-active" : null
-            }`}
-            onClick={handleDeliveryOption}
-          >
-            <div>
-              <p className="font-semibold mb-1">Standard</p>
-              <span className="text-xs font-light">24 horas</span>
-            </div>
-          </Button>
-          <Button
-            data-id="SCHEDULE"
-            className={`bg-transparent  w-full text-primary border-2 border-primary p-6 hover:text-secondary rounded-xl ${
-              deliveryType.type === "SCHEDULE" ? "btn-active" : null
-            }`}
-            onClick={handleDeliveryOption}
-          >
-            <div>
-              <p className="font-semibold mb-1">Entregar para mas tarde</p>
-              {deliveryType?.time ? (
-                <span>{deliveryType.time}</span>
-              ) : (
-                <span className="text-xs font-light">Escoja un tiempo</span>
-              )}
-            </div>
-          </Button>
-        </div>
-      </div>
+
+        <ScheduleDeliveryModal />
+      </section>
 
       {/* PHONE NUMBER*/}
-
-      <div>
-        <h2 className="self-center font-bold text-xl mb-3">
-          Numero de contacto
+      <section>
+        <h2 className=" font-bold text-xl mb-3 flex items-center">
+          {" "}
+          <span className=" rounded-full bg-primary text-white text-base font-semibold px-2 mr-2">
+            3
+          </span>
+          Informacion de envio{" "}
         </h2>
-       
-        <UserPhonenumberModal />
-      </div>
-      {/* GIFT INFO */}
-      <div className="">
-        <h2 className="self-center font-bold text-xl mb-3">
-          Enviar como regalo
-        </h2>
-        <UserGiftModal  />
-      </div>
-
-      {/* ADDRESS INFORMATION */}
-      <section className="flex flex-col gap-3">
-        <h2 className="font-bold text-xl ">Direccion</h2>
-
-        <UserAddressModal  />
-
+        <div>
+          <UserPhonenumberModal />
+          <UserGiftModal />
+          <UserAddressModal />
+        </div>
       </section>
-      <ScheduleDeliveryModal handleSetDeliveryTime={handleSetDeliveryTime} />
     </div>
   );
 };

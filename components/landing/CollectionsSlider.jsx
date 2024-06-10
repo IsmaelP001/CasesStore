@@ -28,7 +28,6 @@ export default function CollectionsSlider({slides,breakpoints, spaceBetween=10,t
      console.log(swiper.isBeginning,swiper.isEnd)
   }
 
-  console.log('collections',collections)
 
   return (
     <div className="relative " onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>

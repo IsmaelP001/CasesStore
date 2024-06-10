@@ -1,23 +1,23 @@
 "use server";
 
-import { address, cart, cartDetails, defaultAddress, defaultGift, discountCode, gift, productDiscount, user } from "../../../database/schemes"
+import { address, cart, cartDetails, defaultAddress, defaultGift, discountCode, gift, productDiscount, user as userTable } from "../../../database/schemes"
 import { eq ,and, AnyColumn, sql, ne} from "drizzle-orm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "../../../database/db";
-import { auth } from "../../../services/auth";
-
+import { getUserSession } from "../../../lib/auth";
+import {phonenumberSchema} from '../../../lib/schemas/phonenumberSchema'
 
 export const createNewAddress=async(FormData)=>{
     const data = Object.fromEntries(FormData)
-    const {user:userData}= await auth();
-    
-    if(!userData?.userId){
-      return redirect('/signin')
+    const {user}= await getUserSession() || {}
+
+    if(!user){
+      return redirect('/auth/signin')
     }
 
     try{
-      await db.insert(address).values({...data,userId:userData.userId,createdAt:new Date(),updatedAt:new Date()})
+      await db.insert(address).values({...data,userId:user?.id})
     }catch(err){
       console.log('error',err)
     }
@@ -26,17 +26,16 @@ export const createNewAddress=async(FormData)=>{
   
   
   export const updateDefaultAddress=async({addressId})=>{
-    const {user:userData}= await auth();
+    const {user}= await getUserSession() || {}
 
-    if(!userData?.userId){
-      return redirect('/signin')
+    if(!user){
+      return redirect('/auth/signin')
     }
 
-    console.log("addressInfo",addressId,userData?.userId)
 
     try{
       await db.insert(defaultAddress)
-      .values({ addressId, userId:userData.userId}).returning()
+      .values({ addressId, userId:user?.id}).returning()
       
     }catch(err){
       return false
@@ -44,12 +43,12 @@ export const createNewAddress=async(FormData)=>{
   }
   
   export const updateAddress=async(FormData)=>{
-    const {user:userData}= await auth();
-
-    if(!userData?.userId){
-      return redirect('/signin')
-    }
     const newAddress=Object.fromEntries(FormData);
+    const {user}= await getUserSession() || {}
+
+    if(!user){
+      return redirect('/auth/signin')
+    }
     try{
       await db.update(address).set({...newAddress}).where(eq(address.id,newAddress.addressId))
       return true;
@@ -59,13 +58,13 @@ export const createNewAddress=async(FormData)=>{
   }
   
   export const deleteAddress=async({addressId})=>{
-    const {user:userData}= await auth();
+    const {user}= await getUserSession()|| null
 
-    if(!userData?.userId){
-      return redirect('/signin')
+    if(!user){
+      return redirect('/auth/signin')
     }
     try{
-      await db.delete(address).where(and(eq(address.id,addressId),eq(address.userId,userData.userId)));
+      await db.delete(address).where(and(eq(address.id,addressId),eq(address.userId,user?.id)));
     }catch(err){
       console.log('error deleting address',err)
     }
@@ -74,14 +73,13 @@ export const createNewAddress=async(FormData)=>{
   
   export const createNewGift=async(FormData)=>{
     const data = Object.fromEntries(FormData)
-    const {user:userData}= await auth();
+    const {user}= await getUserSession() || null
 
-    if(!userData?.userId){
-      return redirect('/signin')
+    if(!user){
+      return redirect('/auth/signin')
     }
-    console.log('giftData',data,userData)
     try{
-      await db.insert(gift).values({...data,userId:userData.userId,createdAt:new Date(),updatedAt:new Date()})
+      await db.insert(gift).values({...data,userId:user?.id})
     }catch(err){
       console.log('error',err)
     }
@@ -90,10 +88,10 @@ export const createNewAddress=async(FormData)=>{
   export const updateGiftInfo=async(FormData)=>{
 
     const newGiftInfo=Object.fromEntries(FormData);
-   const {user:userData}= await auth();
+    const {user}= await getUserSession() || null
 
-   if(!userData?.userId){
-    return redirect('/signin')
+    if(!user){
+      return redirect('/auth/signin')
     }
     try{
       await db.update(gift).set({...newGiftInfo}).where(eq(gift.id,newGiftInfo.giftId))
@@ -106,14 +104,15 @@ export const createNewAddress=async(FormData)=>{
   
   
   export const updateDefaultGift=async({giftId,userId})=>{
-    const {user:userData}= await auth();
 
-    if(!userData?.userId){
-      return redirect('/signin')
+    const {user}= await getUserSession() || null
+
+    if(!user){
+      return redirect('/auth/signin')
     }
     try{
       await db.insert(defaultGift)
-      .values({ giftId, userId:userData.userId})
+      .values({ giftId, userId:user?.id})
       // .onDuplicateKeyUpdate({ set: { giftId } });    
       return true
     }catch(err){
@@ -123,33 +122,35 @@ export const createNewAddress=async(FormData)=>{
   }
   
   export const deleteGift=async({giftId,userId})=>{
-    const {user:userData}= await auth();
+    const {user}= await getUserSession() || null
 
-    if(!userData?.userId){
-      return redirect('/signin')
+    if(!user){
+      return redirect('/auth/signin')
     }
     try{
-      await db.delete(gift).where(and(eq(gift.id,giftId),eq(gift.userId,userData.userId)));
+      await db.delete(gift).where(and(eq(gift.id,giftId),eq(gift.userId,user?.id)));
     }catch(err){
       console.log('error deleting address',err)
     }
   }
   
+
   
   export const updatePhoneNumber=async(FormData)=>{
-    const {phonenumber,userId}=Object.fromEntries(FormData)
-    const {user:userData}= await auth();
-
+    const {phonenumber}=Object.fromEntries(FormData)
+    const {user}= await getUserSession() || {}
     
-    if(!userData?.userId){
-      return redirect('/signin')
+    if(!user){
+      return redirect('/auth/signin')
     }
+    const phonenumberParsed= phonenumberSchema.parse(phonenumber)
+
     try{
-      await db.update(user).set({phonenumber}).where(eq(user.id,userData.userId))
+      await db.update(userTable).set({phonenumber:phonenumberParsed}).where(eq(userTable.id,user?.id))
       return true
     }catch(err){
-      console.log('error updating address',err)
-      return false;
+      console.log('error updating phone number',err)
+      return false
     }
   }
 

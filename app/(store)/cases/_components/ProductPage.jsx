@@ -31,7 +31,6 @@ const ProductPage = ({ params, searchParams }) => {
     },
   });
 
-  console.log('products',products)
 
   return (
     <div className="space-y-5 px-10">

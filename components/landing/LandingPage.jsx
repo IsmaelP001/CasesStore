@@ -8,7 +8,12 @@ import { Button } from "../ui/button";
 import { FaArrowRight } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
 import FavoritesSlider from './FavoritesSlider'
+import { useSession } from "next-auth/react";
+
 export default function Home() {
+
+  const seccion = useSession()
+  console.log('user seccion',seccion)
   return (
     <div className="bg-slate-50 grainy-light space-y-16">
       <div className="relative">

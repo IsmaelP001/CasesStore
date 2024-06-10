@@ -26,3 +26,9 @@ pagina productos
 pagina singleProduct
 -en cada case mostrar opcion de personalizar
  *que tipo de configuracion se puede aplicar, grabado, full o ninguna.
+
+
+hoy
+-next auth
+-middleware, restringir acceso a dashboard y checkout sin registrar
+-

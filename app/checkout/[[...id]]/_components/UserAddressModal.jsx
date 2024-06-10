@@ -25,7 +25,6 @@ const UserAddress = ({defaultAddressId=1}) => {
   });
 
 
-  console.log('defaultAddress',defaultAddress)
 
   const { data: addresses } = useQuery({
     queryKey: ["locations"],
@@ -240,7 +239,7 @@ const UserAddress = ({defaultAddressId=1}) => {
     <Dialog open={open} onOpenChange={setOpen} id="modalAddress" className="modal ">
       <DialogTrigger asChild>
       <Button
-          className="flex justify-between bg-transparent  text-primary border-2 border-primary p-6 hover:text-secondary w-full h-[5rem]"
+          className="flex justify-between bg-transparent rounded-b-md  text-primary border rounded-t-none border-primary px-3 hover:text-secondary w-full py-7"
         >
           {defaultAddress?.address ? (
             <div className="flex items-center gap-3 py-5 ">
@@ -256,9 +255,11 @@ const UserAddress = ({defaultAddressId=1}) => {
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center gap-5">
-              <FaHouse className="text-3xl" />
-              <span>Seleccionar direccion</span>
+            <div className="flex items-center justify-between gap-5  flex-1">
+               <div className='flex gap-3 items-center'>
+                <FaHouse className="text-2xl" />
+                <span>Seleccionar direccion</span>
+               </div>
               <MdKeyboardArrowRight className="text-2xl" />
 
             </div>

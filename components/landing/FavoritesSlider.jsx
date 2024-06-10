@@ -26,10 +26,8 @@ export default function CollectionsSlider({slides,breakpoints, spaceBetween=10,t
 
   const handleSlideChange = (swiper)=>{
      setCurrentSlideInfo({isBeginning:swiper.isBeginning,isEnd:swiper.isEnd,isAllSlideVisible:swiper.isBeginning && swiper.isEnd})
-     console.log(swiper.isBeginning,swiper.isEnd)
   }
 
-  console.log('favoritos',favorites)
 
 
   return (

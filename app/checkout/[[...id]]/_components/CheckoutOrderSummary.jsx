@@ -12,7 +12,7 @@ const CheckoutOrderSummary = () => {
   };
 
   return (
-    <div>
+    <div className=''>
       <h2 className="self-center font-bold text-xl mb-6 ">Resumen de orden</h2>
 
       <div className="">
@@ -21,17 +21,11 @@ const CheckoutOrderSummary = () => {
         </div>
         <CartItemsContainer />
       </div>
-      <div className="mt-5 rounded-md  ">
-        <Button className=" flex  rounded-md justify-between w-full" onClick={()=>document.getElementById("modalCoupon").showModal()}>
-          <div className="flex items-center gap-2">
-            <MdOutlineDiscount className="text-xl" />
-            <spam className="text-sm">Codigo de descuento o promocion</spam>
-          </div>
-          <MdKeyboardArrowRight className=" text-2xl" />
-        </Button>
-      </div>
+      
+      <div className='mt-5'>
       <CouponDiscountModal/>
 
+      </div>
     </div>
   );
 };

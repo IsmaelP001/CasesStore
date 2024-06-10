@@ -9,7 +9,7 @@ import Phone from "../../app/(store)/_components/Phone";
 import { formatPrice } from "../../lib/utils/utils";
 
 
-const CartItem = ({ id,cartId, storageId, product,quantity,configirationImage}) => {
+const CartItem = ({ id,cartId, storageId, product,quantity,configirationImage,device}) => {
   const { id:productId,name, model, price, version, discountId, images } = product;
   const [currentQuantity,setCurrentQuantity]=useState(parseInt(quantity))
   const queryClient=useQueryClient();
@@ -42,7 +42,7 @@ const CartItem = ({ id,cartId, storageId, product,quantity,configirationImage}) 
     },
   });
 
-  console.log('product,',product)
+  console.log('cartItem,',device)
 
 
   const handleQuantityChange = (e) => {
@@ -85,15 +85,12 @@ const CartItem = ({ id,cartId, storageId, product,quantity,configirationImage}) 
       </figure>
 
       {/* PRODUCT-INFO */}
-      <div className=" flex flex-col gap-1 col-span-2 capitalize pt-3 ">
-        <div className="flex items-center gap-1">
+      <div className=" flex flex-col  col-span-2 capitalize pt-3 ">
+        <div className="flex  gap-1">
            <h4 className="text-sm font-extrabold text-neutral text-left  truncate text-ellipsis">{name}</h4>
            <span className="text-xs text-base-200">{version}</span>
         </div>
-        <h4 className="flex items-center gap-2 text-xs text-base-800">
-          Color:
-          {/* <span className="badge w-4 h-3" style={{background:color}}></span> */}
-        </h4>
+        <span className="text-xs font-medium tracking-widest text-left mb-1">{device?.name}</span>
         <div className="">
         <p className="text-xs text-left font-semibold">{formatPrice(price)}</p>
         </div>
@@ -104,13 +101,13 @@ const CartItem = ({ id,cartId, storageId, product,quantity,configirationImage}) 
         <form onSubmit={(e)=>e.preventDefault()} className="flex gap-3 items-center  bg-slate-200 rounded-2xl">
           <Input type="hidden" defaultValue={productId} name="productId"></Input>
           <button
-            className="rounded-full w-7 h-7 bg-gray-400 grid place-content-center"
+            className="w-7 h-7 grid place-content-center"
             disabled={isPending}
             data-id='DECREASE'
             onClick={handleQuantityChange}
           >
          
-            {currentQuantity<=1 ?     <FaTrash className="text-lg text-red-600  " /> : <span className=" text-primary-foreground">-</span>}
+            {currentQuantity<=1 ?     <FaTrash className="text-lg text-red-600  " /> : <span className=" font-bold text-xl text-primary">-</span>}
           </button>
           <div className="max-h-20 w-[0.1rem]">
             {isPending ? (
@@ -120,7 +117,7 @@ const CartItem = ({ id,cartId, storageId, product,quantity,configirationImage}) 
             )}
           </div>
           <button
-            className="rounded-full w-7 h-7 ml-1.5 bg-gray-400 text-primary-foreground grid place-content-center"
+            className="w-7 h-7 ml-1.5  grid place-content-center  text-xl text-black"
             disabled={isPending}
             data-id='INCREASE'
             onClick={handleQuantityChange}

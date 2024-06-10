@@ -141,6 +141,41 @@
       "when": 1717600054035,
       "tag": "0019_closed_wendell_vaughn",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "6",
+      "when": 1717621910362,
+      "tag": "0020_aspiring_wild_pack",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1717944099217,
+      "tag": "0021_cooing_jean_grey",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "6",
+      "when": 1717956907811,
+      "tag": "0022_clean_roughhouse",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "6",
+      "when": 1717956977684,
+      "tag": "0023_oval_garia",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "6",
+      "when": 1717990905316,
+      "tag": "0024_overrated_mad_thinker",
+      "breakpoints": true
     }
   ]
 }

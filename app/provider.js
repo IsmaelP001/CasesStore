@@ -3,8 +3,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState } from "react";
-import { Provider } from "react-redux";
-import {store} from '../store/storeRedux'
+import { Provider as ReduxProvider } from "react-redux";
+import { store } from "../store/storeRedux";
+import { SessionProvider as NextAuthProvider } from "next-auth/react";
+import { Toaster } from "../components/ui/toaster";
+
 const ProviderClient = ({ children }) => {
   const [queryClient] = useState(
     () =>
@@ -18,15 +21,16 @@ const ProviderClient = ({ children }) => {
   );
 
   return (
-    <>
-      <Provider store={store}>
+    <ReduxProvider store={store}>
+      <NextAuthProvider>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <main>{ children }</main>
+          <Toaster />
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
-      </Provider>
-    </>
-  )
+      </NextAuthProvider>
+    </ReduxProvider>
+  );
 };
 
 export default ProviderClient;

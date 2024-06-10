@@ -3,6 +3,12 @@ import { db } from "../../../../database/db"
 import { eq } from "drizzle-orm"
 import { configurationimage } from "../../../../database/schemes"
 import DesignPreview from "./DesignPreview"
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
+
 export const revalidate = 0
 
 interface PageProps{
@@ -12,7 +18,7 @@ interface PageProps{
 }
 
 const page =async ({searchParams}:PageProps) => {
-
+  const queryClient = new QueryClient();
     const {id}=searchParams
 
     // if(!id || typeof id !=="string"){
@@ -31,7 +37,10 @@ const page =async ({searchParams}:PageProps) => {
     // }
 
   return (
-    <DesignPreview configuration={configuration || null}/>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+       <DesignPreview configuration={configuration || null}/>
+    </HydrationBoundary>
+
   )
 }
 

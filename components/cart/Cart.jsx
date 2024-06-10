@@ -44,7 +44,7 @@ const Cart = () => {
 
 function CartDrawer() {
   return (
-    <Drawer.Root direction="right">
+    <Drawer.Root direction="right" >
       <Drawer.Trigger asChild>
         <div className=" relative text-xs">
            <GrCart className="text-xl"/>
@@ -53,7 +53,7 @@ function CartDrawer() {
       </Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed z-[888] inset-0 bg-black/40" />
-        <Drawer.Content className="bg-white flex flex-col  h-full w-[360px] fixed bottom-0 right-0 z-[999]">
+        <Drawer.Content className="bg-white overflow-y-scroll flex flex-col  h-full w-[360px] fixed bottom-0 right-0 z-[999]">
           <div className=''>
             <header className="flex justify-between items-center p-6">
             <Drawer.Title className="text-3xl font-semibold ">Tu Carrito</Drawer.Title>

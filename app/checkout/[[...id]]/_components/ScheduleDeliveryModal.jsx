@@ -1,138 +1,202 @@
-'use client'
-import { useEffect, useState } from "react"
-import moment from 'moment';
+"use client";
+import { useEffect, useState } from "react";
+import moment from "moment";
+import "moment/locale/es";
+import { Button } from "../../../../components/ui/button";
+import { cn } from "../../../../lib/utils/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../../components/ui/dialog";
 
-const getDeliveryDays=()=>{
-  const allDays=[1,2,3,4,5].map(day=>{
-    return moment().add(day, 'days').calendar().split('at').slice(0,1).join()
-  })
+const getDeliveryDays = () => {
+  moment.locale("es"); // 'en'
+  const allDays = [1, 2, 3, 4, 5].map((day) => {
+    return moment().add(day, "days").calendar().split(" ").slice(0, 1).join();
+  });
 
-  return allDays
-}
+  return allDays;
+};
 
-const getDeliveryTime=()=>{
+const getDeliveryTime = () => {
+  const times = [];
+  let currentHour = moment().hour();
+  let currentMinutes = moment().minutes();
+  const minutes = currentMinutes < 30 ? 30 : 0;
+  const hour = currentHour > 17 || currentHour < 8 ? 8 : currentHour;
+  let currentTime = moment({ hour: hour, minute: minutes });
 
-}
+  for (let i = 0; i < 18; i++) {
+    const timeString = currentTime.format("h:mm A");
+    times.push([timeString]);
+    currentTime = currentTime.add(30, "minutes");
+  }
 
-const ScheduleDeliveryModal=({handleSetDeliveryTime})=>{
+  return times;
+};
 
-    const [deliveryDays,setDeliveryDate]=useState(getDeliveryDays())
-    const [deliveryHour,setDeliveryHour]=useState(null)
+const ScheduleDeliveryModal = () => {
+  const [deliveryDays, setDeliveryDate] = useState(null);
+  const [deliveryHour, setDeliveryHour] = useState(null);
+  const [deliveryType, setDeliveryType] = useState({
+    type: "STANDARD",
+    time: null,
+  });
+  const [open, setOpen] = useState(false);
 
-    const closeModal=()=>{
-        document.getElementById('scheduleDeliveryModal').close()
-    }
+  useEffect(() => {
+    if (!deliveryDays || !deliveryHour) return;
+    const time = `${deliveryDays}  /  ${deliveryHour}`;
+    setDeliveryType({ type: "SCHEDULE", time });
+    setOpen(false);
+  }, [deliveryDays, deliveryHour]);
 
-    console.log('deliveryDays',)
-
-
-
-
-
-    const getDeliveryHours = () => {
-      let currentTime = parseInt(moment().format('LT').split(":")[0]);
-      const allHours = [];
-  
-      for (let i = 0; i < 10; i++) {
-          currentTime = currentTime % 12; // Asegurarse de que esté dentro del rango de 1-12
-  
-          if (currentTime === 0) {
-              currentTime = 12; // Cambiar 0 a 12 para representar la medianoche
-          }
-  
-          allHours.push(currentTime);
-  
-          currentTime++; // Incrementar la hora
-  
-          // Si es mayor que 8 (8 PM), reiniciar a 1 (1 PM)
-          if (currentTime > 8) {
-              currentTime = 7;
-          }
-      }
-  
-      return allHours;
-  };
-
-
-    console.log('deliveryHours',getDeliveryHours())
-
-
-   
-
-
-
-    useEffect(()=>{
-        if(!deliveryDays || !deliveryHour)return
-        const time=`${deliveryDays}  /  ${deliveryHour}`
-        handleSetDeliveryTime('SCHEDULE',time)
-        document.getElementById('scheduleDeliveryModal').close()
-    },[deliveryDays,deliveryHour])
-
-
-    return (
-      <dialog id="scheduleDeliveryModal" className="modal ">
-        <div className="modal-box">
-        <div className="flex justify-between items-start">
-           <h2 className="text-ms font-semibold mb-3">Escoja una fecha de entrega</h2>
-           <button className="btn btn-ghost btn-xs" onClick={closeModal}>x</button>
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild></DialogTrigger>
+      <div>
+        <div className="flex gap-4">
+          <Button
+            data-id="STANDARD"
+            className={` bg-transparent w-full text-primary border-2 border-primary p-6 hover:text-secondary rounded-xl ${
+              deliveryType.type === "STANDARD" ? "bg-black text-white" : null
+            }`}
+            onClick={() => setDeliveryType({ type: "STANDARD", time: null })}
+          >
+            <div>
+              <p className="font-semibold mb-1">Standard</p>
+              <span className="text-xs font-light">24 horas</span>
+            </div>
+          </Button>
+          <Button
+            data-id="SCHEDULE"
+            className={`bg-transparent  w-full text-primary border-2 border-primary p-6 hover:text-secondary rounded-xl ${
+              deliveryType.type === "SCHEDULE" ? "bg-black text-white" : null
+            }`}
+            onClick={() => {
+              setOpen(true);
+              setDeliveryType({ type: "SCHEDULE", time: deliveryHour });
+            }}
+          >
+            <div>
+              <p className="font-semibold mb-1">Entregar para mas tarde</p>
+              {deliveryType?.time ? (
+                <span>{deliveryType.time}</span>
+              ) : (
+                <span className="text-xs font-light">Escoja un tiempo</span>
+              )}
+            </div>
+          </Button>
         </div>
-        <div className=" flex gap-2 justify-evenly">
-            
-            <button className={`btn btn-ghost  btn-outline  flex-col ${deliveryDays === 'Martes' && 'btn-active'}`} onClick={(e)=>setDeliveryDate('Martes')}>
-                <div className="grid gap-2">
-                  <p className="text-[0.9rem] font-light tracking-[0.1rem]" >Mañana</p>
-                  <span className="text-[1.1rem]">16</span>
-                </div>
-            </button>
-            <button className={`btn btn-ghost btn-outline flex-col ${deliveryDays === 'Miercoles' && 'btn-active'}`} onClick={(e)=>setDeliveryDate('Miercoles')}>
-                <div className="grid gap-2">
-                  <p className="text-[0.9rem] font-light tracking-[0.1rem]" >Miercoles</p>
-                  <span className="text-[1.1rem]">17</span>
-                </div>
-            </button>
-            <button className={`btn btn-ghost btn-outline  flex-col ${deliveryDays === 'Jueves' && 'btn-active'}`} onClick={(e)=>setDeliveryDate('Jueves')}>
-                <div className="grid gap-2">
-                  <p className="text-[0.9rem] font-light tracking-[0.1rem]" >Jueves</p>
-                  <span className="text-[1.1rem]">18</span>
-                </div>
-            </button>
-            <button className={`btn btn-ghost flex-col btn-outline   ${deliveryDays === 'Viernes' && 'btn-active'}`} onClick={(e)=>setDeliveryDate('Viernes')}>
-                <div className="grid gap-2">
-                  <p className="text-[0.9rem] font-light tracking-[0.1rem]" >Viernes</p>
-                  <span className="text-[1.1rem]">19</span>
-                </div>
-            </button>
-          </div>  
-
-         {
-          deliveryDays && 
-          <div>
-          <h2 className="text-ms font-semibold mb-3 mt-3">Hora entrega deseada</h2>
-          <div className="grid  grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4">
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '8:00 am - 8:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('8:00 am - 8:30 am')}>8:00 am - 8:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '9:00 am - 9:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('9:00 am - 9:30 am')}>9:00 am - 9:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '12:00 am - 12:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('12:00 am - 12:30 am')}>12:00 am - 12:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '11:00 am - 11:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('11:00 am - 11:30 am')}>11:00 am - 11:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '10:00 am - 8:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('10:00 am - 8:30 am')}>10:00 am - 8:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '1:00 am - 1:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('1:00 am - 1:30 am')}>1:00 am - 1:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '2:00 am - 2:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('2:00 am - 2:30 am')}>2:00 am - 2:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '3:00 am - 3:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('3:00 am - 3:30 am')}>3:00 am - 3:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '4:00 am - 4:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('4:00 am - 4:30 am')}>4:00 am - 4:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '5:00 am - 5:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('5:00 am - 5:30 am')}>5:00 am - 5:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '6:00 am - 6:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('6:00 am - 6:30 am')}>6:00 am - 6:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '7:00 am - 7:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('7:00 am - 7:30 am')}>7:00 am - 7:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '8:00 am - 8:30 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('8:00 am - 8:30 am')}>8:00 am - 8:30 am</button>
-              <button className={`btn btn-sm btn-ghost btn-outline rounded-xl ${deliveryHour === '8:30 am - 9:00 am' && 'btn-active'}`} onClick={(e)=>setDeliveryHour('9:00 am - 9:30 am')}>9:00 am - 9:30 am</button>
-
-           </div>
+      </div>
+      <DialogContent>
+        <div className="modal-box">
+          <div className="flex justify-between items-start">
+            <DialogTitle className="mb-5"> Escoja una fecha de entrega</DialogTitle>
           </div>
-         }
-         
-       </div>
-    
-        
-      </dialog>
-    )
-}
+          <div className=" flex justify-evenly bg-gray-200 rounded-[2rem]">
+            {getDeliveryDays()?.map((day) => (
+              <Button
+                key={day}
+                className={cn(
+                  "rounded-[2rem] bg-transparent text-primary capitalize hover:text-white py-7 px-4",
+                  deliveryDays === day ? "bg-primary text-white" : null
+                )}
+                disabled={day === 'sábado'  ? true : false}
+                onClick={(e) => setDeliveryDate(day)}
+              >
+                <div className="grid gap-2">
+                  <p className="text-[0.9rem] tracking-[0.1rem] font-semibold">
+                    {day}
+                  </p>
+                </div>
+              </Button>
+            ))}
+          </div>
 
-export default ScheduleDeliveryModal
+          {deliveryDays && (
+            <div>
+              <DialogTitle className="mb-5 mt-5">Hora entrega deseada</DialogTitle>
+              <div className="grid  grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4">
+                {getDeliveryTime()?.map(([time]) => (
+                  <Button
+                    key={time}
+                    size="sm"
+                    onClick={() => setDeliveryHour(time)}
+                    className={cn(
+                      "rounded-xl text-primary h-7 hover:text-white",
+                      time === deliveryHour
+                        ? "bg-primary text-white"
+                        : "bg-gray-200"
+                    )}
+                  >
+                    <span className="text-semibold tracking-widest">
+                      {" "}
+                      {time}
+                    </span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+//   return (
+//     <dialog id="scheduleDeliveryModal" className="modal ">
+//       <div className="modal-box">
+//         <div className="flex justify-between items-start">
+//           <h2 className="text-ms font-semibold mb-3">
+//             Escoja una fecha de entrega
+//           </h2>
+//           <button className="btn btn-ghost btn-xs" onClick={closeModal}>
+//             x
+//           </button>
+//         </div>
+//         <div className=" flex gap-2 justify-evenly">
+//           {getDeliveryDays()?.map((day) => (
+//             <button className=""  onClick={(e) => setDeliveryDate(day)} >
+//               <div className="grid gap-2">
+//                 <p className="text-[0.9rem] font-light tracking-[0.1rem]">
+//                   {day}
+//                 </p>
+//               </div>
+//             </button>
+//           ))}
+//         </div>
+
+//         {deliveryDays && (
+//           <div>
+//             <h2 className="text-ms font-semibold mb-3 mt-3">
+//               Hora entrega deseada
+//             </h2>
+//             <div className="grid  grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4">
+//               {getDeliveryTime()?.map(([time]) => (
+//                 <Button
+//                   key={time}
+//                   size="sm"
+//                   onClick={() => setDeliveryHour(time)}
+//                   className={cn(
+//                     "rounded-xl text-primary p-0",
+//                     time === deliveryHour ? "bg-primary text-white" : "bg-gray-200"
+//                   )}
+//                 >
+//                   {time}
+//                 </Button>
+//               ))}
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </dialog>
+//   );
+// };
+
+export default ScheduleDeliveryModal;

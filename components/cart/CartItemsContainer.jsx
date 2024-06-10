@@ -15,8 +15,6 @@ const CartItemsContainer = () => {
   })
 
   
-  console.log('cartItems',cartItems)
-
   return (
     <div className="space-y-10 bg-base-200 min-h-full min-w-[315px]  py-5 ">
      

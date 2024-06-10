@@ -298,7 +298,7 @@ const UserGiftModal = ({ defaultGiftId }) => {
     <Dialog open={open} onOpenChange={setOpen} id="modalGift" className="modal ">
       <DialogTrigger asChild>
         <Button
-          className="bg-transparent  text-primary border-2 border-primary w-full  hover:text-secondary  flex items-center justify-between p-2 rounded-lg btn-outline btn-block h-20"
+          className="bg-transparent  text-primary border-x border-primary rounded-none  w-full  hover:text-secondary  flex items-center justify-between px-3 py-7 "
         >
           {giftDataDefault?.gift ? (
             <div className="flex justify-between">
@@ -319,13 +319,14 @@ const UserGiftModal = ({ defaultGiftId }) => {
               <MdKeyboardArrowRight className="text-2xl  " />
             </div>
           ) : (
-            <>
-              <div className="flex gap-2 items-center">
+              <div className="flex items-center justify-between gap-5  flex-1">
+               <div className='flex gap-3 items-center'>
                 <FaGifts className="text-2xl" />
-                <p>Enviar como un regalo</p>
-              </div>
-              <MdKeyboardArrowRight className="text-2xl  " />
-            </>
+                <span>Enviar como regalo</span>
+               </div>
+              <MdKeyboardArrowRight className="text-2xl" />
+
+            </div>
           )}
         </Button>
       </DialogTrigger>

@@ -22,10 +22,12 @@ export const cartDetails = pgTable("cartDetails", {
 		productId: index("productId").on(table.productId),
 		colorId: index("colorId").on(table.colorId),
 		cartProduct:index('cart_product_unique').on(table.cartId,table.quantity),
-		uniqueProductColor:unique().on(table.cartId,table.productId,table.colorId,table.configurationId),
 		uniqueDiscountInCart:unique().on(table.cartId,table.discountId),
 	}
 });
+
+//		uniqueProductColor:unique().on(table.cartId,table.productId,table.colorId,table.configurationId,table.deviceId),
+
 
 export const cartDetailsRelations=relations(cartDetails,({one,many})=>({
     cart:one(cart,{

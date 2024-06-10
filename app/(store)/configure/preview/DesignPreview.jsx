@@ -34,10 +34,15 @@ import { addCartItem } from "../../../../lib/actions/cart";
 import { promise } from "zod";
 import { updateConfigurationImage } from "../../_lib/action";
 import { RadioGroup,RadioGroupItem } from "../../../../components/ui/radio-group";
+import { useToast } from "../../../../components/ui/use-toast";
 
 
 const getOptions = () => {
-  return JSON.parse(sessionStorage?.getItem("PERSONALIZE_CASE_OPTIONS"));
+  if (typeof window !== 'undefined') {
+    return JSON.parse(sessionStorage?.getItem("PERSONALIZE_CASE_OPTIONS"));
+
+  }
+
 };
 
 const IMAGES_DEFAULT = [
@@ -50,12 +55,19 @@ const DesignPreview = ({ configuration }) => {
   const [showConfetti, setConfetti] = useState(false);
   const [imagePreview, setImagePreview] = useState(IMAGES_DEFAULT[0]);
   const { id, imageUrl, width, height } = configuration || {};
+  const {toast}=useToast()
   const [options, setOptions] = useState(
     getOptions() || {
       model: MODELS.options[0].value,
       material: MATERIALS.options[0].value,
     }
   );
+
+  
+  const { data: compatibleProducts } = useQuery({
+    queryKey: ["compatibleproducts"],
+    queryFn: async()=>await getCompatibleProducts(),
+  });
 
   useEffect(() => {
     setConfetti(true);
@@ -73,7 +85,7 @@ const DesignPreview = ({ configuration }) => {
   }, []);
 
   const { mutate: addToCartAction } = useMutation({
-    mutationKey: ["addCase"],
+    mutationKey: ["addPersonalizedCase"],
     mutationFn: async (FormData) => {
       await Promise.all([
         addCartItem(FormData),
@@ -81,15 +93,25 @@ const DesignPreview = ({ configuration }) => {
       ]);
     },
     onSuccess: (data) => {
-      console.log("success", data);
-    },
+      toast({
+        title: "Carrito",
+        description: "Articulo añadido con exito",
+        variant: "default",
+        action: <Button size="sm" variant="outline">Ver carrito</Button>
+      });    },
     onError: (err) => {
-      console.log("error", err);
-    },
+      toast({
+        title: "Carrito",
+        description:
+          "Hubo un  error al añadir el articulo, por favor intente mas tarde.",
+        variant: "destructive",
+      });    },
   });
 
 
-  console.log('config',configuration)
+
+  console.log("materialPrice",options.material,BASE_PRICE)
+  console.log('config',compatibleProducts)
 
   // const { data: compatibleProducts, isPending: isPendingCompatibleProducts } =
   //   useQuery({
@@ -141,10 +163,12 @@ const DesignPreview = ({ configuration }) => {
                 onValueChange={(value) => {
                   setOptions((prev) => {
                     const newOptions = { ...prev, model: value };
-                    sessionStorage.setItem(
-                      "PERSONALIZE_CASE_OPTIONS",
-                      JSON.stringify(newOptions)
-                    );
+                    if (typeof window !== 'undefined') {
+                      sessionStorage.setItem(
+                        "PERSONALIZE_CASE_OPTIONS",
+                        JSON.stringify(newOptions)
+                      );
+                    }
                     return newOptions;
                   });
                 }}
@@ -155,13 +179,14 @@ const DesignPreview = ({ configuration }) => {
                   <SelectValue placeholder="Modelo" />
                 </SelectTrigger>
                 <SelectContent className=" bg-white">
-                  {MODELS.options?.map((product) => (
+                  {compatibleProducts?.map((product) => (
                     <SelectItem
                       key={product.value}
-                      value={product.value}
+                      value={product.name}
                       className="w-full"
                     >
-                      {product.label ?? ""}
+                      {product.name ?? ""}
+                      <input type="hidden" name="deviceId" value={product?.id}></input>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -252,31 +277,37 @@ const DesignPreview = ({ configuration }) => {
             <div className="space-y-2">
               <div className="flex flex-col gap-6">
                 <Label className="text-base font-semibold capitalize">{MATERIALS.name}</Label>
-                <RadioGroup defaultValue={options.material} name="productId"  onValueChange={(material)=>{
+                <RadioGroup defaultValue={options.material}  onValueChange={(material)=>{
                          setOptions((prev) => {
-                          const newOptions = { ...prev, material };
-                          sessionStorage.setItem(
-                            "PERSONALIZE_CASE_OPTIONS",
-                            JSON.stringify(newOptions)
-                          );
+                          const newOptions = { ...options.material,material  };
+                          if (typeof window !== 'undefined'){
+                            sessionStorage.setItem(
+                              "PERSONALIZE_CASE_OPTIONS",
+                              JSON.stringify(newOptions)
+                            );
+                          }
+
                           return newOptions;
                         });
                       }}>
                  {
-                  MATERIALS.options.map(material=>(
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={material.id}  checked={material.id === options.material ? true : false} id={material.label} className='hidden' />
-                      <Label htmlFor={material.label} className={`block w-full border-2 py-6 px-4 border-gray-200 rounded-xl ${material.id === options.material ? 'border-primary':''}`}>
+                  MATERIALS.options.map(material=>{
+                    return (
+                      <div className="flex items-center space-x-2">
+                      <RadioGroupItem value={material}  checked={material.id == options.material.id ? true : false} id={material.label} className='hidden' />
+                      <Label htmlFor={material.label} className={`block w-full border-2 py-6 px-4 border-gray-200 rounded-xl ${material.id === options.material.id ? 'border-primary':''}`}>
                         <div className='flex items-center justify-between '>
                           <div>
                             <p>{material.label}</p>
                             <span>{material.description ?? ''}</span>
                           </div>
                           <p>{material.price}</p>
+                          <input type="hidden" value={material.id} name="productId"></input>
                         </div>
                       </Label>
                     </div>
-                  ))
+                    )
+                  })
                  }
                 
                  

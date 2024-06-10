@@ -1,9 +1,10 @@
 "use server";
 
-import { address, cart, cartDetails, defaultAddress, defaultGift, discountCode, gift, productDiscount, user } from "../../database/schemes"
+import { address, cart, cartDetails, defaultAddress, defaultGift, discountCode, gift, productDiscount, user } from "../../../database/schemes"
 import { eq ,and, AnyColumn, sql, ne} from "drizzle-orm";
 import bcrypt from "bcrypt";
-import { db } from "../../database/db";
+import { db } from "../../../database/db";
+import { redirect } from "next/navigation"
 
 
 
@@ -20,13 +21,12 @@ export const signup = async (FormData) => {
       const hashedPassword = bcrypt.hashSync(password, parseInt(process.env.AUTH_ROUNDS));
       const [newUser] = await db
         .insert(user)
-        .values({ firstName, lastName, email, password: hashedPassword }).returning()
+        .values({ firstName, lastName, email, password: hashedPassword,provider:'credentials'}).returning()
   
-        console.log('newUser',newUser)
       //crear id del carrito
       await db.insert(cart).values({userId:newUser.id})
        
-      return {userId:newUser.id};
+      return redirect('/auth/signin')
     } catch (err) {
       console.log(err);
       throw err;

@@ -5,11 +5,12 @@ import { address,favorite,cart,order, defaultAddress, gift,rol} from './';
 
 export const user = pgTable("users", {
 	id: serial("id").primaryKey().notNull(),
-	firstName: varchar("firstName", { length: 255 }),
+	firstName: varchar("firstName", { length: 255 }).notNull(),
 	lastName: varchar("lastName", { length: 255 }),
 	email: varchar("email", { length: 255 }).unique(),
-	password:varchar("password",{length:255}).notNull(),
-	phonenumber:bigint('phonenumber',{mode:'number'}),
+	provider:varchar('provider',{length:255}),
+	password:varchar("password",{length:275}),
+	phonenumber:varchar('phonenumber',{length:10}),
 	rolId:integer('rolId').notNull().default(1),
 	createdAt: timestamp('createdAt',{mode:'date'}).notNull().defaultNow(),
 	updatedAt: timestamp('updatedAt',{mode:'date'}).notNull().defaultNow(),
