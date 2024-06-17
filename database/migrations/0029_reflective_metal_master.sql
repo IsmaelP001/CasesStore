@@ -1,0 +1,1 @@
+ALTER TABLE "discountCode" DROP COLUMN IF EXISTS "expiresAt";

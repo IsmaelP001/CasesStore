@@ -18,21 +18,21 @@ const CheckoutPage = async ({ params }) => {
   const queryClient = new QueryClient();
 
   await Promise.all([
-    await queryClient.prefetchQuery({
+    await queryClient.fetchQuery({
       queryKey: ["user"],
       queryFn: async () => {
         const data = await getUserData();
         return data;
       },
     }),
-    await queryClient.prefetchQuery({
+    await queryClient.fetchQuery({
       queryKey: ["addressD"],
       queryFn: async () => {
         const data = await getDefaultAddress();
         return data;
       },
     }),
-    await queryClient.prefetchQuery({
+    await queryClient.fetchQuery({
       queryKey: ["gift"],
       queryFn: async () => {
         const data = await getDefaultGift();

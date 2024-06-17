@@ -6,6 +6,8 @@ import CartTotalBtn from "../../../../components/cart/CartTotalBtn";
 import CouponDiscountModal from "./CouponDiscountModal"
 import CartItemsContainer from '../../../../components/cart/CartItemsContainer'
 import { Button } from "../../../../components/ui/button";
+import CheckoutTotals from './CheckoutTotals'
+
 const CheckoutOrderSummary = () => {
   const handleModalPromoCode = () => {
     
@@ -24,7 +26,9 @@ const CheckoutOrderSummary = () => {
       
       <div className='mt-5'>
       <CouponDiscountModal/>
-
+      </div>
+      <div>
+        <CheckoutTotals/>
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ const page = async ({params,searchParams}) => {
     const queryClient = new QueryClient();
     const [id]=params?.id
 
-    await queryClient.prefetchQuery({
+    await queryClient.fetchQuery({
         queryKey:['singleProduct',id],
         queryFn:()=>getProductById(id)
     })

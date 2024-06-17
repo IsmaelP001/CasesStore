@@ -51,7 +51,8 @@ const LoginPage = () => {
       const res = await signIn('credentials',{
         email,
         password,
-        redirect:false
+        redirect:false,
+        callbackUrl:callbackUrl
       })
 
       if(!res?.ok){

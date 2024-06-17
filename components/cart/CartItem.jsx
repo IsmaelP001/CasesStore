@@ -69,7 +69,7 @@ const CartItem = ({ id,cartId, storageId, product,quantity,configirationImage,de
   
   return (
     <article className=" hover:bg-base-300 px-4 py-1  ">
-    <div className="border-b border-b-neutral grid grid-cols-4 gap-1 text-center gap-1  justify-between items-center">
+    <div className="border-b border-b-neutral grid grid-cols-4 gap-1, text-center gap-1  justify-between items-center">
     <figure className="w-20 h-20  relative  flex justify-center">
        {
         configirationImage?.imageUrl ? (

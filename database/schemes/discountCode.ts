@@ -15,7 +15,8 @@ export const discountCode = pgTable("discountCode", {
     productIds:json('productIds'),
     limit:integer('limit'),
 	createdAt: timestamp('createdAt',{mode:'date'}).notNull().defaultNow(),
-	updatedAt: timestamp('updatedAt',{mode:'date'}).notNull().defaultNow(),
+    expiresAt: timestamp('expiresAt',{mode:"date"}).notNull(),
+
 });
 
 

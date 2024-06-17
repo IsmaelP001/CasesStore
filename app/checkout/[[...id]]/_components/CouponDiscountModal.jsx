@@ -1,7 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { applyCouponToCart } from "../action";
 import { useEffect, useState } from "react";
-import { getCartItems } from "../../../../lib/data/cart";
 import {
   Dialog,
   DialogContent,
@@ -12,44 +11,31 @@ import { Input } from "../../../../components/ui/input";
 import { MdKeyboardArrowRight, MdOutlineLocalPhone } from "react-icons/md";
 import { Button } from "../../../../components/ui/button";
 import { MdOutlineDiscount } from "react-icons/md";
+import { useToast } from "../../../../components/ui/use-toast";
 
-const CouponDiscountModal = () => {
-  // const [cartItemIds, setCartItemIds] = useState(null);
-  // const applyCoupontToCartWithProductIds = applyCouponToCart.bind(
-  //   null,
-  //   cartItemIds
-  // );
-  const [isError, setIsError] = useState(null);
+const CouponDiscountModal = () => { 
+  const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
+  const {toast}=useToast()
+  const queryClient=useQueryClient()
 
-  // const { data: cartItems, isPending } = useQuery({
-  //   queryKey: ["cartInfo"],
-  //   queryFn: async () => await getCartItems(),
-  // });
-
-  // useEffect(() => {
-  //   if (isPending) return;
-  //   const cartProductIds = cartItems?.map((item) => {
-  //     return { cartDetailsId: item.id, productId: item.productId };
-  //   });
-  //   setCartItemIds(cartProductIds);
-  // }, []);
-
-  // const { mutate } = useMutation({
-  //   mutationKey: ["applyCouponToCart"],
-  //   mutationFn: applyCoupontToCartWithProductIds,
-  //   onSuccess: (data) => {
-  //     if (data?.isError) {
-  //       setIsError(data);
-  //     } else {
-  //       setIsError(null);
-  //     }
-  //     console.log(data);
-  //   },
-  //   onError: (err) => {
-  //     console.log(err);
-  //   },
-  // });
+  const { mutate:applyCouponAction } = useMutation({
+    mutationKey: ["applyCouponToCart"],
+    mutationFn: applyCouponToCart,
+    onSuccess: (data) => {
+      if (data?._error) {
+        setError(data?._error);
+        return
+      } 
+      if(error !== null) setError(null);
+      queryClient.invalidateQueries({queryKey:['cartInfo'],exact:true})
+      setOpen(false);
+      toast()
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   return (
     <Dialog
@@ -77,7 +63,7 @@ const CouponDiscountModal = () => {
         
           </header>
 
-          <form  className="">
+          <form action={applyCouponAction}  className="">
             <div className="flex items-end gap-2">
               <div className='flex-1'>
                 <Label htmlFor="name" className="font-semibold text-sm">
@@ -90,11 +76,11 @@ const CouponDiscountModal = () => {
                   placeholder="ej. EHF50"
                 ></Input>
               </div>
-              <Button className="btn btn-primary">Aplicar</Button>
+              <Button type="submit" className="">Aplicar</Button>
             </div>
-            {isError && (
+            {error && (
               <p className="ml-1 mt-2 text-xs font-bold text-red-500">
-                {isError.message}
+                {error}
               </p>
             )}
           </form>

@@ -4,8 +4,12 @@ import { devices, product } from '.';
 
 export const productDevices = pgTable("productDevices", {
 	id: serial("id").primaryKey().notNull(),
-	productId: integer('productId').notNull().references(()=>product.id),
-    deviceId:integer('deviceId').notNull().references(()=>devices.id)
+	productId: integer('productId').notNull().references(()=>product.id,{onDelete:'cascade',onUpdate:'cascade'}),
+    deviceId:integer('deviceId').notNull().references(()=>devices.id,{onDelete:'cascade',onUpdate:"cascade"})
+},(table)=>{
+    return {
+        productDeviceUnique:unique().on(table.deviceId,table.productId)
+    }
 });
 
 

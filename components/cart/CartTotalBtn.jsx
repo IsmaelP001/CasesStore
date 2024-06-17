@@ -4,12 +4,13 @@ import Link from "next/link";
 import { getTotalPrice } from "../../lib/data/cart";
 import { isPending } from "@reduxjs/toolkit";
 import { cookies } from "next/cache";
+import { formatPrice } from "../../lib/utils/utils";
 
 const CartTotalBtn = () => {
   const {
     data: cartData,
     isFetching,
-    refetch,
+    
   } = useQuery({
     queryKey: ["totalPrice"],
     queryFn: async () => await getTotalPrice(),
@@ -27,7 +28,7 @@ const CartTotalBtn = () => {
         {isFetching ? (
           <span>Loading...</span>
         ) : (
-          <span>{cartData?.price?.totalPrice || 0}</span>
+          <span className="text-sm">{formatPrice(cartData?.price?.totalPrice) || 0}</span>
         )}
       </Link>
     </div>

@@ -6,7 +6,7 @@ import {
   updateGiftInfo,
 } from "../action";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { Suspense, useRef, useState } from "react";
 import { getDefaultGift, getUserGift } from "../data";
 import {
   Dialog,
@@ -20,35 +20,57 @@ import { Input } from "../../../../components/ui/input";
 import { Label } from "../../../../components/ui/label";
 import { Textarea } from "../../../../components/ui/textarea";
 
-const UserGiftModal = ({ defaultGiftId }) => {
+
+
+function GiftContent({handleOpenCloseModal}){
   const [isNewGift, setIsNewGift] = useState(false);
   const [editGift, setEditGift] = useState(null);
-  const [open, setOpen] = React.useState(false)
-
+  const [error,setError]=useState(null)
   const queryClient = useQueryClient();
+
+
+  const handleEditGift = (giftData) => {
+    setEditGift(giftData);
+  };
+
+  const handleReset = () => {
+    setEditGift(null);
+    setIsNewGift(null);
+  };
+
+  const handleNewGiftForm = (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const data = Object.fromEntries(formData)
+
+    if (editGift) {
+      updateGiftAction(data);
+      console.log('updateGift')
+
+    } else {
+      createGiftAction(data);
+      console.log('createGift')
+    }
+    // handleReset();
+  };
 
   const { data: giftData } = useQuery({
     queryKey: ["regalo"],
     queryFn: async () => await getUserGift(17),
   });
-  const closeGiftModal = () => {
-    document.getElementById("modalGift").close();
-  };
-
-  const { data: giftDataDefault } = useQuery({
-    queryKey: ["gift"],
-    queryFn: async () => await getDefaultGift(),
-  });
-
-  const userId = giftData ? giftData[0]?.userId : null;
 
   const { mutate: createGiftAction } = useMutation({
     mutationKey: ["createdGift"],
     mutationFn: createNewGift,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data?._error) {
+        setError(data?._error);
+        return
+      }
+      if (error !== null) setError(null);
       queryClient.invalidateQueries(["regalo"]);
       setIsNewGift(false);
-      setOpen(false)
+      handleOpenCloseModal()
     },
     onError: (e) => {
       console.log("error updating gift");
@@ -61,7 +83,7 @@ const UserGiftModal = ({ defaultGiftId }) => {
     onSuccess: () => {
       queryClient.invalidateQueries(["default"]);
       setIsNewGift(false);
-      setOpen(false)
+      handleOpenCloseModal()
     },
     onError: (e) => {
       console.log("error updating Gift");
@@ -93,137 +115,7 @@ const UserGiftModal = ({ defaultGiftId }) => {
     },
   });
 
-  const handleEditGift = (giftData) => {
-    setEditGift(giftData);
-  };
-
-  const handleReset = () => {
-    setEditGift(null);
-    setIsNewGift(null);
-  };
-
-  const handleNewGiftForm = (FormData) => {
-    if (editGift) {
-      updateGiftAction(FormData);
-    } else {
-      createGiftAction(FormData);
-    }
-    handleReset();
-  };
-
-
-
-  function CreateGiftContent(){
-    return(
-    
-         <div className="modal-box flex flex-col gap-4">
-          <header className="flex justify-between">
-            <h2 className="font-bold text-2xl ">Informacion de la persona</h2>
-          </header>
-
-          <form action={handleNewGiftForm} className="space-y-5">
-            <div className="space-y-5 ">
-              <Input type="hidden" name="giftId" value={editGift?.id} />
-              <div className="space-y-1.5">
-                <Label htmlFor="name" className=" text-sm font-semibold">
-                  Tu nombre completo
-                </Label>
-                <Input
-                  name="senderName"
-                  type="text"
-                  className=" w-full "
-                  placeholder="ej. Pedro Rodriguez"
-                  defaultValue={editGift?.senderName}
-                ></Input>
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="name" className=" text-sm font-semibold">
-                  Mensaje
-                </Label>
-                <Textarea
-                  name="message"
-                  id=""
-                  cols="10"
-                  rows="4"
-                  className="  w-full resize-none text-sm font-semibold"
-                  placeholder="Ej. te aprecio mucho, espero que te guste!!."
-                  defaultValue={editGift?.message}
-                ></Textarea>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-5">
-              <div className=" space-y-1.5">
-                <Label
-                  htmlFor="firstName"
-                  className="text-sm font-semibold"
-                >
-                  Nombre
-                </Label>
-                <Input
-                  name="firstName"
-                  type="text"
-                  className="rounded-md input-info  "
-                  placeholder="ej. maria"
-                  defaultValue={editGift?.firstName}
-                ></Input>
-              </div>
-              <div className=" space-y-1.5">
-                <Label
-                  htmlFor="lastName"
-                  className="text-sm font-semibold"
-                >
-                  Apellido
-                </Label>
-                <Input
-                  name="lastName"
-                  type="text"
-                  className=" rounded-md input-info"
-                  placeholder="ej. perez"
-                  defaultValue={editGift?.lastName}
-                ></Input>
-              </div>
-            </div>
-
-            <div className=" ">
-              <div className=" space-y-1.5">
-                <Label
-                  htmlFor="zipCode"
-                  className=" text-sm font-semibold"
-                >
-                  Numero de telefono
-                </Label>
-                <Input
-                  name="phonenumber"
-                  type="number"
-                  className=" rounded-md input-info"
-                  placeholder="ej. 809-601-0262"
-                  defaultValue={parseInt(editGift?.phonenumber)}
-                ></Input>
-              </div>
-            </div>
-
-            <div className="flex gap-5">
-              <Button
-                className="bg-secondary text-primary hover:text-secondary"
-                type="button"
-                onClick={handleReset}
-              >
-                Atras
-              </Button>
-              <Button type="submit" className="">
-                {" "}
-                Guardar{" "}
-              </Button>
-            </div>
-          </form>
-        </div>
-     
-    )
-  }
-
-
-  function DefaultGIftContent(){
+  if(!isNewGift && !editGift){
     return(
       <div className="modal-box flex flex-col gap-4">
         <header className="flex justify-between">
@@ -248,9 +140,9 @@ const UserGiftModal = ({ defaultGiftId }) => {
                     <span>{message}</span>
                   </p>
                   <div className="flex gap-6">
-                    {giftId !== defaultGiftId ? (
+                    {giftId ? (
                       <Button
-                        type="btn"
+                        type="button"
                         variant="link"
                         className=""
                         onClick={() => setDefaultAction({ giftId, userId })}
@@ -267,7 +159,7 @@ const UserGiftModal = ({ defaultGiftId }) => {
                       Editar
                     </Button>
                     <Button
-                      type="btn"
+                      type="button"
                       variant="link"
                       className="text-red-600"
                       onClick={() => deleteGiftAction({ giftId, userId })}
@@ -282,6 +174,7 @@ const UserGiftModal = ({ defaultGiftId }) => {
         </div>
 
         <Button variant="secondary"
+        type="button"
           className="hover:bg-primary hover:text-primary-foreground"
           onClick={() => setIsNewGift(true)}
         >
@@ -292,26 +185,172 @@ const UserGiftModal = ({ defaultGiftId }) => {
     )
   }
 
+
+  return(
   
+       <div className="modal-box flex flex-col gap-4">
+        <header className="flex justify-between">
+          <h2 className="font-bold text-2xl ">Informacion de la persona</h2>
+        </header>
+
+        <form onSubmit={handleNewGiftForm} className="space-y-5">
+          <div className="space-y-5 ">
+            <Input type="hidden" name="giftId" value={editGift?.id} />
+            <div className="space-y-1.5">
+              <Label htmlFor="name" className=" text-sm font-semibold">
+                Tu nombre completo
+              </Label>
+              <Input
+                name="senderName"
+                type="text"
+                className=" w-full "
+                placeholder="ej. Pedro Rodriguez"
+                defaultValue={editGift?.senderName}
+              ></Input>
+               {error?.hasOwnProperty("senderName") && (
+              <span className="text-red-500 font-normal text-sm ml-1 mt-0.5">
+                {error?.senderName[0]}
+              </span>
+            )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="name" className=" text-sm font-semibold">
+                Mensaje
+              </Label>
+              <Textarea
+                name="message"
+                id=""
+                cols="10"
+                rows="4"
+                className="  w-full resize-none text-sm font-semibold"
+                placeholder="Ej. te aprecio mucho, espero que te guste!!."
+                defaultValue={editGift?.message}
+              ></Textarea>
+               {error?.hasOwnProperty("message") && (
+              <span className="text-red-500 font-normal text-sm ml-1 mt-0.5">
+                {error?.message[0]}
+              </span>
+            )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-5">
+            <div className=" space-y-1.5">
+              <Label
+                htmlFor="firstName"
+                className="text-sm font-semibold"
+              >
+                Nombre
+              </Label>
+              <Input
+                name="firstName"
+                type="text"
+                className="rounded-md input-info  "
+                placeholder="ej. maria"
+                defaultValue={editGift?.firstName}
+              ></Input>
+               {error?.hasOwnProperty("firstName") && (
+              <span className="text-red-500 font-normal text-sm ml-1 mt-0.5">
+                {error?.firstName[0]}
+              </span>
+            )}
+            </div>
+            <div className=" space-y-1.5">
+              <Label
+                htmlFor="lastName"
+                className="text-sm font-semibold"
+              >
+                Apellido
+              </Label>
+              <Input
+                name="lastName"
+                type="text"
+                className=" rounded-md input-info"
+                placeholder="ej. perez"
+                defaultValue={editGift?.lastName}
+              ></Input>
+               {error?.hasOwnProperty("lastName") && (
+              <span className="text-red-500 font-normal text-sm ml-1 mt-0.5">
+                {error?.lastName[0]}
+              </span>
+            )}
+            </div>
+          </div>
+
+          <div className=" ">
+            <div className=" space-y-1.5">
+              <Label
+                htmlFor="zipCode"
+                className=" text-sm font-semibold"
+              >
+                Numero de telefono
+              </Label>
+              <Input
+                name="phonenumber"
+                type="number"
+                className=" rounded-md input-info"
+                placeholder="ej. 809-601-0262"
+                defaultValue={parseInt(editGift?.phonenumber)}
+              ></Input>
+               {error?.hasOwnProperty("phonenumber") && (
+              <span className="text-red-500 font-normal text-sm ml-1 mt-0.5">
+                {error?.phonenumber[0]}
+              </span>
+            )}
+            </div>
+          </div>
+
+          <div className="flex gap-5">
+            <Button
+              className="bg-secondary text-primary hover:text-secondary"
+              type="button"
+              onClick={handleReset}
+            >
+              Atras
+            </Button>
+            <Button type="submit" className="">
+              {" "}
+              Guardar{" "}
+            </Button>
+          </div>
+        </form>
+      </div>
+   
+  )
+}
+
+const UserGiftModal = () => {
+  const [open, setOpen] = React.useState(false)
+
+  const handleOpenCloseModal=()=>{
+    setOpen(!open)
+  }
+
+  const { data: giftDataDefault } = useQuery({
+    queryKey: ["gift"],
+    queryFn: async () => await getDefaultGift(),
+  });
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen} id="modalGift" className="modal ">
       <DialogTrigger asChild>
         <Button
+        type="button"
           className="bg-transparent  text-primary border-x border-primary rounded-none  w-full  hover:text-secondary  flex items-center justify-between px-3 py-7 "
         >
           {giftDataDefault?.gift ? (
-            <div className="flex justify-between">
+            <div className="flex justify-between flex-1 items-center">
               <div className="flex gap-5 items-center">
                 <FaGifts className="text-2xl" />
                 <div>
                   <p className="flex gap-1">
-                    <span className=" text-base font-semibold ">
+                    <span className=" text-base font-semibold  tracking-wider">
                       {giftDataDefault.gift.firstName}
                     </span>
-                    <span className="text-base font-semibold">{giftDataDefault.gift.lastName}</span>
+                    <span className="text-base font-semibold tracking-wider">{giftDataDefault.gift.lastName}</span>
                   </p>
-                  <p className="text-base  font-semibold">
+                  <p className="  font-semibold tracking-wider">
                     {giftDataDefault.gift.phonenumber.toString()}
                   </p>
                 </div>
@@ -331,7 +370,9 @@ const UserGiftModal = ({ defaultGiftId }) => {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        {isNewGift || editGift ? <CreateGiftContent/>:<DefaultGIftContent/>}
+        <Suspense fallback={<div>Loading...</div>}>
+         <GiftContent handleOpenCloseModal={handleOpenCloseModal}/>
+        </Suspense>
       </DialogContent>
      
     </Dialog>

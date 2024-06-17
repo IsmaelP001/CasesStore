@@ -16,6 +16,7 @@ import { Input } from "../../../../components/ui/input";
 
 const UserPhonenumberModal = ({ defaultPhonenumber }) => {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -27,12 +28,16 @@ const UserPhonenumberModal = ({ defaultPhonenumber }) => {
   const { mutate: updatePhonenumberAction } = useMutation({
     mutationKey: ["updatePhonenumber"],
     mutationFn: updatePhoneNumber,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (data._errors) {
+        setError(data._errors);
+        return;
+      }
+      if (error !== null) setError(null);
       queryClient.invalidateQueries(["userData"]);
       setOpen(false);
     },
     onError: (err) => {
-
       console.log("error al actualizar numero de telefono", err.Error);
     },
   });
@@ -47,14 +52,19 @@ const UserPhonenumberModal = ({ defaultPhonenumber }) => {
       <DialogTrigger asChild>
         <Button className="bg-transparent  rounded-t-md  rounded-b-none text-primary border w-full border-primary  hover:text-secondary  flex items-center justify-between px-3 py-7 ">
           <div className="flex gap-2 items-center  flex-1">
-
             {userData?.phonenumber ? (
-              <p>{userData?.phonenumber}</p>
+              <div className="flex items-center justify-between gap-5  flex-1">
+                <div className="flex gap-3 items-center">
+                  <MdOutlineLocalPhone className="text-3xl" />
+                  <span className="text-base font-semibold">{userData.phonenumber}</span>
+                </div>
+                <MdKeyboardArrowRight className="text-2xl" />
+              </div>
             ) : (
               <div className="flex items-center justify-between gap-5  flex-1">
                 <div className="flex gap-3 items-center">
                   <MdOutlineLocalPhone className="text-2xl" />
-                  <span>Enviar como regalo</span>
+                  <span>Numero de contacto</span>
                 </div>
                 <MdKeyboardArrowRight className="text-2xl" />
               </div>
@@ -80,6 +90,11 @@ const UserPhonenumberModal = ({ defaultPhonenumber }) => {
                 placeholder="ej: 8098546526"
                 defaultValue={userData?.phonenumber}
               ></Input>
+              {error && (
+                <span className="text-red-500 font-normal text-sm ml-1 mt-0.5">
+                  {error}
+                </span>
+              )}
             </div>
             <div className="flex gap-5 mt-5">
               <Button
@@ -89,7 +104,7 @@ const UserPhonenumberModal = ({ defaultPhonenumber }) => {
               >
                 Atras
               </Button>
-              <Button type="submit" className="btn btn-primary btn-sm">
+              <Button type="submit" className="">
                 Guardar
               </Button>
             </div>

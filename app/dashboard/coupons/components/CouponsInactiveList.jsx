@@ -5,6 +5,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import ActiveToogleDropdown from './ActiveToogleDropdown'
 import DeleteDropdownItem from './DeleteDropdownItem'
+import { formatDateToLocal } from "../../../../lib/utils/utils";
 
 const CouponsInactiveList = ({coupons,isInactive,canDeactivate}) => {
     
@@ -41,7 +42,7 @@ const CouponsInactiveList = ({coupons,isInactive,canDeactivate}) => {
                   {coupon.limit === null ? <IoIosInfinite /> : coupon.limit}
                 </td>
                 <td>{coupon.allProducts ? <HiMiniGlobeAlt /> : "Products"}</td>
-                <td>{coupon.expiredAt.toDateString()}</td>
+                <td>{formatDateToLocal(coupon.expiresAt)}</td>
                 <td>
                 <div className="dropdown dropdown-left">
                 <div tabIndex={0} role="button" className="btn m-1">

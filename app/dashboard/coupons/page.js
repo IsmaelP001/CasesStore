@@ -1,36 +1,40 @@
-import { getActiveCoupons, getAsociatedProductsToCoupons, getExpiredCoupons } from "./data";
+import {
+  getActiveCoupons,
+  getAsociatedProductsToCoupons,
+  getExpiredCoupons,
+} from "./data";
 import Link from "next/link";
 import React from "react";
 
-
-import CouponsActiveList from './components/CouponsActiveList'
-import CouponsInactiveList from './components/CouponsInactiveList'
-
+import CouponsList from "./components/CouponsList";
+import CouponsInactiveList from "./components/CouponsInactiveList";
+import { Button } from "../../../components/ui/button";
 
 const page = async () => {
   const expiredCoupons = await getExpiredCoupons();
   const activeCoupons = await getActiveCoupons();
 
-  console.log(expiredCoupons)
-  console.log(activeCoupons)
-
+  console.log("expiredCoupons", expiredCoupons);
+  console.log("activeCoupons", activeCoupons);
 
   return (
     <div className="px-10 py-5">
       <header className="flex justify-between">
         <h2 className="text-5xl font-bold mb-10">Coupones</h2>
-        <Link href={"/dashboard/coupons/create"} className="btn btn-primary">
-          Crear coupon
-        </Link>
+        <Button asChild>
+          <Link href={"/dashboard/coupons/create"} className="btn btn-primary">
+            Crear coupon
+          </Link>
+        </Button>
       </header>
       <div>
         <h4 className="font-semibold text-xl mb-5">Coupones activos</h4>
-        <CouponsActiveList coupons={activeCoupons} canDeactivate={true}/>
+        <CouponsList coupons={activeCoupons} canDeactivate={true} />
       </div>
 
       <div>
         <h4 className="font-semibold text-xl mb-5">Coupones expirados</h4>
-        <CouponsInactiveList coupons={expiredCoupons} isInactive={true}/>
+        <CouponsList isInactive={true} coupons={expiredCoupons} />
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import {
   getPrintPatterns,
   getMaterials,
   getCompatibleProducts,
-} from "../../_lib/data"
+} from "../../../../lib/data/products"
 import ProductPage from "../_components/ProductPage";
 import {
   HydrationBoundary,
@@ -22,7 +22,7 @@ const page = async ({ params, searchParams }) => {
   const [id] = params?.id || [];
   const {collection,pattern,material,color}=searchParams
 
-  await queryClient.prefetchQuery({
+  await queryClient.fetchQuery({
     queryKey: ["cases",collection,pattern,material,color,id],
     queryFn: async () => {
       const data = await getProducts(id, searchParams);

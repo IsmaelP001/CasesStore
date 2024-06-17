@@ -10,7 +10,6 @@ export const product = pgTable("products", {
 	name: varchar("name", { length: 255 }),
 	price: integer("price").notNull(),
     stock:integer('stock').notNull().default(1),
-    isConfigurableMaterial:boolean('isConfigurableMaterial').notNull().default(false),
     isConfigurable:boolean('isConfigurable').notNull().default(false),
 	collectionId: integer("collectionId").references(() => collection.id),
     printPatternId:integer('printPatternId').references(()=>printPattern.id),

@@ -10,8 +10,8 @@ export default async function middleware(req) {
 
   if(!session){
 
-    url.pathname = '/auth/login'
-    url.search = `p=${requestedPage}`
+    url.pathname = '/auth/signin'
+    url.search = `callbackUrl=${requestedPage}`
 
     return NextResponse.redirect(url)
   }
@@ -20,10 +20,10 @@ export default async function middleware(req) {
     return NextResponse.redirect('/dashboard')
   }
 
-  if(session.rol !== 'admin' && req.nextUrl.pathname.startsWith('/dashboard')){
-    url.pathname='/'
-    return NextResponse.redirect(url)
-  }
+  // if(session.rol !== 'admin' && req.nextUrl.pathname.startsWith('/dashboard')){
+  //   url.pathname='/'
+  //   return NextResponse.redirect(url)
+  // }
 
   return NextResponse.next()
 }

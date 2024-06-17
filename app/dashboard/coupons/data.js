@@ -1,23 +1,25 @@
 'use server'
 
 import { address, cartDetails, category, color, defaultAddress, defaultGift, discountCode, gift, product, productDiscount, user, } from "../../../database/schemes";
-import { eq, sql, sum,number, or, lte, not,gt,and,ne,asc,isNotNull,inArray } from "drizzle-orm";
+import { eq, sql, sum,number, or, lte, not,gt,and,ne,asc,isNotNull,inArray, gte,lt } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { db } from "../../../database/db";
-import { auth } from "../../../services/auth";
+
 
 
 export const getActiveCoupons=async()=>{
-  
+
+    const currentDate = new Date()
+    currentDate.setMinutes(currentDate.getMinutes() - currentDate.getTimezoneOffset())
+    
     try{
         const data = await db.query.discountCode.findMany({
-            where:or
+            where:and
             (
-             gt(discountCode.expiredAt,new Date()),
-             and(ne(discountCode.limit,null),lte(discountCode.uses,discountCode.limit)),
-             and(ne(discountCode.expiredAt,null),lte(discountCode.expiredAt,new Date()))
+             gt(discountCode.expiresAt,currentDate),
+             lt(discountCode.uses,discountCode.limit),
             ),
             with:{
                 order:true,
@@ -38,17 +40,30 @@ export const getActiveCoupons=async()=>{
 
 
 export const getExpiredCoupons = async () => {
+
+    const currentDate = new Date()
+    currentDate.setMinutes(currentDate.getMinutes() - currentDate.getTimezoneOffset())
+
     try {
         const data = await db.query.discountCode.findMany({
-            where: not(or(gt(discountCode.expiredAt,new Date()))),
+            where: or(
+                lte(discountCode.expiresAt,currentDate),
+                gte(discountCode.uses,discountCode.limit),
+            ),
             with:{
                 order:true,
-                product:true
+                productDiscount:{
+                    with:{
+                        productDiscount:true
+                    }
+                }
             },
             orderBy:[asc(discountCode.createdAt)]
             //lte(discountCode.limit,discountCode.uses), excluye undefined=unlimited
         });
+        console.log('expiredC',data)
         return data;
+
     } catch (err) {
         console.log(err);
     }

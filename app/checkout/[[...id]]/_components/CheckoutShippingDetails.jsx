@@ -3,44 +3,27 @@ import { useState } from "react";
 
 //ICONOS
 import { FaAddressCard } from "react-icons/fa";
-import { SlPaypal } from "react-icons/sl";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { TbTruckDelivery } from "react-icons/tb";
-import { MdKeyboardArrowRight } from "react-icons/md";
-import { MdOutlineLocalPhone } from "react-icons/md";
-import { FaHouse } from "react-icons/fa6";
-import { FaGifts } from "react-icons/fa6";
+
 
 // import UserPhonenumber from "../checkout/UserPhonenumber";
-import { useQuery } from "@tanstack/react-query";
-import { getDefaultAddress, getDefaultGift, getUserData } from "../data";
 
 import dinamic from "next/dynamic";
-import { Button } from "../../../../components/ui/button";
 import { cn } from "../../../../lib/utils/utils";
-import { Label } from "@headlessui/react";
 
-const UserAddressModal = dinamic(() => import("./UserAddressModal"), {
-  loading: () => <p>Loading...</p>,
-  ssr: false,
-});
-const UserPhonenumberModal = dinamic(() => import("./UserPhonenumberModal"), {
-  loading: () => <p>Loading...</p>,
-  ssr: false,
-});
-const ScheduleDeliveryModal = dinamic(() => import("./ScheduleDeliveryModal"), {
-  loading: () => <p>Loading...</p>,
-  ssr: false,
-});
+import UserAddressModal from './UserAddressModal'
+
+import UserPhonenumberModal from './UserPhonenumberModal'
+
+import ScheduleDeliveryModal from './ScheduleDeliveryModal'
+
 
 const UserGiftModal = dinamic(() => import("./UserGiftModal"), {
   loading: () => <p>Loading...</p>,
   ssr: false,
 });
-const CouponDiscountModal = dinamic(() => import("./CouponDiscountModal"), {
-  loading: () => <p>Loading...</p>,
-  ssr: false,
-});
+
 
 const CheckoutShippingDetails = () => {
 

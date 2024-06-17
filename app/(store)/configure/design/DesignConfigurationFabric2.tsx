@@ -92,6 +92,7 @@ const DesignConfigurator = () => {
   const [fontSizeCustom, setFontSize] = useState(50);
   const [fontPosition, setFontPosition] = useState(FONT_POSITIONS[0]);
   const customTextContainerRef = useRef(null);
+  const spanContainerRef = useRef(null)
   const [stickerOptions, setStickersOptions] = useState<StickerOptions>({
     currentTabIndex: 0,
     selectedStickerId: null,
@@ -250,15 +251,27 @@ const DesignConfigurator = () => {
   };
 
   useEffect(() => {
-    if (customText.length <= 2) return; //previene incremento drastico de tamaño de letra cuando es inferior a 2 caracteres
-    const newFontSize = calculateFontSize(
-      fontPosition.height,
-      fontPosition.width,
-      customText.length
-    );
-    setFontSize(newFontSize);
-    console.log("font position", fontPosition, fontSizeCustom);
-  }, [fontPosition, customText]);
+    // if (customText.length <= 2) return; //previene incremento drastico de tamaño de letra cuando es inferior a 2 caracteres
+    // const newFontSize = calculateFontSize(
+    //   fontPosition.height,
+    //   fontPosition.width,
+    //   customText.length
+    // );
+    const {width,height}= spanContainerRef?.current?.getBoundingClientRect() || {};
+    setFontPosition((prev)=>{
+      const newObject = {
+        ...prev,
+        width:width + 150,
+        height:height -100
+      }
+      console.log('newObject',newObject)
+      return newObject
+    })
+    setFontSize(height);
+    console.log('SPAN DIMENTIONS',width,height);
+    console.log('fontPosition',fontPosition);
+
+  }, [customText]);
 
   return (
     <>
@@ -370,7 +383,7 @@ const DesignConfigurator = () => {
                   };
                 });
               }}
-              className="absolute z-20 border-[1px] rounded-xl border-primary"
+              className=" z-20 border-[1px] rounded-xl border-primary"
               lockAspectRatio
               resizeHandleComponent={{
                 bottomRight: <HandleComponent />,
@@ -380,14 +393,15 @@ const DesignConfigurator = () => {
               }}
             >
               <div
-                className={` ${AlbaSlabOne.className} relative m-0 bg-red-200 `}
+                className={` ${AlbaSlabOne.className} relative m-0 p-0 bg-red-200 `}
                 style={{
                   width: `${(fontPosition.width)}px`,
                   height: `${fontPosition.height}px`,
+                  fontSize:`${fontPosition.height}px`
                 }}
                 ref={customTextContainerRef}
               >
-                <h2
+                {/* <h2
                   className="absolute grid place-content-center min-w-full min-h-full m-0 bg-blue-200 box-border text-nowrap  object-contain overflow-hidden  text-white font-black  tracking-widest"
                   style={{
                     fontSize: `${fontSizeCustom}px`,
@@ -400,7 +414,8 @@ const DesignConfigurator = () => {
                   }}
                 >
                   {customText}
-                </h2>
+                </h2> */}
+                 <span ref={spanContainerRef} className="bg-blue-200">{customText}</span>
               </div>
             </Rnd>
           )}

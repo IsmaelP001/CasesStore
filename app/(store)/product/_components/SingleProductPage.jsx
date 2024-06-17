@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getProductById } from "../../../../lib/data/products";
 import Image from "next/image";
 import { getCompatibleProducts } from "../../_lib/data";
@@ -31,12 +31,13 @@ const SingleProductPage = ({ id }) => {
     queryKey: ["singleProduct", id],
     queryFn: () => getProductById(id),
   });
+  const queryClient = useQueryClient()
 
   const { mutate } = useMutation({
     mutationKey: ["addItemToCart"],
     mutationFn: addCartItem,
     onSuccess: (data) => {
-      console.log("data", data);
+      queryClient.invalidateQueries({queryKey:['totalPrice']})
       toast({
         title: "Carrito",
         description: "Articulo añadido con exito",

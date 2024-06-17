@@ -6,7 +6,7 @@ import {
   getPrintPatterns,
   getMaterials,
   getCompatibleProducts,
-} from "../../_lib/data";
+} from "../../../../lib/data/products";
 import { Label } from "../../../../components/ui/label";
 import {
   RadioGroup,
