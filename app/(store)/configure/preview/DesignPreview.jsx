@@ -35,6 +35,9 @@ import { promise } from "zod";
 import { updateConfigurationImage } from "../../_lib/action";
 import { RadioGroup,RadioGroupItem } from "../../../../components/ui/radio-group";
 import { useToast } from "../../../../components/ui/use-toast";
+import { ToastAction } from "../../../../components/ui/toast";
+import { useDispatch } from "react-redux";
+import { setIsCartOpen } from "../../../../lib/features/cart/cartSlice";
 
 
 const getOptions = () => {
@@ -62,8 +65,8 @@ const DesignPreview = ({ configuration }) => {
       material: MATERIALS.options[0].value,
     }
   );
+  const dispath = useDispatch()
 
-  
   const { data: compatibleProducts } = useQuery({
     queryKey: ["compatibleproducts"],
     queryFn: async()=>await getCompatibleProducts(),
@@ -97,7 +100,7 @@ const DesignPreview = ({ configuration }) => {
         title: "Carrito",
         description: "Articulo añadido con exito",
         variant: "default",
-        action: <Button size="sm" variant="outline">Ver carrito</Button>
+        action: <ToastAction altText="Ver carrito" onClick={()=>dispath(setIsCartOpen({isCartOpen:true}))}>Ver carrito </ToastAction>
       });    },
     onError: (err) => {
       toast({

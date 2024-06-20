@@ -254,7 +254,11 @@ export const applyCouponToCart = async (FormData) => {
       const applicableProduct = coupon?.productIds.find((id) =>
         inCartProductIds.includes(id)
       );
-      console.log("productIdc", applicableProduct);
+
+      const inCartCoupon = inCartItems.map(product=>product?.discountId) ?? []
+      const isCouponAlreadyInCart = inCartCoupon?.includes(coupon?.id)
+      if(isCouponAlreadyInCart) return { _error: "Este coupon ya ha sido aplicado" };
+
       if (!applicableProduct)
         return { _error: "Este coupon no es valido a estos productos" };
       applicableProductId = applicableProduct;
@@ -273,7 +277,7 @@ export const applyCouponToCart = async (FormData) => {
     return true;
   } catch (err) {
     console.log("errror", err);
-    return false;
+    throw new Error('Error al aplicar coupon')
   }
 };
 
@@ -291,5 +295,7 @@ export const removeCouponFromCart = async(cartDetailsId)=>{
     await db.update(cartDetails).set({discountId:null}).where(eq(cartDetails.id,cartDetailsId))
   }catch(err){
     console.log('error removing coupon',err)
+    throw new Error('Error al aplicar coupon')
+
   }
 }

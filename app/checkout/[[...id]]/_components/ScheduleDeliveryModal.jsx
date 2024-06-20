@@ -12,6 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../../components/ui/dialog";
+import { useDispatch, useSelector } from "react-redux";
+import { setScheduledTime } from "../../../../lib/features/cart/cartSlice";
 
 const getDeliveryDays = () => {
   moment.locale("es"); // 'en'
@@ -40,20 +42,22 @@ const getDeliveryTime = () => {
 };
 
 const ScheduleDeliveryModal = () => {
-  const [deliveryDays, setDeliveryDate] = useState(null);
+  const [deliveryDay, setDeliveryDate] = useState(null);
   const [deliveryHour, setDeliveryHour] = useState(null);
   const [deliveryType, setDeliveryType] = useState({
     type: "STANDARD",
     time: null,
   });
+  const dispatch=useDispatch()
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!deliveryDays || !deliveryHour) return;
-    const time = `${deliveryDays}  /  ${deliveryHour}`;
+    if (!deliveryDay || !deliveryHour) return;
+    const time = `${deliveryDay}  /  ${deliveryHour}`;
     setDeliveryType({ type: "SCHEDULE", time });
     setOpen(false);
-  }, [deliveryDays, deliveryHour]);
+    dispatch(setScheduledTime({deliveryType,deliveryDay,deliveryHour}))
+  }, [deliveryDay,deliveryHour]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -104,7 +108,7 @@ const ScheduleDeliveryModal = () => {
                 key={day}
                 className={cn(
                   "rounded-[2rem] bg-transparent text-primary capitalize hover:text-white py-7 px-4",
-                  deliveryDays === day ? "bg-primary text-white" : null
+                  deliveryDay === day ? "bg-primary text-white" : null
                 )}
                 disabled={day === 'sábado'  ? true : false}
                 onClick={(e) => setDeliveryDate(day)}
@@ -118,7 +122,7 @@ const ScheduleDeliveryModal = () => {
             ))}
           </div>
 
-          {deliveryDays && (
+          {deliveryDay && (
             <div>
               <DialogTitle className="mb-5 mt-5">Hora entrega deseada</DialogTitle>
               <div className="grid  grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4">

@@ -11,6 +11,8 @@ import { Drawer } from "vaul";
 import { Sidebar } from "lucide-react";
 import { redirect } from "next/navigation";
 import { GrCart } from "react-icons/gr";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsCartOpen } from "../../lib/features/cart/cartSlice";
 
 const Cart = () => {
   const { data: cartItems, isPending } = useQuery({
@@ -18,6 +20,7 @@ const Cart = () => {
     queryFn: async () => await getCartItems(),
     refetchOnMount: "always",
   });
+
 
   
 
@@ -43,8 +46,17 @@ const Cart = () => {
 
 
 function CartDrawer() {
+  const isCartOpen= useSelector(state=>state.cartState.isCartOpen)
+  const [open,setOpen]=useState(false)
+  const dispath=useDispatch()
+
+  useEffect(()=>{
+    setOpen(isCartOpen)
+    dispath(setIsCartOpen({isCartOpen:false}))
+  },[isCartOpen])
+
   return (
-    <Drawer.Root direction="right" >
+    <Drawer.Root open={open} onOpenChange={setOpen} direction="right" >
       <Drawer.Trigger asChild>
         <div className=" relative text-xs">
            <GrCart className="text-xl"/>

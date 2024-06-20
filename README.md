@@ -11,17 +11,15 @@ Autenfificacion
 -añadir opcion de resetear contraseña
 
 Dashboard
--pagina case
- -pagina para modificar
- -pagina para mostrar lista de productos
 -añadir
 - Collecion
 - Color
 - Material
 - Diseño
 -Ajustar coupons
-* Implementar calendario no pueda agendarse para fecha antes que actual, usar librería
-* Ajustar implementación de coupones
 -pagina ver ordenes pendientes
 -ver total de ganancias por meses, trimestre, año y añadir gráficas
-
+-implementar redux
+ *almacenar, metodo de pago, totales, itebis y shipping
+-arreglar bug horas de schedule for later
+-implementar stock, remover cantidad de stock al realizar orden.

@@ -6,11 +6,14 @@ import { getCartItems, getTotalPrice } from "../../../../lib/data/cart";
 import { formatPrice } from "../../../../lib/utils/utils";
 import { Button } from "../../../../components/ui/button";
 import { removeCouponFromCart } from "../action";
-
+import { useDispatch } from "react-redux";
+import {setTotalPrice,setTotalDiscount, setProductIds} from '../../../../lib/features/cart/cartSlice'
 const SHIPPING = Number(100.00);
 const TAXES = Number(80.00);
 
 const CheckoutTotals = () => {
+
+  const dispath = useDispatch()
 
   const queryClient = useQueryClient()
   const { data: cartItems, isPending } = useQuery({
@@ -48,8 +51,11 @@ const CheckoutTotals = () => {
        return acc + discountAmount * porcentage
       }
     },0) || 0
-    return totalBeforeDiscount - totalDiscounts;
-  },[cartItems])
+    const totalPrice= totalBeforeDiscount - totalDiscounts;
+    dispath(setTotalPrice({totalPrice}))
+    dispath(setTotalDiscount({totalDiscounts}))
+    return totalPrice
+  },[cartItems,subTotal])
 
 
 

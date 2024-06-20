@@ -24,6 +24,10 @@ import {
 } from "../../../../components/ui/alert";
 import { Terminal } from "lucide-react";
 import { useToast } from "../../../../components/ui/use-toast";
+import { useDispatch } from "react-redux";
+import { setIsCartOpen } from "../../../../lib/features/cart/cartSlice";
+import { ToastAction } from "../../../../components/ui/toast";
+
 
 const SingleProductPage = ({ id }) => {
   const { toast } = useToast();
@@ -31,7 +35,9 @@ const SingleProductPage = ({ id }) => {
     queryKey: ["singleProduct", id],
     queryFn: () => getProductById(id),
   });
+  
   const queryClient = useQueryClient()
+  const dispath = useDispatch()
 
   const { mutate } = useMutation({
     mutationKey: ["addItemToCart"],
@@ -42,7 +48,8 @@ const SingleProductPage = ({ id }) => {
         title: "Carrito",
         description: "Articulo añadido con exito",
         variant: "default",
-        action: <Button size="sm" variant="outline">Ver carrito</Button>
+        action: <ToastAction altText="Ver carrito" onClick={()=>dispath(setIsCartOpen({isCartOpen:true}))}>Ver carrito </ToastAction>
+        
       });
     },
     onError: (err) => {

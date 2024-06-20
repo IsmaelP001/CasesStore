@@ -17,6 +17,8 @@ import UserAddressModal from './UserAddressModal'
 import UserPhonenumberModal from './UserPhonenumberModal'
 
 import ScheduleDeliveryModal from './ScheduleDeliveryModal'
+import { useDispatch, useSelector } from "react-redux";
+import { setPaymentMethod } from "../../../../lib/features/cart/cartSlice";
 
 
 const UserGiftModal = dinamic(() => import("./UserGiftModal"), {
@@ -27,7 +29,9 @@ const UserGiftModal = dinamic(() => import("./UserGiftModal"), {
 
 const CheckoutShippingDetails = () => {
 
-  const [paymentMethod,setPaymentMethod]=useState('card')
+  const paymentMethod=useSelector(state=>state.cartState.paymentMethod)
+
+  const dispath = useDispatch()
 
   return (
     <div className="space-y-10 ">
@@ -74,7 +78,7 @@ const CheckoutShippingDetails = () => {
                 name="paymentOption"
                 checked={option.value === paymentMethod}
                 className="hidden"
-                onChange={(e)=>setPaymentMethod(e.target.value)}
+                onChange={(e)=>dispath(setPaymentMethod({paymentMethod:e.target.value}))}
               />
               <label htmlFor={option.value} className="flex items-center gap-4">
                 <option.icon style={{color:option.value === paymentMethod ? option.tw : 'black'}} className="text-2xl  items-center" />
