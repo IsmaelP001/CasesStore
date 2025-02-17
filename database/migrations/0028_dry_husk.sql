@@ -1,1 +1,0 @@
-ALTER TABLE "discountCode" RENAME COLUMN "updatedAt" TO "expiresAt";

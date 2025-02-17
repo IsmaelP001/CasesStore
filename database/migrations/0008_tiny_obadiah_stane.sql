@@ -1,1 +1,0 @@
-ALTER TABLE "productImages" ALTER COLUMN "image" SET DATA TYPE text;
