@@ -1,1 +1,0 @@
-ALTER TABLE "discountCode" ADD COLUMN "expiresAt" timestamp NOT NULL;

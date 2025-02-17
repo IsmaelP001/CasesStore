@@ -1,1 +1,0 @@
-ALTER TABLE "productImages" DROP COLUMN IF EXISTS "type";
