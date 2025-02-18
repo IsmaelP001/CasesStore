@@ -30,7 +30,7 @@ const CustomCaseLayer = () => {
             />
           </div>
 
-          <img src="/arrow.png" className="  " />
+          <img src="/arrow.png" className=" w-[50px] md:w-[80px] " />
 
           <Phone
             className=" w-28 md:w-36"
@@ -39,10 +39,6 @@ const CustomCaseLayer = () => {
         </div>
 
         <ul className="mx-auto   sm:text-lg space-y-4 w-fit  md:mt-8">
-          <li className="w-fit text-sm font-semibold flex gap-1">
-            <FaCheck className="text-xl text-green-600 fill-green-600" />
-            Materal de Silicona de alta calidad
-          </li>
           <li className="w-fit text-sm font-semibold flex gap-1">
             <FaCheck className="text-xl text-green-600 fill-green-600" />
             Laminado resistente a rallones y huellas dactilares

@@ -23,13 +23,13 @@ export default function UploadImagesPicker() {
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
 
   const handleImageUpload = (file: File) => {
-    if (!file) return;
+    if (!file || !Object.values(caseDimensions)?.length) return;
     const {
       leftOffset,
       topOffset,
       width: widthContainer,
       height: heightContainer,
-    } = caseDimensions!;
+    } = caseDimensions;
     const imageUrl = URL.createObjectURL(file);
     const img = new Image();
     img.src = imageUrl;

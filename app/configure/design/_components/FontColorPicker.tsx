@@ -11,7 +11,7 @@ export default function FontColorPicker() {
   const {textState,setTextState}=useDesign()
   return (
     <div>
-        <div className="flex items-center justify-between pt-2 px-1">
+        <div className="flex items-center justify-center gap-2 pt-2 px-1">
           <RadioGroup 
             value={textState.color} 
             onChange={(color) => setTextState({ ...textState, color })}

@@ -17,7 +17,7 @@ import {
 import { useMediaQuery } from "react-responsive";
 import { Button } from "@/components/ui/button";
 
-export default function FontsConfigurator() {
+export default function FontTypePicker() {
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
   const { setTextState, textState } = useDesign();
 
@@ -36,7 +36,7 @@ export default function FontsConfigurator() {
           <DrawerHeader>
             <DrawerTitle>Tipo de fuente</DrawerTitle>
           </DrawerHeader>
-          <div className="overflow-y-scroll max-h-[150px] px-4">
+          <div className="overflow-y-scroll max-h-[200px] px-4">
             <div className="grid grid-cols-4 gap-3 mt-2">
               {CUSTOM_FONTS.map((font) => (
                 <button

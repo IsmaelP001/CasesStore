@@ -62,13 +62,13 @@ const TextContent = () => {
   return (
     <div
       ref={textContainerRef}
-      className="w-full h-full flex items-center justify-center"
+      className="w-full h-full flex items-center justify-center select-none"
     >
       <Textfit
         mode={textState.direction === "vertical" ? "multi" : "single"}
         forceSingleModeWidth={textState.direction !== "vertical"}
         max={textState.direction === "vertical" ? 1000 : 270}
-        className="px-5"
+        className="px-5 select-none"
         style={{
           width: "100%",
           writingMode:
