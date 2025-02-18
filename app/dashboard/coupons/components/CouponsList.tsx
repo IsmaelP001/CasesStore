@@ -1,19 +1,13 @@
-import { HiMiniGlobeAlt } from "react-icons/hi2";
+'use client'
 import { IoIosInfinite } from "react-icons/io";
 import { IoIosCloseCircle } from "react-icons/io";
 import { FaCheckCircle } from "react-icons/fa";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import ActiveToogleDropdown from "./ActiveToogleDropdown";
-import DeleteDropdownItem from "./DeleteDropdownItem";
 import { formatDateToLocal } from "../../../../lib/utils/utils";
 import { BsThreeDots } from "react-icons/bs";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../../../components/ui/dropdown-menu";
 import {
@@ -26,9 +20,33 @@ import {
   TableHeader,
   TableRow,
 } from "../../../../components/ui/table";
-import { Button } from "../../../../components/ui/button";
+import DialogDeleteCoupon from './DialogDeleteCoupon'
+import { CouponItem } from "@/server/coupon/domain/models";
+import useCouponData from "../useCouponData";
+import { useMemo } from "react";
+import Loading from "@/components/Loading";
+import { Ellipsis } from "lucide-react";
 
-const CouponsActiveList = ({ coupons, canDeactivate, isInactive }) => {
+interface CouponListProps{
+  couponsType: "active" | "expired",
+  canDeactivate?:boolean,
+  isInactive?:boolean
+}
+
+const CouponsActiveList = ({ couponsType, canDeactivate, isInactive }:CouponListProps) => {
+
+  const {activeCoupons,expiredCoupons,isPending}=useCouponData()
+
+  const couponList=useMemo(()=>{
+    return couponsType === 'active' ? activeCoupons : expiredCoupons
+  },[couponsType,activeCoupons,expiredCoupons])
+
+  if(isPending){
+    <div className="grid place-content-center min-h-20">
+      <Loading/>
+    </div>
+  }
+
   return (
     <div className="overflow-x-auto mb-10">
       <Table className="table">
@@ -42,11 +60,13 @@ const CouponsActiveList = ({ coupons, canDeactivate, isInactive }) => {
             <TableHead>Limite</TableHead>
             <TableHead>Productos</TableHead>
             <TableHead>Fecha de expiracion</TableHead>
+            <TableHead>options</TableHead>
+
           </TableRow>
         </TableHeader>
         <TableBody>
           {/* row 1 */}
-          {coupons?.map((coupon) => (
+          {couponList?.map((coupon) => (
             <TableRow key={coupon.id} className="text-center">
               <TableCell>
                 {coupon.isActive && !isInactive ? (
@@ -66,7 +86,7 @@ const CouponsActiveList = ({ coupons, canDeactivate, isInactive }) => {
                 )}
               </TableCell>
               <TableCell>
-                {coupon.allProducts ? (
+                {/* {coupon.allProducts ? (
                   <HiMiniGlobeAlt className="text-2xl text-blue-700 m-auto" />
                 ) : (
                   coupon?.productDiscount?.map((item) => {
@@ -76,26 +96,23 @@ const CouponsActiveList = ({ coupons, canDeactivate, isInactive }) => {
                       </spam>
                     );
                   })
-                )}
+                )} */}
               </TableCell>
-              <TableCell>{formatDateToLocal(coupon.expiresAt)}</TableCell>
+              <TableCell>{formatDateToLocal(coupon?.expiresAt!)}</TableCell>
               <TableCell>
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <BsThreeDots className="text-xl" />
+                  <DropdownMenuTrigger >
+                    <Ellipsis/>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent asChild>
                     <div className="flex flex-col gap-0.5">
                       {canDeactivate && (
                         <ActiveToogleDropdown
-                          id={coupon.id}
-                          isActive={coupon.isActive}
+                          id={coupon?.id!}
+                          isActive={coupon?.isActive!}
                         />
                       )}
-                      <DeleteDropdownItem
-                        id={coupon.id}
-                        disabled={coupon.order.length > 0}
-                      />
+                     <DialogDeleteCoupon canBeDeleted={coupon?.uses! > 0 ? false:true} id={coupon?.id!}/>
                     </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -109,26 +126,3 @@ const CouponsActiveList = ({ coupons, canDeactivate, isInactive }) => {
 };
 
 export default CouponsActiveList;
-
-// <TableCell>
-// <div className="dropdown dropdown-left">
-//   <div tabIndex={0} role="button" className="btn m-1">
-//     <BsThreeDotsVertical className="text-xl" />
-//   </div>
-//   <ul
-//     tabIndex={0}
-//     className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-//   >
-//     {canDeactivate && (
-//       <ActiveToogleDropdown
-//         id={coupon.id}
-//         isActive={coupon.isActive}
-//       />
-//     )}
-//     <DeleteDropdownItem
-//       id={coupon.id}
-//       disabled={coupon.order.length > 0}
-//     />
-//   </ul>
-// </div>
-// </TableCell>
