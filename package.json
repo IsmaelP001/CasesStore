@@ -52,7 +52,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "drizzle-orm": "^0.31.4",
     "fabricjs-react": "^1.2.2",
     "html-to-image": "^1.11.11",
