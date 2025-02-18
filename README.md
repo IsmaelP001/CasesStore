@@ -1,25 +1,11 @@
 
--Bug tiempo, agendar mas tarde 
--Crear navbar 
--Hacer projecto responsive
--Integrar pasarela de pagos
--crear mejor estrategia para recopilar informacion de entrega y metodo de pago al crear orden
--integrar correo para enviar email al hacer orden
+referencias
 
-Autenfificacion
--Ver contraseña que un usuario ingresa
--añadir opcion de resetear contraseña
+-patron repositorio node
+https://github.com/shihabmridha/nodejs-repository-pattern-and-ioc/blob/master/src/user/user.service.ts
 
-Dashboard
--añadir
-- Collecion
-- Color
-- Material
-- Diseño
--Ajustar coupons
--pagina ver ordenes pendientes
--ver total de ganancias por meses, trimestre, año y añadir gráficas
--implementar redux
- *almacenar, metodo de pago, totales, itebis y shipping
--arreglar bug horas de schedule for later
--implementar stock, remover cantidad de stock al realizar orden.
+-base repository drizzle example
+https://gist.github.com/cayter/49d5c256a885d90c399ca6c1eca19f51
+
+
+    // "react-rnd": "^10.4.10",
