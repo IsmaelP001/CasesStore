@@ -88,7 +88,7 @@ class CartRepositoryImpl
 
     const queries = [createItemQuery];
     if (removeProductFromCartIfExist) {
-      queries.push(removeProductFromCartIfExist);
+      queries.push(removeProductFromCartIfExist as any);
     }
 
     const [cartItemCreated] = await Promise.all(queries);
