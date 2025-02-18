@@ -97,7 +97,7 @@ export const ConfigurationPanel = () => {
   return (
     <div className="w-[350px] space-y-3 shadow-gray-300 shadow-[0_0_15px_5px_rgba(0,0,0,0.3)] px-2 pt-4 pb-2 rounded-2xl">
       <Tabs
-        className="max-h-[550px] min-h-[400px]  "
+        className="max-h-[550px] min-h-[400px]  overflow-y-scroll"
         defaultValue="text"
       >
         <TabsList className="flex w-full rounded-2xl">
