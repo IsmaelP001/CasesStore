@@ -131,6 +131,10 @@
   font-family: var(--font-bebas-neue);
 }
 
+html, body {
+  overscroll-behavior: none;
+}
+
 .swiper {
   width: 100%;
   padding-top: 50px;
@@ -147,4 +151,13 @@
 .swiper-slide img {
   display: block;
   width: 100%;
+}
+
+
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+  select:focus,
+  textarea:focus,
+  input:focus {
+    font-size: 16px;
+  }
 }

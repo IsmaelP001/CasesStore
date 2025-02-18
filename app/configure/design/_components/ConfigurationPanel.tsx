@@ -5,11 +5,10 @@ import FontColorPicker from "./FontColorPicker";
 import { useMediaQuery } from "react-responsive";
 import TextCustomConfigurator from "./TextCustomConfigurator";
 import TextOrientationConfiguration from "./TextOrientationConfiguration";
-import FontsConfigurator from "./FontsConfigurator";
 import StickersPicker from "./StickersPicker";
 import { Label } from "@/components/ui/label";
 import UploadImagesPicker from "./UploadImagesPicker";
-import { useDesign } from "../hooks/useDesign-context";
+import FontTypePicker from "./FontTypePicker";
 
 const ImagesTabs = () => {
   return (
@@ -59,7 +58,7 @@ const ConfigurationPanelMobile = () => {
               <div className="flex gap-1 w-full">
                 <TextCustomConfigurator />
                 <TextOrientationConfiguration />
-                <FontsConfigurator />
+                <FontTypePicker />
               </div>
               <FontColorPicker />
             </div>{" "}
@@ -130,7 +129,7 @@ export const ConfigurationPanel = () => {
                 <FontColorPicker />
               </div>
 
-              <FontsConfigurator />
+              <FontTypePicker />
             </div>{" "}
           </TabsContent>
 

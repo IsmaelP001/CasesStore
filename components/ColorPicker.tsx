@@ -1,5 +1,6 @@
 import { useRef, ChangeEvent } from 'react';
 import Image from 'next/image';
+import { cn } from '@/lib/utils/utils';
 
 interface ColorPickerProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -21,7 +22,6 @@ export default function ColorPicker({ onChange, value, className }: ColorPickerP
       <input
         ref={colorInputRef}
         type="color"
-        className={className}
         onChange={onChange}
         value={value}
         style={{
@@ -35,10 +35,10 @@ export default function ColorPicker({ onChange, value, className }: ColorPickerP
       <Image
         width={30}
         height={30}
-        className="w-[30px] h-[30px] object-contain cursor-pointer"
+        className={cn("w-[35px] h-[35px] object-contain cursor-pointer",className)}
         src={'/icons/color-palet.png'}
         alt="icon colors palet"
-        onClick={handleClick} // Asigna el evento onClick
+        onClick={handleClick} 
       />
     </div>
   );
