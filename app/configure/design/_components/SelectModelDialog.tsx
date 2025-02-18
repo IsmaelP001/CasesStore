@@ -28,7 +28,7 @@ export function SelectModelDialog() {
   const { data: devices ,isPending:isPendingDevices} = trpc.catalog.getDevices.useQuery(undefined, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-  });
+  })
   const { data: materials,isPending:isPendingMaterials } = trpc.catalog.getProductsByType.useQuery(
     {
       productType: "CUSTOM_CASE_MATERIAL",
@@ -47,11 +47,7 @@ export function SelectModelDialog() {
     setDesignOptions((prev) => ({ ...prev, material }));
   };
 
-  useEffect(() => {
-    if (designOptions.device.name && renderElementType !== "MATERIALS") {
-      setRenderElementType("MATERIALS");
-    }
-  }, [openSelectDeviceSidebar, designOptions.device]);
+  
 
   useEffect(()=>{
     if(devices?.length){
@@ -61,22 +57,28 @@ export function SelectModelDialog() {
       const material={id:materials[0].id!,name:materials[0].name!}
       setDesignOptions((prev)=>({...prev,material}))
     }
-  },[devices,materials])
+  },[devices,materials,setDesignOptions])
+
+  useEffect(()=>{
+    if(openSelectDeviceSidebar && renderElementType!=='DEVICES'){
+      setRenderElementType('DEVICES')
+    }
+  },[openSelectDeviceSidebar])
 
   return (
     <>
       <Sheet open={openSelectDeviceSidebar} onOpenChange={setOpenSelectDeviceSidebar}>
         <SheetTrigger asChild>
-          <div className="relative z-50 py-2 px-6 flex items-center cursor-pointer gap-1 bg-accent  text-base  text-black rounded-3xl  font-semibold space-x-2 ">
-            <div className="flex gap-1 items-center  text-nowrap">
-              {isPendingDevices && <Skeleton className="w-[80px] h-3"/>}
-              <span className="text-nowrap">{designOptions.device.name}</span>{" "}
+          <div className="relative z-50 py-2 px-6 flex items-center hover:bg-accent/50 transition-colors ease-in-out cursor-pointer gap-1 bg-accent  text-sm  text-black rounded-2xl  font-semibold space-x-2 ">
+            <div className="flex gap-1  items-center max-w-[100px]   text-nowrap">
+              {isPendingDevices && <Skeleton className="w-[70px] h-3"/>}
+              <span className="truncate first-letter:uppercase">{designOptions.device.name}</span>{" "}
               <ChevronDown size={15} />
             </div>
             <span>|</span>
-            <div className="flex gap-1 items-center text-nowrap">
-            {isPendingMaterials && <Skeleton className="w-[80px] h-3"/>}
-              <span className="text-nowrap">{designOptions.material.name}</span>{" "}
+            <div className="flex gap-1 items-center text-nowrap max-w-[100px] ">
+            {isPendingMaterials && <Skeleton className="w-[70px] h-3"/>}
+              <span className="truncate first-letter:uppercase">{designOptions.material.name}</span>{" "}
               <ChevronDown size={15} />
             </div>
           </div>
@@ -85,9 +87,9 @@ export function SelectModelDialog() {
           <SheetHeader></SheetHeader>
           <div className="relative overflow-hidden min-h-[75vh] mt-2">
             {renderElementType === "DEVICES" ? (
-              <div className="space-y-3">
+              <div className="space-y-6">
                 <header>
-                  <h3 className="text-base font-semibold mb-0.5">
+                  <h3 className="text-xl font-semibold mb-0.5">
                     Dispositivo
                   </h3>
                   <p className="font-light">
@@ -98,7 +100,7 @@ export function SelectModelDialog() {
                   {devices?.map((device) => (
                     <article
                       className={cn(
-                        "border border-gray-400  rounded-xl p-2",
+                        "border-2 border-gray-400 font-medium first-letter:uppercase  rounded-xl px-3 py-2",
                         device.name === designOptions.device.name &&
                           "border-accent"
                       )}
@@ -111,24 +113,24 @@ export function SelectModelDialog() {
                 </div>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-6">
                 <header className="flex items-center gap-2">
                   <button
                     onClick={() => setRenderElementType("DEVICES")}
                     className="rounded-full grid place-content-center w-[35px] h-[35px] border border-black"
                   >
-                    <ChevronLeft />
+                    <ChevronLeft size={15}/>
                   </button>
                   <div>
-                    <h3 className="text-base font-semibold ">Material</h3>
-                    <p className="font-light">Selecciona el tipo de material</p>
+                    <h3 className="text-xl font-semibold ">Material</h3>
+                    <p className="font-light text-sm">Selecciona el tipo de material</p>
                   </div>
                 </header>
                 <div className=" space-y-1 max-h-[75vh]">
                   {materials?.map((material) => (
                     <article
                       className={cn(
-                        "border border-gray-400 rounded-xl p-2",
+                        "border-2 border-gray-400 rounded-xl px-3 font-medium py-6",
                         material?.name === designOptions.material.name &&
                           "border-accent"
                       )}

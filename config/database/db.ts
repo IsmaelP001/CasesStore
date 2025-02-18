@@ -1,11 +1,14 @@
-
-
-
-import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { sql } from '@vercel/postgres';
 import * as schema from './schemes';
-import { config } from "dotenv";
 
-config({ path: ".env" }); // or .env.local
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 
-export const db = drizzle(sql, { schema });
+import { drizzle as drizzleVercel } from 'drizzle-orm/vercel-postgres';
+import { sql } from '@vercel/postgres';
+
+const db =
+  process.env.NODE_ENV === 'production'
+    ? drizzleVercel(sql, { schema })
+    : drizzle(postgres(process.env.DB_URL!), { schema });
+
+export {db}
