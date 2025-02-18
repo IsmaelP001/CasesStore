@@ -16,7 +16,7 @@ const ProductSkeleton = () => {
 
 const ProductListSkeleton = () => {
   return (
-    <div className="grid gap-5 grid-cols-[repeat(auto-fill,minmax(150px,1fr))]">
+    <div className="grid gap-5 place-items-center  grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
       {[...Array(8)].map((_, index) => (
         <ProductSkeleton key={index} />
       ))}
