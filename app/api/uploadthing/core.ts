@@ -1,11 +1,7 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
-import { z } from "zod";
 import sharp from "sharp";
-import { db } from "../../../database/db";
-import { configurationimage } from "../../../database/schemes";
-import { v4 as uuidv4 } from "uuid";
-import { eq } from "drizzle-orm";
+import { db } from "../../../config/database/db";
+import { configurationimage } from "../../../config/database/schemes";
 
 const f = createUploadthing();
 
