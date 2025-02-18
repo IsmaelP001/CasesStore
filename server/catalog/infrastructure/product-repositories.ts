@@ -194,7 +194,7 @@ class DefaultProductRepositoryImpl
       productId: product.id,
     }));
 
-    const newProduct = await db.transaction(async (tx) => {
+    const newProduct = await db.transaction(async (tx:any) => {
       const [newProduct] = await Promise.all([
         this.create({ ...product, coverImage: images[0] }, { tx }),
         tx.insert(productDevices).values(selectedProducts as any),
