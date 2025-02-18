@@ -19,7 +19,7 @@ export const PhoneCasePreview = () => {
   return (
     <div
       ref={containerRef}
-      className="relative h-[34.5rem]  md:h-[37.5rem] overflow-hidden lg:col-span-2 w-full  flex flex-col gap-2 md:gap-5 items-center bg-transparent justify-center rounded-lg px-12 pb-2 md:py-5  text-center"
+      className="relative  h-[34.5rem]  md:h-[37.5rem] overflow-hidden lg:col-span-2 w-full  flex flex-col gap-2 md:gap-5 items-center bg-transparent md:justify-center rounded-lg px-12 pb-2 md:py-5  text-center"
     >
       <SelectModelDialog />
 
