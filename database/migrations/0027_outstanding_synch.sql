@@ -1,1 +1,0 @@
-ALTER TABLE "productDevices" ADD CONSTRAINT "productDevices_deviceId_productId_unique" UNIQUE("deviceId","productId");

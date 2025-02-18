@@ -1,1 +1,0 @@
-ALTER TABLE "cartDetails" DROP CONSTRAINT "cartDetails_cartId_productId_colorId_configurationId_deviceId_unique";
