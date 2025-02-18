@@ -6,7 +6,7 @@ import Loading from "../Loading";
 import { useDebouncedCallback } from "use-debounce";
 import { useEffect, useState } from "react";
 import { CartItem, CartItemQueryElement, CustomCaseCartDetails } from "@/server/cart/domain/models";
-import { trpc } from "@/utils/trpc/client";
+import { trpc } from "@/lib/trpc/client";
 import { Product } from "@/server/catalog/domain/product.model";
 
 interface CartItemProps {

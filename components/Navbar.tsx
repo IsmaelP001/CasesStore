@@ -1,246 +1,406 @@
-'use client'
-import { useState, useEffect, useRef } from 'react';
-import { navLinks } from "../lib/utils/links"
-import Link from "next/link"
-import CartDrawer from './cart/Cart';
-import { MdOutlineFavorite } from "react-icons/md";
+"use client";
+import React, { useState } from "react";
+import * as NavigationMenu from "@radix-ui/react-navigation-menu";
+import { CaretDownIcon } from "@radix-ui/react-icons";
+import "../app/styles.css";
+import { cn } from "../lib/utils/utils";
+import Link from "next/link";
+import { Button, buttonVariants } from "./ui/button";
+import {
+  FaArrowRightLong,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa6";
+import Image from "next/image";
+import { trpc } from "../lib/trpc/client";
+import CartDrawer from "./cart/Cart";
+import Loading from "./Loading";
+import { signOut, useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Heart, LogOut, User } from "lucide-react";
 
-const Navbar = () => {
-  const [scrolling, setScrolling] = useState(false);
-  const navRef=useRef(null)
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { FaBars } from "react-icons/fa";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-  useEffect(() => {
-    const navHeight=navRef.current.getBoundingClientRect().height;
-    const handleScroll = () => {
-      if (window.scrollY > navHeight) {
-        setScrolling(true);
-      } else {
-        setScrolling(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+const FavoriteTrigger = () => {
+  const { status } = useSession();
+  const { data: favorites, isFetching: isFetchingFavorites } =
+    trpc.userFeatures.favorite.getUserFavorites.useQuery(undefined, {
+      enabled: status === "authenticated",
+    });
 
   return (
-    <nav ref={navRef} className={`py-2  sticky inset-0 flex justify-between px-10 importante  min-w-[80%] transition-all duration-300 ${scrolling ? 'bg-neutral text-neutral-100' : 'bg-base-200'}`}>
-        <div>
-          <Link href='/' className='text-xs'>Store</Link>
+    <Link href={"/favorites"}>
+      <div className="relative text-xs">
+        <Heart />
+        <span
+          className={cn(
+            "absolute -top-2 -right-2 w-4 h-4 rounded-full bg-secondary grid place-content-center text-xs font-semibold text-primary-foreground",
+            !favorites?.length && !isFetchingFavorites ? "bg-transparent" : null
+          )}
+        >
+          {isFetchingFavorites && <Loading size={10} />}
+          {favorites?.length && !isFetchingFavorites ? favorites.length : null}
+        </span>
+      </div>
+    </Link>
+  );
+};
+
+const MobileNavbar: React.FC = () => {
+  const [isDevicesOpen, setDevicesOpen] = useState(false);
+  const [isCollectionsOpen, setCollectionsOpen] = useState(false);
+  const { data: collections } = trpc.catalog.getCollections.useQuery();
+  const { data: devices } = trpc.catalog.getDevices.useQuery();
+
+  const toggleSubmenu = (submenu: "devices" | "collections") => {
+    if (submenu === "devices") {
+      setDevicesOpen(!isDevicesOpen);
+    } else {
+      setCollectionsOpen(!isCollectionsOpen);
+    }
+  };
+
+  return (
+    <div className="relative flex z-50 bg-white  items-center justify-between px-4 py-2 border-b md:hidden">
+      {/* Botón hamburguesa */}
+      <Sheet >
+        <SheetTrigger asChild>
+          <Button variant="ghost" className="p-2 z-50">
+            <FaBars className="text-xl" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-64">
+          <SheetHeader>
+            <SheetTitle>Menú</SheetTitle>
+            <SheetDescription>Navega por las secciones</SheetDescription>
+          </SheetHeader>
+          <nav className="mt-4 space-y-3">
+            <SheetClose asChild>
+              <Link href="/" className="block text-lg font-medium">
+                Home
+              </Link>
+            </SheetClose>
+
+            {/* Dispositivos */}
+            <div>
+              <button
+                className="flex items-center justify-between w-full text-lg font-medium"
+                onClick={() => toggleSubmenu("devices")}
+              >
+                Dispositivos
+                {isDevicesOpen ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
+              {isDevicesOpen && (
+                <ul className="mt-2 space-y-2 pl-4">
+                  {devices?.map((device) => (
+                    <li key={device.id}>
+                      <SheetClose asChild>
+                        <Link
+                          href={`/cases?device=${device.name}`}
+                          className="block"
+                        >
+                          {device.name}
+                        </Link>
+                      </SheetClose>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* Colecciones */}
+            <div>
+              <button
+                className="flex items-center justify-between w-full text-lg font-medium"
+                onClick={() => toggleSubmenu("collections")}
+              >
+                Colecciones
+                {isCollectionsOpen ? <FaChevronUp /> : <FaChevronDown />}
+              </button>
+              {isCollectionsOpen && (
+                <ul className="mt-2 space-y-2 pl-4">
+                  {collections?.map((collection) => (
+                    <li key={collection.id}>
+                      <SheetClose asChild>
+                        <Link
+                          href={`/cases?collection=${collection?.name}`}
+                          className="block"
+                        >
+                          {collection.name}
+                        </Link>
+                      </SheetClose>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <SheetClose asChild>
+              <Link href="/cases" className="block text-lg font-medium">
+                Fundas
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link href="/favorites" className="block text-lg font-medium">
+                Favoritos
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link href="/profile" className="block text-lg font-medium">
+                Perfil
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link
+                href="/configure/design"
+                className="block text-lg font-medium"
+              >
+                Crear Funda
+              </Link>
+            </SheetClose>
+          </nav>
+        </SheetContent>
+      </Sheet>
+
+      <div className="flex items-center space-x-4">
+        <FavoriteTrigger />
+        <CartDrawer />
+      </div>
+    </div>
+  );
+};
+
+export default function Navbar() {
+  const isMobile = useIsMobile();
+  const { data: collections } = trpc.catalog.getCollections.useQuery();
+  const { data: devices } = trpc.catalog.getDevices.useQuery();
+
+  if (isMobile) {
+    return <MobileNavbar />;
+  }
+
+  return (
+    <NavigationMenu.Root className="NavigationMenuRoot">
+      <div className="NavigationMenuContainer border-b bg-white border-gray-300">
+        <div className="NavigationMenuStart list-none">
+          <NavigationMenu.Item>
+            <Link className="NavigationMenuLink" href="/">
+              Home
+            </Link>
+          </NavigationMenu.Item>
         </div>
-         <ul className="flex gap-8 justify-between">
-            {navLinks.map(link =>
-               <li key={link.type}>
-                <Link href={link.link}>
-                  <span className="capitalize text-xs font-light">{link.type}</span>
+        <div className="NavigationMenuCenter">
+          <NavigationMenu.List className="NavigationMenuList">
+            <NavigationMenu.Item>
+              <NavigationMenu.Trigger className="NavigationMenuTrigger">
+                Dispositivos <CaretDownIcon className="CaretDown" aria-hidden />
+              </NavigationMenu.Trigger>
+              <NavigationMenu.Content className="NavigationMenuContent">
+                <div>
+                  <ul className="w-[600px] grid gap-4 grid-cols-[repeat(auto-fit,minmax(150px,1fr))] p-4">
+                    {devices?.map((device) => (
+                      <ListItem key={device?.id} href="" title={"Iphone"}>
+                        <Button
+                          variant="link"
+                          className="h-6 block px-0"
+                          asChild
+                          key={device?.id}
+                        >
+                          <Link href={`/cases?device=${device?.name}`}>
+                            {device?.name}
+                          </Link>
+                        </Button>
+                      </ListItem>
+                    ))}
+                  </ul>
+                  <div className="fles justify-center items-center  text-center py-1">
+                    <Link
+                      href={"/cases"}
+                      className={cn(buttonVariants({ variant: "link" }))}
+                    >
+                      Ver todos
+                    </Link>
+                  </div>
+                </div>
+              </NavigationMenu.Content>
+            </NavigationMenu.Item>
+
+            <NavigationMenu.Item>
+              <NavigationMenu.Trigger className="NavigationMenuTrigger">
+                Colecciones <CaretDownIcon className="CaretDown" aria-hidden />
+              </NavigationMenu.Trigger>
+              <NavigationMenu.Content className="NavigationMenuContent p-5">
+                <h3 className="text-xl font-bold">Colecciones</h3>
+                <ul className="List two grid gap-4 grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
+                  {collections?.map((collection) => (
+                    <ListItem
+                      href={`/cases?collection=${collection?.name}`}
+                      key={collection?.id}
+                    >
+                      <article className="flex gap-3 items-center">
+                        <div>
+                          <Image
+                            width={50}
+                            height={50}
+                            src={collection?.image ?? ""}
+                            alt={collection?.name ?? "Collection Image"}
+                            className="w-[30px] h-[30px]"
+                          />
+                        </div>
+                        <div>
+                          <p>{collection?.name}</p>
+                        </div>
+                      </article>
+                    </ListItem>
+                  ))}
+                </ul>
+              </NavigationMenu.Content>
+            </NavigationMenu.Item>
+
+            <NavigationMenu.Item>
+              <Button
+                variant="link"
+                size="sm"
+                className="bg-primary text-primary-foreground"
+              >
+                <Link href="/configure/design">
+                  Crea tu propia <span>Funda</span>
+                  <FaArrowRightLong className="text-xl inline ml-1 hover:ml-2 transition-all animate-pulse transition-300" />
                 </Link>
-               </li>
-            )}
-         </ul>
+              </Button>
+            </NavigationMenu.Item>
 
-         <div className='flex items-center gap-5'>
-           <MdOutlineFavorite className='text-2xl text-rose-600'/>
-           <CartDrawer/>
-         </div>
+            <NavigationMenu.Indicator className="NavigationMenuIndicator">
+              <div className="Arrow" />
+            </NavigationMenu.Indicator>
+          </NavigationMenu.List>
+        </div>
+        <div className="NavigationMenuEnd list-none flex gap-3 items-center mr-10">
+          <NavigationMenu.Item>
+            <FavoriteTrigger />
+          </NavigationMenu.Item>
+          <NavigationMenu.Item>
+            <CartDrawer />
+          </NavigationMenu.Item>
+          <NavigationMenu.Item className="ml-0.5">
+            <UseAuthOptions />
+          </NavigationMenu.Item>
+        </div>
+      </div>
 
-    </nav>
-  )
+      <div className="ViewportPosition">
+        <NavigationMenu.Viewport className="NavigationMenuViewport" />
+      </div>
+    </NavigationMenu.Root>
+  );
 }
 
-export default Navbar;
+const ListItem = React.forwardRef<
+  HTMLLIElement,
+  {
+    className?: string;
+    children: React.ReactNode;
+    title?: string;
+    href: string;
+  }
+>(({ className, href, children, title, ...props }) => (
+  <li {...props}>
+    <Link href={href || ""}>
+      <p className="text-base font-bold leading-none mb-1">{title}</p>
+      {children}
+    </Link>
+  </li>
+));
+ListItem.displayName = "ListItem";
 
-// "use client";
+function UseAuthOptions() {
+  const { data, status }: any = useSession();
 
-// const PRODUCTS_MODELS = [
-//   {
-//     name: "iPhone",
-//     options: [
-//       "iPhone X",
-//       "iPhone 11",
-//       "iPhone 11 Pro",
-//       "iPhone 12 Max",
-//       "iPhone 12",
-//       "iPhone 12 Pro",
-//       "iPhone 13 Max",
-//       "iPhone 13",
-//       "iPhone 13 Pro",
-//       "iPhone 13 Max",
-//       "iPhone 14",
-//       "iPhone 14 Pro",
-//       "iPhone 14 Max",
-//     ],
-//   },
-//   {
-//     name: "iPad",
-//     options: [
-//       "iPad 10,9 Pulgadas",
-//       "iPad Air",
-//       "iPad Pro 11 Pulgadas",
-//       "iPad Pro 12.9 Pulgadas",
-//     ],
-//   },
-//   {
-//     name: "AirPods",
-//     options: [
-//       "AirPods 2nd Generacion",
-//       "AirPods 3er Generacion",
-//       "AirPods Pro",
-//       "AirPods Pro 2",
-//     ],
-//   },
-//   {
-//     name: "Macbook",
-//     options: ["MackBook Air", "MackBook Pro"],
-//   },
-//   {
-//     name: "Apple Watch",
-//     options: [
-//       "Watch SE 35 mm",
-//       "Watch SE 44 mm",
-//       "Watch pro 35 mm",
-//       "Watch pro 44 mm",
-//     ],
-//   },
-// ];
-
-// import * as React from "react";
-// import Link from "next/link";
-
-// import { cn } from "../lib/utils/utils";
-// import {
-//   NavigationMenu,
-//   NavigationMenuContent,
-//   NavigationMenuItem,
-//   NavigationMenuLink,
-//   NavigationMenuList,
-//   NavigationMenuTrigger,
-//   navigationMenuTriggerStyle,
-// } from "../components/ui/navigation-menu";
-
-// const components: { title: string; href: string; description: string }[] = [
-//   {
-//     title: "Alert Dialog",
-//     href: "/docs/primitives/alert-dialog",
-//     description:
-//       "A modal dialog that interrupts the user with important content and expects a response.",
-//   },
-//   {
-//     title: "Hover Card",
-//     href: "/docs/primitives/hover-card",
-//     description:
-//       "For sighted users to preview content available behind a link.",
-//   },
-//   {
-//     title: "Progress",
-//     href: "/docs/primitives/progress",
-//     description:
-//       "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-//   },
-//   {
-//     title: "Scroll-area",
-//     href: "/docs/primitives/scroll-area",
-//     description: "Visually or semantically separates content.",
-//   },
-//   {
-//     title: "Tabs",
-//     href: "/docs/primitives/tabs",
-//     description:
-//       "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-//   },
-//   {
-//     title: "Tooltip",
-//     href: "/docs/primitives/tooltip",
-//     description:
-//       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-//   },
-// ];
-
-// function NavigationMenuNavbar() {
-//   return (
-//        <NavigationMenu className="w-100vw">
-//       <NavigationMenuList className="">
-//         <NavigationMenuItem >
-//           <NavigationMenuTrigger>Productos</NavigationMenuTrigger>
-//           <NavigationMenuContent className='absolute left-0 top-0 right-0 bottom-0 min-w-[800px] min-h-[800px]'>
-//             <ul className="flex gap-5 p-6 md:w-[400px] lg:w-full z-[999]">
-//               <li className="w-[150px] bg-red-200">
-//                 <NavigationMenuLink asChild>
-//                   <a
-//                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-//                     href="/"
-//                   >
-//                     <span>icon</span>
-//                     <div className="mb-2 mt-4 text-lg font-medium">
-//                       shadcn/ui
-//                     </div>
-//                     <p className="text-sm leading-tight text-muted-foreground">
-//                       Beautifully designed components that you can copy and
-//                       paste into your apps. Accessible. Customizable. Open
-//                       Source.
-//                     </p>
-//                   </a>
-//                 </NavigationMenuLink>
-//               </li>
-//               <ul className="w-[600px] grid gap-2 grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
-//                 {PRODUCTS_MODELS.map(({ name, options }) => {
-//                   return (
-//                     <ListItem title={name}>
-//                       {options.map((device) => (
-//                         <article key={device}>{device}</article>
-//                       ))}
-//                     </ListItem>
-//                   );
-//                 })}
-//               </ul>
-//             </ul>
-//           </NavigationMenuContent>
-//         </NavigationMenuItem>
-//         <NavigationMenuItem>
-//           <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-//           <NavigationMenuContent>
-//             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-//               {components.map((component) => (
-//                 <ListItem
-//                   key={component.title}
-//                   title={component.title}
-//                   href={component.href}
-//                 >
-//                   {component.description}
-//                 </ListItem>
-//               ))}
-//             </ul>
-//           </NavigationMenuContent>
-//         </NavigationMenuItem>
-//         <NavigationMenuItem>
-//           <Link href="/docs" legacyBehavior passHref>
-//             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-//               Documentation
-//             </NavigationMenuLink>
-//           </Link>
-//         </NavigationMenuItem>
-//       </NavigationMenuList>
-//     </NavigationMenu>
-//   );
-// }
-
-// const ListItem = React.forwardRef<
-//   React.ElementRef<"a">,
-//   React.ComponentPropsWithoutRef<"a">
-// >(({ className, title, children, ...props }, ref) => {
-//   return (
-//     <li className={title === "iPhone" ? " row-span-3 bg-red-200" : "bg-red-20"}>
-//       <div className="text-sm font-medium leading-none">{title}</div>
-//       <NavigationMenuLink asChild>
-//         <Link className=" text-sm" href="/cases">
-//           {children}
-//         </Link>
-//       </NavigationMenuLink>
-//     </li>
-//   );
-// });
-// ListItem.displayName = "ListItem";
-
-// export default NavigationMenuNavbar;
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <User size={28} className="mt-1" />
+      </DropdownMenuTrigger>
+      {status === "authenticated" ? (
+        <DropdownMenuContent className="w-56 bg-card mt-2 mr-2 z-50">
+          <DropdownMenuLabel>
+            <div className="flex gap-2 items-center">
+              <Avatar className="w-[25px] h-[25px]">
+                <AvatarImage src={data?.user?.image ?? ""} />
+                <AvatarFallback>
+                  {data?.user?.name && data?.user?.lastName ? (
+                    <p>
+                      <span>{data.user.name.slice(0, 1)}</span>
+                      <span>{data.user.lastName.slice(0, 1)}</span>
+                    </p>
+                  ) : (
+                    <span>{data?.user?.name?.slice(0, 1)}</span>
+                  )}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-semibold">{data?.user?.name}</p>
+                <p className="text-sm text-muted-foreground">
+                  {data?.user?.email}
+                </p>
+              </div>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Link className="flex gap-2 items-center" href="/profile">
+                <User className="mr-2 h-4 w-4" />
+                <span>Perfil</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link className="flex gap-2 items-center" href="/favorites">
+                <Heart className="mr-2 h-4 w-4" />
+                <span>Favoritos</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Cerrar sesión
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      ) : (
+        <DropdownMenuContent className="w-56 bg-card mt-2 mr-2">
+          <DropdownMenuLabel>
+            <p className="text-center">Usuario</p>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <Link className="flex justify-between" href="/auth/signin">
+                <User className="mr-2 h-4 w-4" />
+                Iniciar sesión
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      )}
+    </DropdownMenu>
+  );
+}

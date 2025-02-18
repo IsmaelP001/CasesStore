@@ -8,9 +8,9 @@ import { cn } from "../../lib/utils/utils";
 import CartItemsContainer from "./CartItemsContainer";
 import { ShoppingCart } from "lucide-react";
 import Loading from "../Loading";
-import { setIsCartOpen } from "@/redux/features/order/orderSlice";
+import { setIsCartOpen } from "@/config/redux/features/order/orderSlice";
 import useCartData from "@/hooks/useCartData";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/config/redux/hooks";
 
 const Cart = () => {
   const {cartItems}=useCartData()

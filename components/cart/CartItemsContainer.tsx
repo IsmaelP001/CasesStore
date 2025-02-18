@@ -1,8 +1,7 @@
 "use client";
-import React, { useMemo } from "react";
+import React from "react";
 import CartItem from "./CartItem";
 import useCartData from "@/hooks/useCartData";
-import CustomCaseCartItem from "./CustomCaseCartItem";
 import CartEmpty from "./CartEmpty";
 
 const CartItemsContainer = () => {
@@ -10,23 +9,18 @@ const CartItemsContainer = () => {
 
   return (
     <>
-      {cartItems?.length? (
-        <>
-          {cartItems?.length && (
+      {cartItems?.length! > 0 && (
+        <div>
+          <div className="space-y-10 bg-base-200 min-h-full overflow-hidden">
             <div>
-              <div className="space-y-10 bg-base-200 min-h-full overflow-hidden">
-                <div>
-                  {cartItems?.map((item, index) => (
-                    <CartItem key={index} item={item as any} />
-                  ))}
-                </div>
-              </div>
+              {cartItems?.map((item, index) => (
+                <CartItem key={index} item={item as any} />
+              ))}
             </div>
-          )}
-        </>
-      ) : (
-        <CartEmpty />
+          </div>
+        </div>
       )}
+      {!cartItems?.length && !isPending && <CartEmpty />}
     </>
   );
 };

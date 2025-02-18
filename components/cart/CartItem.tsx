@@ -2,16 +2,16 @@
 import { FaTrash } from "react-icons/fa6";
 import { Input } from "../ui/input";
 import Phone from "../../app/(store)/_components/Phone";
-import { formatPrice } from "../../lib/utils/utils";
+import { cn, formatPrice } from "../../lib/utils/utils";
 import Loading from "../Loading";
 import { useDebouncedCallback } from "use-debounce";
 import { useEffect, useState } from "react";
-import useCartItemsActions from "@/app/hooks/useCartItemsActions";
+import useCartItemsActions from "@/hooks/useCartItemsActions";
 import Image from "next/image";
 import { CartItemQueryElement } from "@/server/cart/domain/models";
 
-interface CartItemProps{
-  item:CartItemQueryElement
+interface CartItemProps {
+  item: CartItemQueryElement;
 }
 
 const CartItem = ({ item }: CartItemProps) => {
@@ -25,10 +25,10 @@ const CartItem = ({ item }: CartItemProps) => {
     productId,
     coverImage,
     colorId,
-    inStock
+    inStock,
   } = item;
 
-  console.log('cart item',item)
+  console.log("cart item", item);
 
   const [newQuantity, setNewQuantity] = useState<number>(quantity);
   const handleChangeState = (value: number) => {
@@ -38,7 +38,6 @@ const CartItem = ({ item }: CartItemProps) => {
     () => handleChangeState(quantity),
     true
   );
-
 
   const debouncedHandleQuantityChange = useDebouncedCallback(() => {
     if (newQuantity > inStock) return;
@@ -51,12 +50,10 @@ const CartItem = ({ item }: CartItemProps) => {
       configurationId,
     });
   }, 400);
-  
 
   useEffect(() => {
     handleChangeState(quantity);
   }, [quantity]);
-
 
   return (
     <article className="hover:bg-base-300 px-4 py-1">
@@ -98,7 +95,10 @@ const CartItem = ({ item }: CartItemProps) => {
         <div className="">
           <form
             onSubmit={(e) => e.preventDefault()}
-            className="flex gap-3 items-center bg-slate-200 rounded-2xl"
+            className={cn(
+              "flex gap-3 items-center bg-slate-200 rounded-2xl",
+              inStock <= newQuantity && "border-2 border-red-300"
+            )}
           >
             <Input
               type="hidden"
