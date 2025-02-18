@@ -1,7 +1,6 @@
 import {string, z} from 'zod'
 
-export const newAddressScheme = z.object({
-    addressId:z.coerce.number(),
+export const addressScheme = z.object({
     street: z.string()
       .min(2, { message: 'La calle debe tener al menos 2 letras' }),
   
@@ -19,3 +18,12 @@ export const newAddressScheme = z.object({
     references: z.string().optional()
   });
   
+  export type AddressSchema=z.infer<typeof addressScheme>
+
+  export type UpdateAddress=z.infer<typeof addressScheme> & {
+    addressId:string,
+    userId:string
+  }
+  export type  InsertAddress=z.infer<typeof addressScheme> & {
+    userId:string
+  }
