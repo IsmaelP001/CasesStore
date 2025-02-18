@@ -13,10 +13,10 @@ const CartTotalBtn = () => {
   return (
     <div className="">
       <button
-        disabled={isPending}
+        disabled={isPending || !activeCartId}
         onClick={() => {
           if (status !== "loading" && status === "unauthenticated") {
-            router.push("/auth/signin");
+            router.push("/auth/signin?callback=/checkout");
             return;
           }
           router.push(`/checkout?cartId=${activeCartId}`);
