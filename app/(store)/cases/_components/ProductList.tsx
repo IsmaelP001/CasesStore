@@ -11,7 +11,7 @@ const ProductList = ({searchParams}:{searchParams:SearchParams}) => {
   return (
     <div>
          {products?.length ? (
-            <div className="grid gap-5 grid-cols-[repeat(auto-fill,minmax(150px,1fr))]">
+            <div className="grid gap-5 place-items-center grid-cols-[repeat(auto-fill,minmax(150px,1fr))]">
               {products?.map((product: any) => (
                 <Product key={product.id} product={product}></Product>
               ))}
