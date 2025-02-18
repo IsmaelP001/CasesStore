@@ -6,11 +6,7 @@ import "../app/styles.css";
 import { cn } from "../lib/utils/utils";
 import Link from "next/link";
 import { Button, buttonVariants } from "./ui/button";
-import {
-  FaArrowRightLong,
-  FaChevronDown,
-  FaChevronUp,
-} from "react-icons/fa6";
+import { FaArrowRightLong, FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import Image from "next/image";
 import { trpc } from "../lib/trpc/client";
 import CartDrawer from "./cart/Cart";
@@ -82,7 +78,7 @@ const MobileNavbar: React.FC = () => {
   return (
     <div className="relative flex z-50 bg-white  items-center justify-between px-4 py-2 border-b md:hidden">
       {/* Botón hamburguesa */}
-      <Sheet >
+      <Sheet>
         <SheetTrigger asChild>
           <Button variant="ghost" className="p-2 z-50">
             <FaBars className="text-xl" />
@@ -95,8 +91,8 @@ const MobileNavbar: React.FC = () => {
           </SheetHeader>
           <nav className="mt-4 space-y-3">
             <SheetClose asChild>
-              <Link href="/" className="block text-lg font-medium">
-                Home
+              <Link href={"/"} className="block">
+                Inicio
               </Link>
             </SheetClose>
 
@@ -180,7 +176,17 @@ const MobileNavbar: React.FC = () => {
           </nav>
         </SheetContent>
       </Sheet>
-
+      <div>
+        <Link className="NavigationMenuLink" href="/">
+          <Image
+            src="/icons/cartago-logo.png"
+            width={50}
+            height={50}
+            className="w-[80px] h-[50px] object-cover pt-1 object-center"
+            alt="cartago-logo"
+          />
+        </Link>
+      </div>
       <div className="flex items-center space-x-4">
         <FavoriteTrigger />
         <CartDrawer />
@@ -204,7 +210,13 @@ export default function Navbar() {
         <div className="NavigationMenuStart list-none">
           <NavigationMenu.Item>
             <Link className="NavigationMenuLink" href="/">
-              Home
+              <Image
+                src="/icons/cartago-logo.png"
+                width={50}
+                height={50}
+                className="w-[80px] h-[50px] object-cover object-center"
+                alt="cartago-logo"
+              />
             </Link>
           </NavigationMenu.Item>
         </div>
