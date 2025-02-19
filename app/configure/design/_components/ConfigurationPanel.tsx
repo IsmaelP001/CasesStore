@@ -9,6 +9,7 @@ import StickersPicker from "./StickersPicker";
 import { Label } from "@/components/ui/label";
 import UploadImagesPicker from "./UploadImagesPicker";
 import FontTypePicker from "./FontTypePicker";
+import { Images, LetterText, Signature, Type } from "lucide-react";
 
 const ImagesTabs = () => {
   return (
@@ -50,8 +51,8 @@ const ImagesTabs = () => {
 
 const ConfigurationPanelMobile = () => {
   return (
-    <div className="fixed overflow-x-scroll bottom-0 left-0 right-0 pb-1 px-1 z-50 bg-gray-200/80">
-      <Tabs className="" defaultValue="text">
+    <div className=" overflow-x-scroll bottom-0 left-0 right-0 pb-1 px-1 z-50 bg-gray-200/80">
+      <Tabs className="h-[150px]" defaultValue="text">
         <div className="px-2 pb-1  border-t border-gray-300 pt-0 overflow-x-scroll">
           <TabsContent className=" h-[100px]" value="text">
             <div className="h-full">
@@ -95,23 +96,27 @@ export const ConfigurationPanel = () => {
   }
 
   return (
-    <div className="w-[350px] space-y-3 shadow-gray-300 shadow-[0_0_15px_5px_rgba(0,0,0,0.3)] px-2 pt-4 pb-2 rounded-2xl">
-      <Tabs
-        className="max-h-[550px] min-h-[400px]  overflow-y-scroll"
-        defaultValue="text"
-      >
-        <TabsList className="flex w-full rounded-2xl">
+    <div
+      className="w-[350px] 
+                   max-h-[80vh]
+                   h-full
+    space-y-3 grid grid-rows-[1fr_auto] shadow-gray-300 shadow-[0_0_15px_5px_rgba(0,0,0,0.3)] px-2 pt-4 pb-2 rounded-2xl"
+    >
+      <Tabs className=" min-h-[400px]  overflow-y-scroll" defaultValue="text">
+        <TabsList className="flex w-full py-5 rounded-2xl">
           <TabsTrigger
-            className="flex-grow rounded-2xl data-[state=active]:bg-accent  tracking-wider"
+            className="flex-grow py-2 flex items-center gap-1 rounded-2xl data-[state=active]:bg-accent  tracking-wider"
             value="text"
           >
-            Texto
+            <LetterText size={15} className="text-gray-700" />
+            <p>Texto</p>
           </TabsTrigger>
           <TabsTrigger
-            className="flex-grow rounded-2xl data-[state=active]:bg-accent  tracking-wider"
+            className="flex-grow flex py-2 items-center gap-1 rounded-2xl data-[state=active]:bg-accent  tracking-wider"
             value="images"
           >
-            Imagenes
+            <Images size={15}className="text-gray-700" />
+            <p>Imagenes</p>
           </TabsTrigger>
         </TabsList>
 
