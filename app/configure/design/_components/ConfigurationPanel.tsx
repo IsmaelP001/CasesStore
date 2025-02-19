@@ -51,7 +51,7 @@ const ImagesTabs = () => {
 
 const ConfigurationPanelMobile = () => {
   return (
-    <div className=" overflow-x-scroll bottom-0 left-0 right-0 pb-1 px-1 z-50 bg-gray-200/80">
+    <div className="w-full overflow-x-scroll  pb-1 px-1 z-50 bg-gray-200/80">
       <Tabs className="h-[150px]" defaultValue="text">
         <div className="px-2 pb-1  border-t border-gray-300 pt-0 overflow-x-scroll">
           <TabsContent className=" h-[100px]" value="text">
@@ -97,13 +97,13 @@ export const ConfigurationPanel = () => {
 
   return (
     <div
-      className="w-[350px] 
-                   max-h-[80vh]
+      className=" w-[350px] 
+                   max-h-[80dvh]
                    h-full
-    space-y-3 grid grid-rows-[1fr_auto] shadow-gray-300 shadow-[0_0_15px_5px_rgba(0,0,0,0.3)] px-2 pt-4 pb-2 rounded-2xl"
+    space-y-3 grid grid-rows-[1fr_auto] shadow-gray-300 shadow-[0_0_15px_5px_rgba(0,0,0,0.3)] px-3 pt-4 pb-2 rounded-2xl"
     >
       <Tabs className=" min-h-[400px]  overflow-y-scroll" defaultValue="text">
-        <TabsList className="flex w-full py-5 rounded-2xl">
+        <TabsList className="flex w-full h-fit py-0 px-0 rounded-2xl">
           <TabsTrigger
             className="flex-grow py-2 flex items-center gap-1 rounded-2xl data-[state=active]:bg-accent  tracking-wider"
             value="text"
