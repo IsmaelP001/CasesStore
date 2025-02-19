@@ -11,7 +11,7 @@ const CustomCaseLayer = () => {
     <MaxWidthWrapper className="">
       <div className="mb-6 px-6 lg:px-8">
         <div className="mx-auto max-w-2xl sm:text-center">
-          <h2 className="order-1 bebas-neue tracking-wide  text-3xl md:text-4xl text-center text-balance !leading-tight font-bold md:text-3xl text-gray-900">
+          <h2 className="order-1 sedgwick_ave text-3xl md:text-4xl lg:text-5xl text-center text-balance !leading-tight font-bold  text-gray-900">
             Diseña tu funda{" "}
             <span className="text-accent">
               exclusiva

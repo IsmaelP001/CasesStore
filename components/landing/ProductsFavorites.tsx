@@ -15,7 +15,7 @@ const ProductsFavorites = ({products}:ProductsFavoritesProps) => {
 
   return (
     <section className=" pt-5 pb-5 ">
-      <SliderTitle className="bebas-neue tracking-wide text-3xl md:text-4xl text-center mb-5">
+      <SliderTitle className="sedgwick_ave text-3xl md:text-4xl lg:text-5xl text-center mb-5">
         <span className="text-accent">Favoritos</span> de nuestros clientes
       </SliderTitle>
       <Slider>
