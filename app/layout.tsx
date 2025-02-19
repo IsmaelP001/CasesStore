@@ -1,7 +1,6 @@
-import { Inter } from "next/font/google";
+import { Poppins, Shadows_Into_Light,Montserrat,Open_Sans, Lato } from "next/font/google";
 import "./globals.css";
 import { Quicksand } from "next/font/google";
-import { Bebas_Neue } from "next/font/google";
 
 import ProviderClient from "./provider";
 import { ReactNode } from "react";
@@ -17,16 +16,23 @@ const quicksand = Quicksand({
   variable: "--font-quicksand",
 });
 
-const bebasNeue = Bebas_Neue({
+const lato = Lato({
   subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-bebas-neue",
+  weight: ["300", "400", "700"],
 });
+
+
+const shadowsIntoLight = Shadows_Into_Light({
+  weight: '400',
+  subsets: ["latin"],
+  variable: "--font-shadows_into_light",
+});
+
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${quicksand.variable} ${bebasNeue.variable}`}>
+      <body className={`${quicksand.variable}  ${shadowsIntoLight.variable} ${lato.className}`}>
         <ProviderClient>{children}</ProviderClient>
       </body>
     </html>

@@ -4,8 +4,6 @@
 import { CUSTOM_FONTS, FONT_COLORS } from "@/config/validators/fonts-options";
 import {
   COLORS,
-  MATERIALS,
-  MODELS,
 } from "@/config/validators/option-validator";
 import React, { createContext, useContext, useState } from "react";
 import useCasesRef from "./useCasesRef";

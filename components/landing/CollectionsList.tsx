@@ -15,7 +15,7 @@ const CollectionsList =async () => {
 
   return (
     <div>
-      <h2 className="bebas-neue quicksand tracking-wide text-center text-balance !leading-tight font-bold  text-3xl md:text-4xl text-gray-900">
+      <h2 className="sedgwick_ave text-3xl md:text-4xl lg:text-5xl text-center text-balance  font-bold  text-gray-900">
         <span className="text-accent">Colecciones</span> recientes
       </h2>
       <section className="py-5 grid grid-cols-2  md:grid-cols-4 gap-4">
