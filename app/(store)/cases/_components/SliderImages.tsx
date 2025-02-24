@@ -22,9 +22,9 @@ const SliderImages: React.FC<SliderImagesProps> = ({ images }) => {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1024px)" });
 
   return (
-    <div className="absolute inset-0 px-4  max-w-screen-lg mx-auto flex gap-2 flex-col lg:flex-row items-start overflow-hidden">
+    <div className="absolute inset-0 md:px-4  max-w-screen-lg mx-auto md:h-[65svh] flex gap-2 flex-col lg:flex-row items-start overflow-hidden">
       {/* Thumbnail Swiper */}
-      <div className={`${isTabletOrMobile ? "order-1 w-full" : "order-none lg:w-[90px] lg:h-full"} flex-shrink-0`}>
+      <div className={`${isTabletOrMobile ? "order-1 min-w-[50svw] m-auto justify-center" : "lg:w-[90px] lg:h-full"} flex-shrink-0`}>
         <Swiper
           onSwiper={setThumbsSwiper}
           direction={isTabletOrMobile ? "horizontal" : "vertical"}
@@ -33,14 +33,14 @@ const SliderImages: React.FC<SliderImagesProps> = ({ images }) => {
           freeMode
           watchSlidesProgress
           modules={[Thumbs]}
-          className="w-full h-[80px] lg:h-full border-r lg:border-b-0 border-b border-gray-300 rounded-2xl"
+          className="w-full h-[50px] md:h-[80px] lg:h-full md:rounded-2xl"
         >
           {images?.map(({ id, image }, index) => (
             <SwiperSlide key={id}>
               <img
                 src={image}
                 alt={`Thumbnail ${index}`}
-                className="object-contain w-full h-full rounded-2xl cursor-pointer"
+                className="object-contain w-full h-full rounded-sm cursor-pointer"
                 onMouseEnter={() => mainSwiper?.slideTo(index)}
               />
             </SwiperSlide>
@@ -48,13 +48,13 @@ const SliderImages: React.FC<SliderImagesProps> = ({ images }) => {
         </Swiper>
       </div>
 
-      <div className="relative flex-1 max-h-[70%] h-full w-full lg:w-5/6 lg:max-h-full flex justify-center items-center bg-gray-200 rounded-3xl overflow-hidden">
-=        <Swiper
+      <div className="relative flex-1 h-fit md:max-h-[70dvh] md:h-full w-full lg:w-5/6 lg:max-h-full flex justify-center items-center bg-gray-200 md:rounded-2xl overflow-hidden">
+      <Swiper
           onSwiper={setMainSwiper}
           spaceBetween={10}
           thumbs={{ swiper: thumbsSwiper }}
           modules={[Navigation, Thumbs]}
-          className="w-full h-full rounded-3xl"
+          className="w-full h-full md:rounded-3xl"
         >
           {images?.map(({ id, image }, index) => (
             <SwiperSlide key={id} className="relative w-full h-full">
@@ -62,7 +62,7 @@ const SliderImages: React.FC<SliderImagesProps> = ({ images }) => {
                 src={image}
                 alt={`Main Image ${index + 1}`}
                 layout="fill"
-                className="object-contain rounded-2xl"
+                className="object-contain md:rounded-2xl"
               />
             </SwiperSlide>
           ))}
@@ -71,5 +71,9 @@ const SliderImages: React.FC<SliderImagesProps> = ({ images }) => {
     </div>
   );
 }
+
+
+
+
 
 export default SliderImages;
