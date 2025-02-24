@@ -11,6 +11,7 @@ import Loading from "@/components/Loading";
 const FilterSearch = () => {
   const [query, setQuery] = useState<string>("");
   const [value] = useDebounce(query, 400);
+  const router = useRouter()
 
   const { data, isPending, isError, error } = trpc.catalog.getProductsBySearchCriteria.useQuery(
     { query: value },
@@ -19,23 +20,32 @@ const FilterSearch = () => {
     }
   );
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      router.push(`?q=${query}`);
+      setQuery('')
+    }
+  };
+
+
   return (
-    <div className="relative z-30 max-w-[800px]">
+    <div className="relative z-20 max-w-[800px]">
       <Input
         type="text"
         className="w-full"
         placeholder="Buscar por nombre, dispositivo o colecciones..."
         onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
 
       {isPending && query && (
-        <div className="absolute z-10 mt-2 w-full border p-5 border-gray-300 rounded-md bg-white shadow-lg">
+        <div className="absolute z-20 mt-2 w-full border p-5 border-gray-300 rounded-md bg-white shadow-lg">
           <p className="px-4 py-2 text-gray-500"><Loading/></p>
         </div>
       )}
 
       {isError && query && (
-        <div className="absolute z-10 mt-2 w-full border p-5 border-gray-300 rounded-md bg-white shadow-lg">
+        <div className="absolute z-20 mt-2 w-full border p-5 border-gray-300 rounded-md bg-white shadow-lg">
           <p className="px-4 py-2 text-red-500">
             Error al cargar los productos: {error?.message || "Intenta de nuevo más tarde"}
           </p>
@@ -43,11 +53,11 @@ const FilterSearch = () => {
       )}
 
       {data && query && data.length > 0 && (
-        <ul className="absolute z-10 mt-2 w-full border px-2 py-3 space-y-2 border-gray-300 rounded-md bg-white shadow-lg">
+        <ul className="absolute z-20 mt-2 w-full border px-2 py-3 space-y-2 border-gray-300 rounded-md bg-white shadow-lg">
           {data.map((product) => (
             <li key={product.id}>
               <Link
-                href={`/product/${product.id}`}
+                href={`/cases/${product.id}`}
                 className="px-4 py-2 cursor-pointer hover:bg-gray-200 space-x-2"
               >
                 <span>{product.name}</span>,
@@ -60,7 +70,7 @@ const FilterSearch = () => {
       )}
 
       {data && query && data.length === 0 && (
-        <div className="absolute z-10 mt-2 w-full border border-gray-300 rounded-md bg-white shadow-lg">
+        <div className="absolute z-20 mt-2 w-full border border-gray-300 rounded-md bg-white shadow-lg">
           <p className="px-4 py-2 text-gray-500">No se encontraron productos</p>
         </div>
       )}

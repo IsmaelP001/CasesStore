@@ -1,5 +1,5 @@
 import { CreateProduct, Product, ProductById, ProductFilters, ProductSearchCriteria, ProductTypeEnum } from "../domain/product.model";
-import { Collection } from "../domain/collection.model";
+import { Collection, FilterCollection } from "../domain/collection.model";
 import { Color } from "../domain/color-model";
 import { Material } from "../domain/material.model";
 import { Devices } from "../domain/devices.model";
@@ -20,7 +20,7 @@ export interface IProductService {
 
 
 export interface ICollectionsService {
-  getAllCollections(): Promise<Collection[]>;
+  getAllCollections(filter?:FilterCollection): Promise<Collection[]>;
 }
 
 export interface IColorsService {

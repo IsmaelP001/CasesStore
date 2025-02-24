@@ -3,7 +3,7 @@ import { serverHelpers } from "@/lib/trpc/serverHelper";
 import { Params, SearchParams } from "@/types";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import FilterSidebar from "./_components/FilterSidebar";
-import FilterSearch from "@/components/product/FilterSearch";
+import FilterSearch from "@/app/(store)/cases/_components/FilterSearch";
 import FilterParams from "./_components/FilterParams";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SidebarFilterTrigger from "./_components/SidebarFilterTrigger";
@@ -26,21 +26,21 @@ const page = async ({
 
   return (
     <HydrationBoundary state={dehydrate(serverHelpers.queryClient)}>
-      <div className="space-y-1 px-5 flex pt-2">
+      <div className="space-y-1 px-2 md:px-5  flex pt-2">
         <SidebarProvider defaultOpen>
           <FilterSidebar />
           <div className=" w-full min-h-screen gap-5 ">
-            <div className="sticky text-2xl md:text-3xl top-0 z-20 w-full py-2 bg-background ">
+            <div className="sticky text-2xl md:text-3xl top-0 z-30 w-full py-2 bg-background ">
               {searchParams?.device?.split("%")?.length === 1 ? (
                 <h2 className="font-semibold">
                   Fundas para <span className="text-primary first-letter:uppercase">{searchParams?.device}</span>
                 </h2>
               ) : searchParams?.device?.split("%")?.length > 1 ? (
-                <h2 className="  font-semibold">
+                <h2 className="  font-semibold ">
                   Fundas para múltiples dispositivos
                 </h2>
               ) : (
-                <h2 className="font-semibold">Todos los dispositivos</h2>
+                <h2 className="font-semibold ">Todos los dispositivos</h2>
               )}
             </div>
             <div

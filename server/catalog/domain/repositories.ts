@@ -2,7 +2,7 @@ import { CreateProduct, MostOrderedProductQuery, Product, ProductById, ProductFi
 import { Devices } from "./devices.model";
 import { Color } from "../domain/color-model";
 import { Material } from "../domain/material.model";
-import { Collection } from "./collection.model";
+import { Collection, FilterCollection } from "./collection.model";
 import { PrintPattern } from "./printPattern-model";
 
 export interface IProductRepository {
@@ -32,7 +32,7 @@ export interface IMaterialRepository {
 }
 
 export interface ICollectionRepository {
-  getAllCollections(): Promise<Collection[]>; 
+  getAllCollections(filter?:FilterCollection): Promise<Collection[]>; 
 }
 
 export interface IPrintPatternRepository {

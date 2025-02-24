@@ -23,7 +23,7 @@ export default async function middleware(req:any) {
   }
 
   if (pathname.startsWith('/dashboard') && session.role !== 'admin') {
-    return NextResponse.redirect(new URL('/', req.url));
+    // return NextResponse.redirect(new URL('/', req.url));
   }
 
   return NextResponse.next();

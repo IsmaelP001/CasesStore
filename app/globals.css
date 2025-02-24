@@ -127,6 +127,14 @@
   font-family: var(--font-quicksand);
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 
 .sedgwick_ave{
   font-family: var(--font-shadows_into_light);
@@ -160,5 +168,18 @@ html, body {
   textarea:focus,
   input:focus {
     font-size: 16px;
+  }
+}
+
+
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

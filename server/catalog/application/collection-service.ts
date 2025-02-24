@@ -1,4 +1,4 @@
-import { Collection } from "../domain/collection.model";
+import { Collection, FilterCollection } from "../domain/collection.model";
 import { defaultCollectionRepository } from "../infrastructure/collection-repositories";
 import { ICollectionsService } from "./service.definitions";
 import {ICollectionRepository} from '../domain/repositories'
@@ -9,9 +9,9 @@ export  class  CollectionsServiceImpl implements ICollectionsService{
     ){
     }
 
-    async getAllCollections():Promise<Collection[]>{
+    async getAllCollections(filter?:FilterCollection):Promise<Collection[]>{
         try {
-            return await this.collectionsRepository.getAllCollections()
+            return await this.collectionsRepository.getAllCollections(filter)
         } catch (error) {
             console.log('error collections',error)
             throw new Error('Error al obtener colecciones')
