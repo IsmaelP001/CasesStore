@@ -241,7 +241,8 @@ class DefaultProductRepositoryImpl
           ilike(devices.name, `%${query}%`),
           ilike(collectionTable.name, `%${query}%`)
         )
-      );
+      )
+      .groupBy(product.id,collectionTable.id)
 
     return result as ProductSearchCriteria[];
   }

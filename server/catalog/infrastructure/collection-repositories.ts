@@ -2,7 +2,7 @@ import { collection, product } from "@/config/database/schemes";
 import { db } from "@/config/database/db";
 import { count, eq } from "drizzle-orm";
 import { BaseRepository } from "@/server/shared/repositories/BaseRepository";
-import { Collection } from "../domain/collection.model";
+import { Collection, FilterCollection } from "../domain/collection.model";
 import { ICollectionRepository } from "../domain/repositories";
 
 class DefaultCollectionsRepositoryImpl extends BaseRepository<
@@ -13,8 +13,8 @@ class DefaultCollectionsRepositoryImpl extends BaseRepository<
     super(collection, "collection");
   }
 
-  async getAllCollections(): Promise<Collection[]> {
-    const items = await db
+  async getAllCollections(filter:FilterCollection): Promise<Collection[]> {
+    const itemsQuery =  db
       .select({
         id: collection.id,
         name: collection.name,
@@ -23,8 +23,11 @@ class DefaultCollectionsRepositoryImpl extends BaseRepository<
       })
       .from(collection)
       .leftJoin(product, eq(collection.id, product.collectionId))
-      .groupBy(collection.id);
-    return items as Collection[];
+      .groupBy(collection.id).$dynamic()
+      if(filter?.limit){
+        itemsQuery.limit(filter?.limit )
+      }
+    return await itemsQuery as Collection[];
   }
 }
 

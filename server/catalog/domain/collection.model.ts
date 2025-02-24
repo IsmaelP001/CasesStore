@@ -7,3 +7,7 @@ export interface Collection {
     image:string
 }
 
+
+export interface FilterCollection{
+    limit?:number
+}

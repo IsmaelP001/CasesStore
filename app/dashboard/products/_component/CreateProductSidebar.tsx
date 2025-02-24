@@ -201,11 +201,11 @@ export default function CreateProductSidebar() {
       <SheetTrigger asChild>
         <Button variant="outline">Crear producto</Button>
       </SheetTrigger>
-      <SheetContent className="md:w-[450px]">
+      <SheetContent className="">
         <SheetHeader>
           <SheetTitle className="mb-2 text-2xl">Crear producto</SheetTitle>
         </SheetHeader>
-        <Tabs defaultValue="account" className="w-[400px]">
+        <Tabs defaultValue="account" className="">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="product">Producto</TabsTrigger>
             <TabsTrigger value="images">Imagenes</TabsTrigger>
