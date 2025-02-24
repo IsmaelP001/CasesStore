@@ -77,7 +77,6 @@ const MobileNavbar: React.FC = () => {
 
   return (
     <div className="relative flex z-50 bg-white  items-center justify-between px-4 py-2 border-b md:hidden">
-      {/* Botón hamburguesa */}
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="ghost" className="p-2 z-50">
@@ -177,7 +176,7 @@ const MobileNavbar: React.FC = () => {
         </SheetContent>
       </Sheet>
       <div>
-        <Link className="NavigationMenuLink" href="/">
+        <Link className="NavigationMenuLh-[75vh]ink" href="/">
           <Image
             src="/icons/cartago-logo.png"
             width={50}
@@ -227,20 +226,15 @@ export default function Navbar() {
                 Dispositivos <CaretDownIcon className="CaretDown" aria-hidden />
               </NavigationMenu.Trigger>
               <NavigationMenu.Content className="NavigationMenuContent">
-                <div>
+                <div className="px-4 pt-4">
+                  <h3 className="text-xl font-bold">Dispositivos</h3>
                   <ul className="w-[600px] grid gap-4 grid-cols-[repeat(auto-fit,minmax(150px,1fr))] p-4">
                     {devices?.map((device) => (
-                      <ListItem key={device?.id} href="" title={"Iphone"}>
-                        <Button
-                          variant="link"
-                          className="h-6 block px-0"
-                          asChild
-                          key={device?.id}
-                        >
-                          <Link href={`/cases?device=${device?.name}`}>
-                            {device?.name}
-                          </Link>
-                        </Button>
+                      <ListItem
+                        key={device?.id}
+                        href={`/cases?device=${device?.name}`}
+                      >
+                        <p className="hover:underline"> {device?.name}</p>
                       </ListItem>
                     ))}
                   </ul>
@@ -268,20 +262,20 @@ export default function Navbar() {
                       href={`/cases?collection=${collection?.name}`}
                       key={collection?.id}
                     >
-                      <article className="flex gap-3 items-center">
+                      <div className="flex gap-3 items-center">
                         <div>
                           <Image
                             width={50}
                             height={50}
                             src={collection?.image ?? ""}
                             alt={collection?.name ?? "Collection Image"}
-                            className="w-[30px] h-[30px]"
+                            className="w-[30px] h-[30px] object-cover rounded-md"
                           />
                         </div>
                         <div>
-                          <p>{collection?.name}</p>
+                          <p className="hover:underline">{collection?.name}</p>
                         </div>
-                      </article>
+                      </div>
                     </ListItem>
                   ))}
                 </ul>
@@ -292,11 +286,11 @@ export default function Navbar() {
               <Button
                 variant="link"
                 size="sm"
-                className="bg-primary text-primary-foreground"
+                className="bg-primary text-primary-foreground rounded-3xl px-4 "
               >
                 <Link href="/configure/design">
                   Crea tu propia <span>Funda</span>
-                  <FaArrowRightLong className="text-xl inline ml-1 hover:ml-2 transition-all animate-pulse transition-300" />
+                  <FaArrowRightLong className="text-xl inline ml-2 hover:ml-2 transition-all animate-pulse transition-300" />
                 </Link>
               </Button>
             </NavigationMenu.Item>
