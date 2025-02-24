@@ -1,41 +1,29 @@
-'use client'
-import Slider, { SliderTitle } from "../Slider";
-import SliderContent from "../Slider";
-import { SwiperSlide } from "swiper/react";
 import Product from "@/app/(store)/cases/_components/Product";
-import { Button } from "../ui/button";
-import Link from "next/link";
+import  {Slider,SliderContent } from "../SliderV3";
+import { serverHelpers } from "@/lib/trpc/serverHelper";
 
-
-interface ProductsFavoritesProps{
-  products:any[]
-}
-
-const ProductsFavorites = ({products}:ProductsFavoritesProps) => {
-
+const ProductsFavorites = async() => {
+  const mostOrderedProducts =
+  await serverHelpers.catalog.getMostOrderedProducts.fetch();
   return (
-    <section className=" pt-5 pb-5 ">
-      <SliderTitle className="sedgwick_ave text-3xl md:text-4xl lg:text-5xl text-center mb-5">
-        <span className="text-accent">Favoritos</span> de nuestros clientes
-      </SliderTitle>
+    <section className=" pt-5 pb-5 space-y-3 ">
+      <div className="flex items-center gap-2">
+        <h3 className="sedgwick_ave font-semibold text-2xl md:text-4xl mb-1.5 max-w-[290px] md:max-w-full truncate   "><span className="text-accent text-3xl md:text-4xl">Favoritos</span> de nuestros clientes</h3>
+      </div>
       <Slider>
         <SliderContent>
-          {products?.map((item: any) => {
-            return (
-              <SwiperSlide key={item?.id}>
-                <Product product={item} />
-              </SwiperSlide>
-            );
-          })}
+        {mostOrderedProducts?.map((product, index) => (
+          <Product
+            className="w-[37dvw] md:w-[19dvw] lg:w-[16dvw]"
+            key={index}
+            product={product}
+          />
+        ))}
         </SliderContent>
-      </Slider>{" "}
-      <Button size="sm" className="m-auto block rounded-3xl mt-2">
-        <Link href={"/cases"} className="">
-          Ver todos
-        </Link>
-      </Button>
+      </Slider>    
     </section>
   );
 };
+
 
 export default ProductsFavorites;

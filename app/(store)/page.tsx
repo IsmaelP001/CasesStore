@@ -4,22 +4,23 @@ import ProductsFavorites from "@/components/landing/ProductsFavorites";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import CustomCaseLayer from "@/components/landing/CustomCaseLayer";
 import NewProducts from "@/components/landing/NewProducts";
-import { serverHelpers } from "@/lib/trpc/serverHelper";
+import { Smartphone } from "lucide-react";
+import Link from "next/link";
+import DevicesList from "@/components/landing/DevicesList";
 export const revalidate = 86400; // Revalida cada 24 horas
 export const dynamic = "force-static";
 
 const HomePage = async () => {
-  const newProducts = await serverHelpers.catalog.getNewProducts.fetch();
-  const mostOrderedProducts =
-    await serverHelpers.catalog.getMostOrderedProducts.fetch();
-
   return (
-    <div className="space-y-16">
+    <div className="space-y-10">
       <div className="relative">
         <MainSlider />
       </div>
-      <div></div>
-
+      <div>
+        <MaxWidthWrapper>
+        <DevicesList/>
+        </MaxWidthWrapper>
+      </div>
       <div>
         <MaxWidthWrapper>
           <CollectionsList />
@@ -28,11 +29,11 @@ const HomePage = async () => {
 
       <div>
         <MaxWidthWrapper>
-          <ProductsFavorites products={mostOrderedProducts} />
+          <ProductsFavorites />
         </MaxWidthWrapper>
       </div>
 
-      <div>
+      <div className="bg-white">
         <MaxWidthWrapper>
           <CustomCaseLayer />
         </MaxWidthWrapper>
@@ -40,7 +41,7 @@ const HomePage = async () => {
 
       <div>
         <MaxWidthWrapper>
-          <NewProducts products={newProducts} />
+          <NewProducts />
         </MaxWidthWrapper>
       </div>
     </div>

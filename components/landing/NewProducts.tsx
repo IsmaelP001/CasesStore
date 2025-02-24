@@ -1,32 +1,29 @@
-'use client'
-import Slider, { SliderTitle } from "../Slider";
-import SliderContent from "../Slider";
-import { SwiperSlide } from "swiper/react";
 import Product from "@/app/(store)/cases/_components/Product";
 import { serverHelpers } from "@/lib/trpc/serverHelper";
+import { Slider, SliderContent } from "../SliderV3";
 
-
-interface NewProductsProps{
-  products:any[]
-}
-const NewProducts = ({products}:NewProductsProps) => {
+const NewProducts = async () => {
+  const newProducts = await serverHelpers.catalog.getNewProducts.fetch();
 
   return (
-    <section className=" pt-5 pb-5 ">
-      <SliderTitle className="sedgwick_ave text-3xl md:text-4xl lg:text-5xl text-center mb-5">
-        <span className="text-accent">Nuevos</span> diseños
-      </SliderTitle>
+    <section className=" pt-5 pb-5 space-y-3 ">
+      <div className="flex items-center gap-2">
+        <h3 className="sedgwick_ave font-semibold text-3xl md:text-4xl ">
+          <span className="text-accent">Nuevos</span> diseños
+        </h3>
+      </div>
       <Slider>
         <SliderContent>
-          {products?.map((item: any) => {
-            return (
-              <SwiperSlide key={item?.id}>
-                <Product product={item} isNewProduct={true}/>
-              </SwiperSlide>
-            );
-          })}
+          {newProducts?.map((product, index) => (
+            <Product
+              isNewProduct
+              className="w-[37dvw] md:w-[19dvw] lg:w-[16dvw]"
+              key={index}
+              product={product}
+            />
+          ))}
         </SliderContent>
-      </Slider>{" "}
+      </Slider>
     </section>
   );
 };

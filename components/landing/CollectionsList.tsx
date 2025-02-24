@@ -1,52 +1,58 @@
-
 import { cn } from "@/lib/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { serverHelpers } from "@/lib/trpc/serverHelper";
-const COLORS_COLLECTIONS: { [key: number]: string } = {
-  0: "bg-yellow-500/50",
-  5: "bg-green-500/50",
-};
 
-
-
-const CollectionsList =async () => {
-  const collections =await serverHelpers.catalog.getCollections.fetch()
+const CollectionsList = async () => {
+  const collections = await serverHelpers.catalog.getCollections.fetch({limit:8});
 
   return (
     <div>
-      <h2 className="sedgwick_ave text-3xl md:text-4xl lg:text-5xl text-center text-balance  font-bold  text-gray-900">
+      <h2 className="sedgwick_ave font-semibold text-3xl md:text-4xl   text-gray-900">
         <span className="text-accent">Colecciones</span> recientes
       </h2>
-      <section className="py-5 grid grid-cols-2  md:grid-cols-4 gap-4">
+
+      <section
+        className="py-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4
+          auto-rows-[50px] md:auto-rows-[50px] lg:auto-rows-[70px]
+          gap-2 grid-flow-row-dense "
+      >
         {collections?.map(({ id, name, image, products_count }, index) => {
-          const spanClass = [0, 5].includes(index)
-            ? " md:col-span-2 rounded-xl"
-            : "bg-gray-100 rounded-xk";
+          const spanClass =
+            index % 6 === 0
+              ? "col-span-2 row-span-2"
+              : index % 5 === 0
+              ? "col-span-1 row-span-2"
+              : index % 4 === 0
+              ? "col-span-1 row-span-2"
+              : "col-span-1 row-span-1";
+
           return (
             <article
               key={id}
-              className={cn(spanClass, COLORS_COLLECTIONS[index])}
+              className={cn(
+                " rounded-md bg-gray-400  flex flex-col justify-center items-center",
+                spanClass
+              )}
             >
-              <Link href={`/cases?collection=${name}`}>
-                <div className="grid grid-cols-[1fr_auto]  px-1.5 pt-2 min-w-[200px]">
-                  <div className="flex items-center justify-center">
-                    <p className="p-3 text-black capitalize text-wrap text-sm md:text-base font-semibold text-center">
-                      {name}
-                    </p>
-                    <p className="font-light tracking-tight text-sm md:text-base">
-                      {products_count}
-                    </p>
-                  </div>
-                  <div className="relative h-[80px] w-[80px] rounded-xl">
-                    <Image
-                      fill
-                      className="w-[150px] h-[150px] object-contain rounded-xl"
-                      alt={name}
-                      src={image || "/IA.SVG"}
-                    />
-                  </div>
+              <Link
+                className="relative  w-full h-full"
+                href={`/cases?collection=${name}`}
+              >
+                <div className="absolute bottom-0 left-0 w-fit h-fit p-2 md:p-3 z-10 text-white quicksand">
+                  <p className="capitalize text-sm md:text-xl font-bold">
+                    {name}
+                  </p>
+                  <p className="font-light text-sm md:text-base space-x-2">
+                    <span>{products_count}</span><span>Articulos</span>
+                  </p>
                 </div>
+                <Image
+                  src={image || ""}
+                  alt="Descripción de la imagen"
+                  fill
+                  className="object-cover w-[50px] rounded-md brightness-75"
+                />
               </Link>
             </article>
           );
