@@ -34,12 +34,12 @@ export const catalogRouter = router({
       return await catalogServiceFacade.getProductById(input.id);
     }),
   getMostOrderedProducts: publicProcedure.query(async ({ input }) => {
-    const getMostOrderedProductQuery= unstable_cache(async()=>catalogServiceFacade.getMostOrderedProducts(),['MOST_ORDERED_PRODUCTS'])
-    return await getMostOrderedProductQuery()
+    // const getMostOrderedProductQuery= unstable_cache(async()=>catalogServiceFacade.getMostOrderedProducts(),['MOST_ORDERED_PRODUCTS'])
+    return await catalogServiceFacade.getMostOrderedProducts()
   }),
   getNewProducts: publicProcedure.query(async ({ input }) => {
-    const getNewProductsQuery= unstable_cache( async ()=>catalogServiceFacade.getNewProducts(),['NEW_PRODUCTS'])
-    return await getNewProductsQuery()
+    // const getNewProductsQuery= unstable_cache( async ()=>catalogServiceFacade.getNewProducts(),['NEW_PRODUCTS'])
+    return await catalogServiceFacade.getNewProducts()
   }),
   getProductsBySearchCriteria: publicProcedure
     .input(
@@ -55,9 +55,11 @@ export const catalogRouter = router({
   getPrintPatterns: publicProcedure.query(async () => {
     return await catalogServiceFacade.getAllPrintPattern();
   }),
-  getCollections: publicProcedure.query(async () => {
-    const getCollectionsQuery= unstable_cache( async()=>catalogServiceFacade.getAllCollections(),['COLLECTIONS'])
-    return await getCollectionsQuery()
+  getCollections: publicProcedure.input(z.object({
+    limit:z.number().optional().nullable()
+  }).optional()).query(async ({input}) => {
+    // const getCollectionsQuery= unstable_cache( async()=>catalogServiceFacade.getAllCollections(),['COLLECTIONS'])
+    return await catalogServiceFacade.getAllCollections(input as any)
   }),
   getColors: publicProcedure.query(async () => {
     return await catalogServiceFacade.getAllColors();

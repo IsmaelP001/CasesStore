@@ -1,5 +1,5 @@
 import { getUserSession } from "@/lib/auth";
-import { Collection } from "../domain/collection.model";
+import { Collection, FilterCollection } from "../domain/collection.model";
 import { Color } from "../domain/color-model";
 import { Devices } from "../domain/devices.model";
 import { Material } from "../domain/material.model";
@@ -133,11 +133,10 @@ class CatalogsServiceFacadeImpl {
     }
   }
 
-  async getAllCollections(): Promise<Collection[]> {
+  async getAllCollections(filter?:FilterCollection): Promise<Collection[]> {
     try {
-      return await this.collectionsService.getAllCollections();
+      return await this.collectionsService.getAllCollections(filter);
     } catch (error) {
-      console.log("error products", error);
       throw new Error("error al obtener productos");
     }
   }
