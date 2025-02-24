@@ -6,6 +6,8 @@ import SlideNextButton from "./SlideNextButton";
 import SlidePrevButton from "./SlidePrevButton";
 import "swiper/swiper-bundle.css";
 import { cn } from "@/lib/utils/utils";
+import { Autoplay } from "swiper/modules";
+import 'swiper/css/autoplay';
 
 export function Slider({ children }: { children: ReactNode }) {
   return <div>{children}</div>;
@@ -71,7 +73,7 @@ export default function SliderContent({
       spaceBetween: 10,
     },
     768: {
-      slidesPerView: 3,
+      slidesPerView: 5,
       spaceBetween: 10,
     },
     1024: {
@@ -86,19 +88,22 @@ export default function SliderContent({
 
   return (
     <Swiper
+     modules={[Autoplay]}
       onSwiper={setSwiperRef as any}
       onSlideChange={handleSlideChange}
-      slidesPerView={4} 
-      spaceBetween={spaceBetween} 
+      slidesPerView={4}
+      spaceBetween={spaceBetween}
+      centeredSlides={true}
       autoplay={{
-        delay: 500,
-        disableOnInteraction: true,
+        delay: 5000, 
+        disableOnInteraction: false, 
       }}
       loop={true}
-      breakpoints={{ ...defaultBreakpoints, ...breakpoints }} 
+      speed={500}
+      breakpoints={{ ...defaultBreakpoints, ...breakpoints }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={cn("relative", className)}
+      className={cn("relative ", className)}
     >
       {children}
       {hovered && (
