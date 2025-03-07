@@ -8,10 +8,10 @@ export const addressScheme = z.object({
       .min(2, { message: 'La ciudad debe tener al menos 2 letras'})
       .regex(/^[a-zA-Z\s]+$/, { message: 'La ciudad solo puede contener letras' }),
   
-    country: z.string()
+      country: z.string()
       .min(2, { message: 'El país debe tener al menos 2 caracteres' })
-      .regex(/^[a-zA-Z\s]+$/, { message: 'Este campo solo puede contener letras' }),
-  
+      .regex(/^[\p{L}\s]+$/u, { message: 'Este campo solo puede contener letras y espacios' }),
+    
     zipCode: z.string()
       .length(5, { message: 'El código postal debe tener exactamente 5 dígitos' }),
   

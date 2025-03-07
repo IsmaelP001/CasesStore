@@ -1,32 +1,45 @@
-'use server';
 
-import { cookies } from 'next/headers';
+// import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+// import { cookies } from 'next/headers';
 
-interface CookieOptions {
-  path?: string;
-  maxAge?: number;
-  domain?: string;
-  secure?: boolean;
-  httpOnly?: boolean;
-  sameSite?: 'strict' | 'lax' | 'none';
-}
 
-interface SetCookieParams {
-  cookieName: string;
-  value: string;
-  options?: CookieOptions;
-}
+// interface SetCookieParams {
+//   cookieName: string;
+//   value: string;
+//   options?: CookieOptions;
+// }
 
-export async function getCookie({cookieName}:{cookieName:string}) {
-  const cookieStore = await cookies();
-  return cookieStore.get(cookieName);
-}
 
-export async function setCookie({ cookieName, value, options }: SetCookieParams) {
-  const cookieStore = await cookies();
-  cookieStore.set(cookieName, value, options);
-}
+// export const getCookie =(cookieName:string):RequestCookie | null=>{
+//   const cookieStore = cookies()
+//   if(cookieStore.has(cookieName)){
+//     return cookieStore.get(cookieName)!
+//   }
+//   return null
+// }
+// type CookieOptions = {
+//   path?: string;
+//   domain?: string;
+//   secure?: boolean;
+//   httpOnly?: boolean;
+//   sameSite?: "strict" | "lax" | "none";
+//   maxAge?: number;
+// };
 
-export async function deleteCookie({ cookieName }: {cookieName:string}) {
-  (await cookies()).delete(cookieName)
-}
+// export const setCookie = async (
+//   cookieName: string,
+//   value: string,
+//   options: CookieOptions = {}
+// ) => {
+//   cookies().set(cookieName, value, {
+//     secure: process.env.NODE_ENV === "production",
+//     sameSite: "lax", 
+//     maxAge: 60 * 60 * 24, 
+//     ...options, 
+//   });
+// };
+
+
+// export async function deleteCookie({ cookieName }: {cookieName:string}) {
+//   (await cookies()).delete(cookieName)
+// }
