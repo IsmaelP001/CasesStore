@@ -9,8 +9,8 @@
     --font-bebas-neue: "Bebas Neue", sans-serif;
 
     /* Background and Foreground */
-    --background: 0 0% 98%; /* Gris claro */
-    --foreground: 0 0% 10%; /* Gris oscuro */
+    --background: 0, 0%, 96%, 1;
+    --foreground: 240 10% 3.9%;
 
     /* Card */
     --card: 0 0% 100%; /* Blanco */
@@ -161,6 +161,7 @@ html, body {
   display: block;
   width: 100%;
 }
+
 
 
 @media screen and (-webkit-min-device-pixel-ratio:0) { 
