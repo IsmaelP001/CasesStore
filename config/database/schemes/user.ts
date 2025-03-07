@@ -1,7 +1,9 @@
-import { relations, sql } from 'drizzle-orm';
-import {  pgTable,serial,char, primaryKey,integer,bigint, index,boolean,json,uniqueIndex,timestamp,unique,text,varchar, pgEnum, uuid } from 'drizzle-orm/pg-core';
-import { address,favorite,cart,order, defaultAddress, gift,rol, defaultGift} from '.';
+import { relations } from 'drizzle-orm';
+import {  pgTable,timestamp,unique,varchar, pgEnum, uuid } from 'drizzle-orm/pg-core';
+import { address,favorite,cart,order, defaultAddress, gift, defaultGift} from '.';
+import { userRoles } from '@/server/user/domain/auth.model';
 
+export const rolEnum = pgEnum('rol', userRoles);
 
 export const user = pgTable("users", {
 	id: uuid("id").primaryKey().defaultRandom(),
@@ -11,7 +13,7 @@ export const user = pgTable("users", {
 	provider:varchar('provider',{length:255}),
 	password:varchar("password",{length:275}),
 	phonenumber:varchar('phonenumber',{length:10}),
-	rolId:uuid('rolId').notNull().references(()=>rol.id),
+	role:rolEnum('rol').notNull().default('user'),
 	createdAt: timestamp('createdAt',{mode:'date'}).notNull().defaultNow(),
 	updatedAt: timestamp('updatedAt',{mode:'date'}).notNull().defaultNow(),
 },(table=>(
@@ -25,10 +27,6 @@ export const userRelations=relations(user,({one,many})=>({
     favorite:many(favorite),
     cart:one(cart),
     order:one(order),
-	rol:one(rol,{
-		fields:[user.rolId],
-		references:[rol.id]
-	}),
 	defaultAddress:one(defaultAddress),
 	gift:many(gift),
 	defaultGift:one(defaultGift)

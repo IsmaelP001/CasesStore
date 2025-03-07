@@ -7,9 +7,8 @@ import { drizzle as drizzleVercel } from 'drizzle-orm/vercel-postgres';
 import { sql } from '@vercel/postgres';
 config({ path: '.env.local' }); 
 
-const db =
-  process.env.NODE_ENV === 'production'
-    ? drizzleVercel(sql, { schema })
-    : drizzle(postgres(process.env.DB_URL!), { schema });
+// const db = drizzleVercel(sql, { schema })
+const queryClient = postgres(process.env.DB_URL!);
+const db = drizzle(queryClient,{schema});
 
 export {db}

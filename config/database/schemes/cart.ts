@@ -1,19 +1,19 @@
-import {  pgTable,serial,char, primaryKey,integer,index,uniqueIndex, varchar, uuid, boolean } from 'drizzle-orm/pg-core';
+import {  pgTable,serial,char, primaryKey,integer,index,uniqueIndex, varchar, uuid, boolean, pgEnum, text } from 'drizzle-orm/pg-core';
 import { order, user } from '.';
 import { relations, sql } from 'drizzle-orm';
 import { cartDetails } from './cartDetails';
 
+export const cartStatus=pgEnum("status", ['PENDING','ACTIVE','CHECKED_OUT','ABANDONED',"CONFIRMED"] )
+
 export const cart = pgTable("carts", {
-	id: uuid("id").primaryKey().defaultRandom(),
+	id: uuid("id").primaryKey().defaultRandom().notNull(),
 	userId: uuid("userId").references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" } ),
-    hasCheckout:boolean('hasCheckout').notNull().default(false)
+    status:text('cart_status').notNull()
 },
 (table) => {
 	return {
 		userId: index("userId_user_index").on(table.userId),
-        hasCheckout_unique_true:index()
-        .on(table.hasCheckout)
-        .where(sql`${table.hasCheckout} = TRUE`)
+       
 	}
 });
 
