@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Button } from "../../../components/ui/button";
+import { Button, buttonVariants } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import {
   Form,
@@ -18,6 +18,8 @@ import { useToast } from "@/components/ui/use-toast";
 import Loading from "@/components/Loading";
 import { singUpSchema } from "@/lib/schemas/authSchema";
 import { trpc } from "@/lib/trpc/client";
+import { ArrowLeft } from "lucide-react";
+import { cn } from "@/lib/utils/utils";
 
 
 
@@ -34,6 +36,10 @@ const SignupPage = () => {
 
   const {mutateAsync,isPending,error}=trpc.user.createUser.useMutation({
     onSuccess(){
+      toast({
+        title:'Exito!',
+        description:'Registro con exito, inicia seccion.',
+      })
       router.push('/auth/signin')
     },
     onError(err){
@@ -54,7 +60,12 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex  items-center justify-center bg-gray-200 px-2">
+    <div className="relative min-h-screen flex  items-center justify-center bg-gray-200 px-2">
+      <div>
+        <Link href="/" className={cn(buttonVariants({variant:'outline',size:'sm',className:'absolute top-2 left-2 flex items-center gap-2 px-3 rounded-2xl'}))}>
+           <ArrowLeft/>  Regresar a la tienda
+        </Link>
+      </div>
       <section className=" md:grid md:grid-cols-10 bg-white rounded-xl">
         <div className=" p-6 min-w-[400px] md:col-span-4  h-full">
           <h2 className="text-2xl font-semibold mb-2">Registrarse</h2>
@@ -171,7 +182,7 @@ const SignupPage = () => {
           </Form>
         </div>
         <div className="hidden md:block overflow-hidden bg-blue-200 [@media(min-width:910px)]:block md:col-span-6 relative min-w-[200px] w-full min-h-[300px] h-full rounded-r-xl">
-          <figure className=" absolute -bottom-10 left-[50%] transform -translate-x-[calc(50%-100px)] z-0">
+          <figure className=" absolute bottom-16 left-[50%] transform -translate-x-[calc(50%-100px)] z-0">
             <div className="relative w-[120px] h-[200px] md:w-[400px] md:h-[400px]">
               <Image
                 fill

@@ -30,7 +30,8 @@ const page = async ({
         <SidebarProvider defaultOpen>
           <FilterSidebar />
           <div className=" w-full min-h-screen gap-5 ">
-            <div className="sticky text-2xl md:text-3xl top-0 z-30 w-full py-2 bg-background ">
+            <div className="sticky flex justify-between items-center text-2xl md:text-3xl top-0 z-30 w-full py-2 bg-background ">
+              <div>
               {searchParams?.device?.split("%")?.length === 1 ? (
                 <h2 className="font-semibold">
                   Fundas para <span className="text-primary first-letter:uppercase">{searchParams?.device}</span>
@@ -42,15 +43,17 @@ const page = async ({
               ) : (
                 <h2 className="font-semibold ">Todos los dispositivos</h2>
               )}
+              </div>
+              <div className="flex justify-end">
+              <SidebarFilterTrigger />
+              </div>
             </div>
             <div
               className='flex-1 transition-transform duration-300 ease-in-out space-y-2 py-4 '
             >
               <FilterSearch />
               <FilterParams />
-              <div className="flex justify-end">
-              <SidebarFilterTrigger />
-              </div>
+              
               <ErrorBoundary>
                 <Suspense
                   key={Object.values(searchParams).toLocaleString()}

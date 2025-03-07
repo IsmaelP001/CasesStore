@@ -2,7 +2,7 @@
 
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MoveLeft, MoveRight } from "lucide-react";
 import React, { useRef, useEffect, useState, ReactNode, forwardRef } from "react";
 import { cn } from "@/lib/utils/utils";
 
@@ -92,25 +92,25 @@ const Slider: React.FC<SliderProps> = ({ children, step = 1 }) => {
   }, [currentSlide]); 
 
   return (
-    <div className="relative w-full">
-      <div className="absolute z-20 right-0 -top-14 flex justify-end pb-1 px-1">
+    <div className="relative w-full pb-10">
+      <div className="absolute z-20 right-0  -bottom-5 flex justify-end pb-1 px-1">
         <div className="flex gap-2">
           <button
             onClick={prevSlide}
             className={cn(
-              "border border-[#CCCACA] grid place-content-center p-2 rounded-full z-10",
+              "border border-[#CCCACA] grid place-content-center rounded-2xl px-6 py-2 z-10 ",
               isAtStart && "bg-gray-200"
             )}
           >
-            <ChevronLeft className="size-[20px]" />
+            <MoveLeft className="size-[20px]" />
           </button>
           <button
             onClick={nextSlide}
             className={cn(
-              "border border-[#CCCACA] p-2 rounded-full z-10 grid place-content-center",
+              "border border-[#CCCACA] rounded-2xl px-6 py-2 z-10 grid place-content-center bg-foreground text-white",
             )}
           >
-            <ChevronRight className="size-[20px]" />
+            <MoveRight className="size-[20px]" />
           </button>
         </div>
       </div>
