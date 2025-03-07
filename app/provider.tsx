@@ -9,12 +9,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import React, { ReactNode, useState } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { SessionProvider as NextAuthProvider } from "next-auth/react";
-import { Toaster } from "../components/ui/toaster";
+import { Toaster as ShadcnToaster } from "../components/ui/toaster";
 import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@/lib/trpc/client";
 import SuperJSON from "superjson";
 import { store } from "@/config/redux/storeRedux";
 import { DesignProvider } from "./configure/design/hooks/useDesign-context";
+import toast, { Toaster } from 'react-hot-toast';
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; //browser whould use relative url
@@ -58,8 +59,9 @@ const ProviderClient = ({ children }: { children: ReactNode }) => {
         <NextAuthProvider>
           <DesignProvider>
             <QueryClientProvider client={queryClient}>
-               {children}
-              <Toaster />
+              {children}
+              <ShadcnToaster />
+              <Toaster position="top-center" reverseOrder={false} />
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </DesignProvider>

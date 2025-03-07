@@ -7,8 +7,8 @@ const NewProducts = async () => {
 
   return (
     <section className=" pt-5 pb-5 space-y-3 ">
-      <div className="flex items-center gap-2">
-        <h3 className="sedgwick_ave font-semibold text-3xl md:text-4xl ">
+      <div className="flex text-center items-center justify-center gap-2">
+        <h3 className="sedgwick_ave font-semibold text-3xl md:text-[2.60rem] ">
           <span className="text-accent">Nuevos</span> diseños
         </h3>
       </div>

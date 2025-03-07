@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { getProviders, signIn } from "next-auth/react";
 import { Input } from "../../../components/ui/input";
-import { Button } from "../../../components/ui/button";
+import { Button, buttonVariants } from "../../../components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import useFormHandler from "@/hooks/useFormHandler";
 import { z } from "zod";
@@ -21,6 +21,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useToast } from "@/components/ui/use-toast";
+import { ArrowLeft } from "lucide-react";
+import { cn } from "@/lib/utils/utils";
 
 interface AuthProvider {
   id: string;
@@ -95,7 +97,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex  items-center justify-center bg-gray-200">
+    <div className="relative min-h-screen flex  items-center justify-center bg-gray-200">
+        <div>
+        <Link href="/" className={cn(buttonVariants({variant:'outline',size:'sm',className:'absolute top-2 left-2 flex items-center gap-2 px-3 rounded-2xl'}))}>
+           <ArrowLeft/>  Regresar a la tienda
+        </Link>
+      </div>
       <section className=" space-y-2 flex flex-col-reverse md:grid md:grid-cols-10 bg-white rounded-xl">
         <div className="hidden  md:block overflow-hidden bg-yellow-200 col-span-6  md:col-span-6 relative w-[500px] min-h-[400px] h-full rounded-l-xl">
      

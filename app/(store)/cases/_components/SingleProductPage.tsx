@@ -76,11 +76,12 @@ const SingleProductPage = ({ id }: { id: string }) => {
     <section className=" md:pt-4  md:px-5 lg:mx-10 mb-5 min-h-dvh">
       <div className="mb-3 ml-6 hidden md:block">
         <Breadcrumb>
-          <BreadcrumbList className="quicksand font-medium text-sm">
+          <BreadcrumbList className=" font-medium text-sm ">
             {[...BREAD_CRUBS_ITEMS, currentBreadCrumItem]?.map((item) => (
               <>
                 <BreadcrumbItem>
                   <BreadcrumbLink
+                   href={item.path}
                     className={cn(item?.isCurrentPath && "text-accent")}
                   >
                     {item.label}
@@ -97,8 +98,8 @@ const SingleProductPage = ({ id }: { id: string }) => {
           <SliderImages images={images!} />
         </div>
 
-        <div className=" grid grid-rows-[1fr_auto] gap-y-5 md:min-h-[65svh] md:col-span-4 lg:col-span-4 px-6 md:px-2 w-full ">
-          <div>
+        <div className=" grid grid-rows-[1fr_auto] gap-y-10 md:min-h-[73svh] md:col-span-4 lg:col-span-4 px-6 md:px-2 w-full ">
+          <div className="md:space-y-10">
             <header className="space-y-0">
               <h2 className="quicksand text-3xl font-medium">
                 Cover <span>{name}</span>

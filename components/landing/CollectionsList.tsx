@@ -8,7 +8,7 @@ const CollectionsList = async () => {
 
   return (
     <div>
-      <h2 className="sedgwick_ave font-semibold text-3xl md:text-4xl   text-gray-900">
+      <h2 className="sedgwick_ave font-semibold text-center text-3xl md:text-[2.60rem]   text-gray-900">
         <span className="text-accent">Colecciones</span> recientes
       </h2>
 

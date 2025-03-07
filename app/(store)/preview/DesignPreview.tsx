@@ -4,8 +4,7 @@ import Confetti from "react-dom-confetti";
 import { cn } from "../../../lib/utils/utils";
 import Phone from "../../(store)/_components/Phone";
 import { Button } from "../../../components/ui/button";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+import {  useRouter, useSearchParams } from "next/navigation";
 import { Check } from "lucide-react";
 import useCartItemsActions from "@/hooks/useCartItemsActions";
 import useCartData from "@/hooks/useCartData";
@@ -15,9 +14,7 @@ const DesignPreview = ({ configuration }: any) => {
   const { id, imageUrl } = configuration || {};
   const searchParams = useSearchParams()
   const router = useRouter();
-  const path = usePathname()
 
-  const { status } = useSession();
 
   useEffect(() => {
     setConfetti(true);

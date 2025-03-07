@@ -7,8 +7,8 @@ const ProductsFavorites = async() => {
   await serverHelpers.catalog.getMostOrderedProducts.fetch();
   return (
     <section className=" pt-5 pb-5 space-y-3 ">
-      <div className="flex items-center gap-2">
-        <h3 className="sedgwick_ave font-semibold text-2xl md:text-4xl mb-1.5 max-w-[290px] md:max-w-full truncate   "><span className="text-accent text-3xl md:text-4xl">Favoritos</span> de nuestros clientes</h3>
+      <div className="flex items-center justify-center">
+        <h3 className="sedgwick_ave font-semibold text-3xl md:text-[2.60rem] mb-1.5  md:max-w-full truncate   "><span className="text-accent">Favoritos</span> de nuestros clientes</h3>
       </div>
       <Slider>
         <SliderContent>
