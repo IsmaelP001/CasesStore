@@ -28,7 +28,6 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -76,21 +75,20 @@ const MobileNavbar: React.FC = () => {
   };
 
   return (
-    <div className="relative flex z-50 bg-white  items-center justify-between px-4 py-2 border-b md:hidden">
+    <div className="relative flex z-50 bg-white  items-center justify-between px-4 py-1 border-b md:hidden">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="ghost" className="p-2 z-50">
             <FaBars className="text-xl" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-64">
+        <SheetContent side="left" >
           <SheetHeader>
             <SheetTitle>Menú</SheetTitle>
-            <SheetDescription>Navega por las secciones</SheetDescription>
           </SheetHeader>
-          <nav className="mt-4 space-y-3">
+          <nav className="mt-14 space-y-3 max-w-[250px] m-auto" >
             <SheetClose asChild>
-              <Link href={"/"} className="block">
+              <Link href={"/"} className="block text-lg font-medium">
                 Inicio
               </Link>
             </SheetClose>
@@ -204,8 +202,8 @@ export default function Navbar() {
   }
 
   return (
-    <NavigationMenu.Root className="NavigationMenuRoot">
-      <div className="NavigationMenuContainer border-b bg-white border-gray-300">
+    <NavigationMenu.Root  className="NavigationMenuRoot">
+      <div className="NavigationMenuContainer  bg-transparent ">
         <div className="NavigationMenuStart list-none">
           <NavigationMenu.Item>
             <Link className="NavigationMenuLink" href="/">
@@ -219,8 +217,8 @@ export default function Navbar() {
             </Link>
           </NavigationMenu.Item>
         </div>
-        <div className="NavigationMenuCenter">
-          <NavigationMenu.List className="NavigationMenuList">
+        <div className="NavigationMenuCenter rounded-xl">
+          <NavigationMenu.List className="NavigationMenuList !rounded-3xl">
             <NavigationMenu.Item>
               <NavigationMenu.Trigger className="NavigationMenuTrigger">
                 Dispositivos <CaretDownIcon className="CaretDown" aria-hidden />
@@ -256,8 +254,8 @@ export default function Navbar() {
               </NavigationMenu.Trigger>
               <NavigationMenu.Content className="NavigationMenuContent p-5">
                 <h3 className="text-xl font-bold">Colecciones</h3>
-                <ul className="List two grid gap-4 grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
-                  {collections?.map((collection) => (
+                <ul className="w-[600px] grid gap-4 grid-cols-[repeat(auto-fit,minmax(150px,1fr))] p-4">
+                {collections?.map((collection) => (
                     <ListItem
                       href={`/cases?collection=${collection?.name}`}
                       key={collection?.id}
@@ -330,10 +328,12 @@ const ListItem = React.forwardRef<
   }
 >(({ className, href, children, title, ...props }) => (
   <li {...props}>
-    <Link href={href || ""}>
+     <NavigationMenu.Link asChild>
+     <Link href={href || ""}>
       <p className="text-base font-bold leading-none mb-1">{title}</p>
       {children}
     </Link>
+     </NavigationMenu.Link>
   </li>
 ));
 ListItem.displayName = "ListItem";

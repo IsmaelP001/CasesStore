@@ -18,7 +18,7 @@ const FilterParams = () => {
     .flat();
 
   return (
-    <div className="flex gap-2 flex-nowrap overflow-x-scroll scrollbar-hide">
+    <div className="flex gap-2 flex-nowrap overflow-x-scroll scrollbar-hide ">
       {paramsArray.map(([key, value]) => (
         <Button
           key={key.toString()}

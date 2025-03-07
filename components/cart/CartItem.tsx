@@ -28,13 +28,12 @@ const CartItem = ({ item }: CartItemProps) => {
     inStock,
   } = item;
 
-  console.log("cart item", item);
 
   const [newQuantity, setNewQuantity] = useState<number>(quantity);
   const handleChangeState = (value: number) => {
     setNewQuantity((prev: any) => value);
   };
-  const { handleQuantityChange, isPending } = useCartItemsActions(
+  const { handleQuantityChange, isPendingUpdate } = useCartItemsActions(
     () => handleChangeState(quantity),
     true
   );
@@ -107,7 +106,7 @@ const CartItem = ({ item }: CartItemProps) => {
             ></Input>
             <button
               className="w-7 h-7 grid place-content-center"
-              disabled={isPending}
+              disabled={isPendingUpdate}
               data-id="DECREASE"
               onClick={() => {
                 handleChangeState(newQuantity < 1 ? 0 : newQuantity - 1);
@@ -121,11 +120,11 @@ const CartItem = ({ item }: CartItemProps) => {
               )}
             </button>
             <div className="max-h-20 w-4 text-center">
-              {isPending ? <Loading size={15} /> : <span>{newQuantity}</span>}
+              {isPendingUpdate ? <Loading size={15} /> : <span>{newQuantity}</span>}
             </div>
             <button
               className="w-7 h-7 grid place-content-center text-xl text-black"
-              disabled={isPending || inStock <= newQuantity}
+              disabled={isPendingUpdate || inStock <= newQuantity}
               data-id="INCREASE"
               onClick={() => {
                 handleChangeState(newQuantity + 1);

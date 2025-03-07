@@ -16,15 +16,17 @@ interface SliderImagesProps {
   images: ImageType[];
 }
 
-const SliderImages: React.FC<SliderImagesProps> = ({ images }) => {
+const SliderImages: React.FC<SliderImagesProps> = ({ images =[]}) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [mainSwiper, setMainSwiper] = useState<any>(null);
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1024px)" });
 
+  if(!images)return
+
   return (
-    <div className="absolute inset-0 md:px-4  max-w-screen-lg mx-auto md:h-[65svh] flex gap-2 flex-col lg:flex-row items-start overflow-hidden">
+    <div className="absolute inset-0 md:px-4  max-w-screen-lg mx-auto md:h-[75svh] flex gap-2 flex-col lg:flex-row items-start overflow-hidden">
       {/* Thumbnail Swiper */}
-      <div className={`${isTabletOrMobile ? "order-1 min-w-[50svw] m-auto justify-center" : "lg:w-[90px] lg:h-full"} flex-shrink-0`}>
+      <div className={`${isTabletOrMobile ? "order-1 min-w-[50svw] m-auto justify-center" : "lg:w-[70px] lg:h-full"} flex-shrink-0`}>
         <Swiper
           onSwiper={setThumbsSwiper}
           direction={isTabletOrMobile ? "horizontal" : "vertical"}
@@ -48,7 +50,7 @@ const SliderImages: React.FC<SliderImagesProps> = ({ images }) => {
         </Swiper>
       </div>
 
-      <div className="relative flex-1 h-fit md:max-h-[70dvh] md:h-full w-full lg:w-5/6 lg:max-h-full flex justify-center items-center bg-gray-200 md:rounded-2xl overflow-hidden">
+      <div className="relative flex-1 h-fit md:max-h-[90dvh] md:h-full w-full lg:w-5/6 lg:max-h-full flex justify-center items-center bg-gray-200 md:rounded-2xl overflow-hidden">
       <Swiper
           onSwiper={setMainSwiper}
           spaceBetween={10}

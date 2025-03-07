@@ -1,5 +1,5 @@
 import { ProductTypeEnum } from "@/server/catalog/domain/product.model";
-import { string } from "zod";
+import { number, string } from "zod";
 
 export interface CartTotal {
   grossTotal: number;
@@ -8,13 +8,21 @@ export interface CartTotal {
   total: number;
 }
 
+export const cartStatusEnum = ['PENDING','ACTIVE','CHECKED_OUT','VERIFIED_USER','ABANDONED'] as const
+
+export type CartStatus = typeof cartStatusEnum[number]
 
 export interface Cart {
-  id:string,
-  userId:string,
-  hasCheckout:boolean
+  id: string;
+  userId: string;
+  status: CartStatus;
 }
 
+export interface FindProductInCart {
+  productId: string;
+  cartId: string;
+  deviceId: string;
+}
 
 // export interface CartItemQueryElement{
 //   quantity: number;
@@ -38,12 +46,9 @@ export interface CartItem {
   productId?: string;
   deviceId: string;
   quantity: number;
-  prevQuantity?:number;
+  prevQuantity?: number;
   colorId?: string | null;
-  isAddItemFirstTime?:boolean
 }
-
-
 
 interface BaseConfiguration {
   configurationId?: string;
@@ -53,12 +58,12 @@ interface BaseConfiguration {
 export interface CartItemQueryElement extends BaseConfiguration {
   name: string;
   price: string;
-  productId:string;
-  quantity:number
-  colorId:string
+  productId: string;
+  quantity: number;
+  colorId: string;
   productType: ProductTypeEnum;
   coverImage: string;
-  inStock:number
+  inStock: number;
   device: {
     id: string;
     name: string;
@@ -66,12 +71,9 @@ export interface CartItemQueryElement extends BaseConfiguration {
 }
 
 export interface CartItemQuery {
-  cartId:string,
-  items:CartItemQueryElement[]
- }
- 
-
-
+  cartId: string;
+  items: CartItemQueryElement[];
+}
 
 export interface ApplicableProductCouponDto {
   cartId: string;
@@ -83,7 +85,7 @@ export interface ApplyCouponCartDto {
   cartId: string;
   productId: string;
   couponId: string;
-  discountValue:number
+  discountValue: number;
 }
 
 export interface CartItem {
@@ -92,37 +94,33 @@ export interface CartItem {
   productId?: string;
   deviceId: string;
   quantity: number;
-  prevQuantity?:number;
+  prevQuantity?: number;
   colorId?: string | null;
   configurationId?: string | null;
 }
 
-export interface ApplicableProduct{
-  product:{
-    id:string,
-    price:number
-  }
+export interface ApplicableProduct {
+  product: {
+    id: string;
+    price: number;
+  };
 }
-
-
 
 export interface CustomCaseCartDetails {
-  id?: number; 
-  cartId: string; 
+  id?: number;
+  cartId: string;
   material: string;
   quantity: number;
-  deviceId:string
-  price: string; 
-  discountId?: string | null; 
-  configurationId: string; 
-  createdAt?: Date; 
-  updatedAt?: Date; 
-  image?:{
-    imageUrl:string
-  },
-  device?:{
-    name:string
-  }
+  deviceId: string;
+  price: string;
+  discountId?: string | null;
+  configurationId: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  image?: {
+    imageUrl: string;
+  };
+  device?: {
+    name: string;
+  };
 }
-
-

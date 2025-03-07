@@ -66,7 +66,6 @@ class CatalogsServiceFacadeImpl {
   async getProductById(productId: string): Promise<ProductById | null> {
     try {
       const data = await this.productService.getById(productId);
-      console.log('product id facade',productId)
       return data;
     } catch (error) {
       throw new Error("error al obtener producto" + error);

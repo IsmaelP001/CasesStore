@@ -1,4 +1,4 @@
-import { rol, user } from "@/config/database/schemes";
+import {  user } from "@/config/database/schemes";
 import { BaseRepository } from "@/server/shared/repositories/BaseRepository";
 import { Pagination, UpdateUser, User } from "../domain/user.model";
 import { IDefaultUserRepository } from "../domain/repositories";
@@ -24,7 +24,7 @@ export class UserRepositoryImpl
         phonenumber: true,
         createdAt: true,
         updatedAt: true,
-        rolId: true,
+        rol: true,
       },
     });
     return data as User;
@@ -40,7 +40,7 @@ export class UserRepositoryImpl
         phonenumber: true,
         createdAt: true,
         updatedAt: true,
-        rolId: true,
+        rol: true,
       },
       limit:(pagination?.limit || 10)
     });
@@ -49,33 +49,30 @@ export class UserRepositoryImpl
 
   async updateUser(user: Partial<UpdateUser>): Promise<User> {
     const { userId, ...userData } = user;
-    const data = await this.update({
+    const [data] = await this.update({
       input: userData,
       filter: { id: userId },
     });
 
-    return data[0] as User;
+    return data as User;
   }
 
   async createUser(user: User): Promise<User> {
     try {
-      const userRole = await this.db.query.rol.findFirst({
-        where: eq(rol.rol, "customer"),
-      });
-      const data = await this.create({ ...user, rolId: userRole?.id! });
-      return data[0] as User;
+      const [newUser] = await this.create(user);
+      return newUser as User;
     } catch (error) {
       throw new Error("error creating user" + error);
     }
   }
 
   async getTotalCustomers(): Promise<{ totalUsers: string }> {
-    const data = await this.db
+    const [data] = await this.db
       .select({
         totalUsers: sql`count(${user.id})`,
       })
       .from(user);
-    return data[0];
+    return data
   }
 }
 

@@ -3,11 +3,14 @@ import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import Auth0Provider from "next-auth/providers/auth0";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
 import { User } from "@/server/user/domain/user.model";
-import { authServiceFacade, userServiceFacade } from "@/server/user/application";
+import {
+  authServiceFacade,
+} from "@/server/user/application";
+import { cookies } from "next/headers";
+import { VARIABLES_CONFIG } from "@/lib/utils/utils";
 
- const authOption: NextAuthOptions = {
+const authOption: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
@@ -28,7 +31,15 @@ import { authServiceFacade, userServiceFacade } from "@/server/user/application"
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
-        const user = await authServiceFacade.authUserLocalDb({email:credentials?.email!,password:credentials?.password!})
+        const user = await authServiceFacade.authUserLocalDb({
+          email: credentials?.email!,
+          password: credentials?.password!,
+        });
+        cookies().set(VARIABLES_CONFIG.CART_TOKEN!, "token", {
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24,
+        });
         if (!user) {
           return null;
         }
@@ -37,7 +48,7 @@ import { authServiceFacade, userServiceFacade } from "@/server/user/application"
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
-          rol: user.rolId,
+          rol: user.rol,
         };
       },
     }),
@@ -56,30 +67,33 @@ import { authServiceFacade, userServiceFacade } from "@/server/user/application"
         };
 
         try {
-          const userDb = await authServiceFacade.authUserExternalProvider(authUser);
-
+          const userDb = await authServiceFacade.authUserExternalProvider(
+            authUser
+          );
+          cookies().delete(VARIABLES_CONFIG.CART_TOKEN!)
           user.id = userDb.id;
           user.email = userDb.email;
           user.firstName = userDb.firstName;
           user.lastName = userDb.lastName;
-          user.rolId = userDb.rolId;
+          user.rol = userDb.rol;
         } catch (error) {
           return false;
         }
 
         return true;
       }
-      if(user)return true
-      return false
-      },
+      if (user) return true;
+      return false;
+    },
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.name = user.firstName;
         token.lastName = user.lastName;
-        token.rol = user.rolId;
+        token.rol = user.rol;
       }
+  
       return token;
     },
     async session({ session, token }: any) {
@@ -88,13 +102,14 @@ import { authServiceFacade, userServiceFacade } from "@/server/user/application"
         session.user.email = token.email;
         session.user.name = token.name;
         session.user.lastName = token.lastName;
-        session.user.rol = token.rolId;
+        session.user.rol = token.rol;
       }
       return session;
     },
+   
   },
 };
 
 const handler = NextAuth(authOption);
 export { handler as GET, handler as POST };
-export default authOption
+export default authOption;
