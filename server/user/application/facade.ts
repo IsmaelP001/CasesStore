@@ -11,53 +11,69 @@ import { Gift, GiftActive, updateGift } from "../domain/gift.model";
 import { handleError } from "@/server/shared/utils/errors";
 import { Favorite } from "../domain/favorite.model";
 import { Product } from "@/server/catalog/domain/product.model";
-import bcrypt from "bcrypt";
 import { AuthSignin } from "../domain/auth.model";
 import { comparePassword, hashPassword } from "@/lib/auth";
 import { TRPCError } from "@trpc/server";
+import {
+  ICartServiceFacade,
+} from "@/server/cart/application/services";
 
 export class AuthFacade {
-  constructor(private authService: IAuthService) {}
+  constructor(
+    private authService: IAuthService,
+    private cartServiceFacade: ICartServiceFacade
+  ) {}
 
   async authUserExternalProvider(user: User): Promise<User> {
     try {
       const userDb = await this.authService.findOrCreateUser(user);
+       this.cartServiceFacade.mergeCart(userDb?.id!);
       return userDb;
     } catch (error) {
+      console.log('erro sign in',error)
       throw new Error("Error finding or creating user" + error);
     }
   }
 
-  async register(userData:User): Promise<User> {
-   try {
-    const isEmailExist = await this.authService.getUserByEmailLocalProvider(userData?.email)
-    if(isEmailExist){
-      throw new TRPCError({
-        code:'FORBIDDEN',
-        message:"Un usuario ya existe con este correo, inicia session."
-      })
+  async register(userData: User): Promise<User> {
+    try {
+      const isEmailExist = await this.authService.getUserByEmailLocalProvider(
+        userData?.email
+      );
+      if (isEmailExist) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Un usuario ya existe con este correo, inicia session.",
+        });
+      }
+      const hashedPassword = await hashPassword(userData.password!);
+      return await this.authService.register({
+        ...userData,
+        password: hashedPassword,
+      });
+    } catch (error) {
+      handleError(error);
     }
-    const hashedPassword= await hashPassword(userData.password!)
-    return await this.authService.register({...userData,password:hashedPassword});
-   } catch (error) {
-    handleError(error)
-   }
   }
 
-  async authUserLocalDb({email,password}:AuthSignin): Promise<User> {
+  async authUserLocalDb({ email, password }: AuthSignin): Promise<User> {
     try {
       const userDb = await this.authService.getUserByEmailLocalProvider(email);
-      if(!userDb){
+      if (!userDb) {
         throw new Error("email/Usuario no encontrado");
       }
-      const isPasswordMatch= await comparePassword(password,userDb?.password!)
+      const isPasswordMatch = await comparePassword(
+        password,
+        userDb?.password!
+      );
       if (!isPasswordMatch) {
         throw new Error("password/Contraseña incorrecta");
       }
-      const {password:userPasword,...rest}=userDb
-      return rest
+       this.cartServiceFacade.mergeCart(userDb?.id!);
+      const { password: userPasword, ...rest } = userDb;
+      return rest;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }

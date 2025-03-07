@@ -4,14 +4,25 @@ import { CartItemDto } from "./dto";
 
 export interface ICartService {
   addItem(input: CartItem): Promise<CartItem[]>;
-  getCartItems(cartId:string): Promise<CartItemQuery>;
+  saveCartItems(input:CartItem[]):Promise<CartItem[]>
+  getInCartItems(cartId:string): Promise<CartItemQuery>;
   updateItem(input: UpdateCartItem): Promise<CartItem>;
-  getTotalCart(cartId:string): Promise<CartTotal>;
   getApplicableCouponProduct(params:ApplicableProductCouponDto):Promise<ApplicableProduct>
-  initCartAndAddItems(input: CartItemDto[],userId: string): Promise<{ cartId: string }> 
-  findActiveCart(userId:string): Promise<{cartId:string}>
-  findOrCreateActiveCart(userId:string): Promise<{cartId:string}>
+  findActiveCart(userId:string): Promise<Cart>
+  createCart(userId?:string): Promise<Cart>
   markCartAsCheckedOut(cartId:string): Promise<Cart>
+  updateItemQuantity(input: CartItem): Promise<CartItem[]>
+  findCart(cartId: string): Promise<{ cartId: string }>
+  updateCart(cartId: string,input:Partial<Cart>): Promise<Cart>
+  findOrCreateCart(userId?: string): Promise<Cart>
+  getCartItems(cartId:string):Promise<CartItem[]>
 }
 
+export interface ICartServiceFacade {
+  getCartItems(userId?: string): Promise<CartItemQuery>;
+  mergeCart(userId: string): Promise<void>;
+  getOrCreateActiveUserCart(userId?: string): Promise<{ cartId: string }>;
+  createItem(cartItems: CartItemDto): Promise<CartItem[]>;
+  updateItemQuantity(cartItems: CartItemDto): Promise<CartItem[]>;
+}
 
