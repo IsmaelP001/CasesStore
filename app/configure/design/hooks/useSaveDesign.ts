@@ -51,16 +51,16 @@ export const useSaveDesign = () => {
       ctx!.fillRect(0, 0, canvas.width, canvas.height);
 
       if (imagesState?.length) {
-        const imagesPromises = stickersState.items.map((image) => {
+        const imagesPromises = imagesState.map((image) => {
           return new Promise<void>((resolve) => {
             const customImage = new Image();
             customImage.crossOrigin = "anonymous";
-            customImage.src = image.image.src;
+            customImage.src = image.url!;
             customImage.onload = () => {
               ctx?.drawImage(
                 customImage,
-                (image.x - leftOffset) * scaleFactor,
-                (image.y - topOffset) * scaleFactor,
+                (image.position.x - leftOffset) * scaleFactor,
+                (image.position.y - topOffset) * scaleFactor,
                 image.width * scaleFactor,
                 image.height * scaleFactor
               );
@@ -74,7 +74,7 @@ export const useSaveDesign = () => {
       if (textContainerRef.current) {
         const textImageUrl = await toPng(textContainerRef.current, {
           quality: 1,
-          pixelRatio: 3,
+          pixelRatio: 5,
         });
         const textImage = new Image();
         textImage.crossOrigin = "anonymous";
