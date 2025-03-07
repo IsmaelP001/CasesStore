@@ -24,7 +24,6 @@ export const PhoneCasePreview = () => {
                   rounded-lg px-12 py-6 text-center flex flex-col items-center justify-center "
     >
 
-      {/* Contenedor con tamaño dinámico */}
       <div className="relative 
                 w-[calc((79dvh-150px)*(900/1700))]
                 aspect-[920/1900] 
