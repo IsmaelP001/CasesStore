@@ -29,6 +29,8 @@ class UserServiceImpl implements IUserService {
     return this.UserRepository.getTotalCustomers()
   }
 
+
+
   async findOrCreateUser(user: User): Promise<User> {
     const userFound = await this.UserRepository.getUserBy({
       email: user.email,

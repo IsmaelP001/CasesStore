@@ -7,85 +7,105 @@ import {
   Cart,
   CartItem,
   CartItemQuery,
-  CartTotal,
+  CartStatus,
 } from "../domain/models";
 import { ICartService } from "./services";
 import { defaultCartRepository } from "../infrastructure/repositories-impl";
-import { CartItemDto } from "./dto";
-import { handleError } from "@/server/shared/utils/errors";
 import { IStockService } from "@/server/stock/application/service-def";
 import { defaultStockService } from "@/server/stock/application/service-impl";
 
 class DefaultCartServiceImpl implements ICartService {
   constructor(
     private cartRepository: ICartRepository,
-    private stockService: IStockService
   ) {}
 
   async addItem(input: CartItem): Promise<CartItem[]> {
-    if (input?.isAddItemFirstTime) {
-      const isProductInCart = await this.cartRepository.findProductInCart(
-        input.productId!,
-        input.cartId
-      );
-      if (isProductInCart) return [];
-    }
+    const isProductInCart = await this.cartRepository.findProductInCart({
+      deviceId: input.deviceId,
+      cartId: input.cartId,
+      productId: input.productId!,
+    });
+    if (isProductInCart) return [];
+
     const result = await this.cartRepository.createItem(input);
     return result as CartItem[];
   }
 
-  async findActiveCart(userId: string): Promise<{ cartId: string }> {
+  saveCartItems(input: CartItem[]): Promise<CartItem[]> {
+    return this.cartRepository.createItem(input) as any;
+  }
+
+  async updateItemQuantity(input: CartItem): Promise<CartItem[]> {
+    const result = await this.cartRepository.createItem(input);
+    return result as CartItem[];
+  }
+
+  async findActiveCart(userId: string): Promise<Cart> {
     return this.cartRepository.findActiveCart(userId);
   }
 
+  findCart(cartId: string): Promise<{ cartId: string }> {
+    return this.cartRepository.findCart(cartId);
+  }
+
+  async updateCart(cartId: string, input: Partial<Cart>): Promise<Cart> {
+    return this.cartRepository.updateCart(cartId, input);
+  }
+
   async markCartAsCheckedOut(cartId: string): Promise<Cart> {
-    return this.cartRepository.updateCart(cartId, { hasCheckout: true });
+    return this.cartRepository.updateCart(cartId, { status: "CHECKED_OUT" });
   }
 
-  async findOrCreateActiveCart(userId: string): Promise<{ cartId: string }> {
-    return await this.cartRepository.findOrCreateActiveCart(userId);
-  }
-
-  async initCartAndAddItems(
-    input: CartItemDto[],
-    userId: string
-  ): Promise<{ cartId: string }> {
-    const { cartId } = await this.cartRepository.findOrCreateActiveCart(userId);
-    const cartItems = await Promise.all(
-      input.map(async (item) => {
-        const stockRecord = await this.stockService.findStockByProductAndDeviceId({
-          productId:item.productId,
-          deviceId:item.deviceId
-        });
-        const availableQuantity = stockRecord?.inStock || 0;
-        const quantityToAdd = Math.min(item.quantity, availableQuantity);
-
-        return {
-          ...item,
-          cartId,
-          quantity: quantityToAdd,
-        };
-      })
-    );
-
-    await this.cartRepository.createItem(cartItems);
-    return { cartId };
-  }
-
-  async getCartItems(cartId: string): Promise<CartItemQuery> {
-    try {
-      return await this.cartRepository.getItems({ cartId });
-    } catch (error) {
-      handleError(error);
+  async findOrCreateCart(userId?: string): Promise<Cart> {
+    const status:CartStatus = userId ? 'ACTIVE':"PENDING"
+    if(userId){
+      const activeUserCart = await this.cartRepository.findActiveCart(userId);
+      if (activeUserCart) return activeUserCart;
     }
+    return await this.cartRepository.createCart(status, userId);
+  }
+
+  async createCart(userId?: string): Promise<Cart> {
+    const status: CartStatus = userId ? "ACTIVE" : "PENDING";
+    return await this.cartRepository.createCart(status, userId);
+  }
+
+  // async initCartAndAddItems(
+  //   input: CartItemDto[],
+  //   userId: string
+  // ): Promise<{ cartId: string }> {
+  //   const { cartId } = await this.cartRepository.findOrCreateActiveCart(userId);
+  //   const cartItems = await Promise.all(
+  //     input.map(async (item) => {
+  //       const stockRecord =
+  //         await this.stockService.findStockByProductAndDeviceId({
+  //           productId: item.productId,
+  //           deviceId: item.deviceId,
+  //         });
+  //       const availableQuantity = stockRecord?.inStock || 0;
+  //       const quantityToAdd = Math.min(item.quantity, availableQuantity);
+
+  //       return {
+  //         ...item,
+  //         cartId,
+  //         quantity: quantityToAdd,
+  //       };
+  //     })
+  //   );
+
+  //   await this.cartRepository.createItem(cartItems);
+  //   return { cartId };
+  // }
+  async getInCartItems(cartId: string): Promise<CartItemQuery> {
+    return await this.cartRepository.getItems({ cartId });
   }
 
   async updateItem(input: UpdateCartItem): Promise<CartItem> {
     return await this.cartRepository.updateItem(input);
   }
 
-  async getTotalCart(cartId: string): Promise<CartTotal> {
-    return await this.cartRepository.getTotalCart(cartId);
+  async getCartItems(cartId: string): Promise<CartItem[]> {
+      return await this.cartRepository.getCartItems(cartId)
   }
 
   async getApplicableCouponProduct(
@@ -106,5 +126,4 @@ class DefaultCartServiceImpl implements ICartService {
 
 export const defaultCartService = new DefaultCartServiceImpl(
   defaultCartRepository,
-  defaultStockService
 );

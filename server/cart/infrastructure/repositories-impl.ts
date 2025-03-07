@@ -16,14 +16,15 @@ import {
   Cart,
   CartItem,
   CartItemQuery,
+  CartStatus,
   CartTotal,
+  FindProductInCart,
 } from "../domain/models";
 
-import {
-  ICartRepository,
-} from "../domain/services";
+import { ICartRepository } from "../domain/services";
 import { db } from "@/config/database/db";
 import { couponCartItems } from "@/config/database/schemes/couponCartItems";
+import { jsonAggBuildObject } from "@/lib/utils/querys";
 
 class CartRepositoryImpl
   extends BaseRepository<typeof cartDetails, "cartDetails">
@@ -33,24 +34,17 @@ class CartRepositoryImpl
     super(cartDetails, "cartDetails");
   }
 
-  async findOrCreateActiveCart(userId: string): Promise<{ cartId: string }> {
+
+  async createCart(status:CartStatus,userId?: string): Promise<Cart> {
     return await this.db.transaction(
       async (tx: any) => {
-        const activeCart = await this.cartTableRepository.getFirst({
-          filter: { userId, hasCheckout: false },
-          tx,
-        });
-
-        if (activeCart?.id) {
-          return { cartId: activeCart.id };
-        }
 
         const [newCart] = await this.cartTableRepository.create(
-          { userId, hasCheckout: false },
+          { userId, status },
           { tx }
         );
 
-        return { cartId: newCart.id };
+        return newCart 
       },
       {
         isolationLevel: "serializable",
@@ -59,40 +53,64 @@ class CartRepositoryImpl
     );
   }
 
-  async findActiveCart(userId: string): Promise<{ cartId: string }> {
+  async findActiveCart(userId: string): Promise<Cart> {
+    return await this.cartTableRepository.getFirst({
+      filter: { userId, status: 'ACTIVE' },
+    }) as Cart
+  }
+
+
+  async findCart(cartId: string): Promise<{ cartId: string }> {
     const cartItem = await this.cartTableRepository.getFirst({
-      filter: { userId, hasCheckout: false },
+      filter: { id:cartId},
     });
     return { cartId: cartItem?.id };
   }
 
-  async findProductInCart(productId: string,cartId:string): Promise<boolean> {
-    const [product] = await db.select({
-      count:sum(cartDetails.quantity)
-    }).from(cartDetails).where(and(eq(cartDetails.productId,productId),eq(cartDetails.cartId,cartId)))
-    return parseInt(product.count!) >= 1 ? true: false
+
+  async findProductInCart({
+    deviceId,
+    productId,
+    cartId,
+  }: FindProductInCart): Promise<boolean> {
+    const [product] = await db
+      .select({
+        count: sum(cartDetails.quantity),
+      })
+      .from(cartDetails)
+      .where(
+        and(
+          eq(cartDetails.productId, productId),
+          eq(cartDetails.cartId, cartId),
+          eq(cartDetails.deviceId, deviceId)
+        )
+      );
+    return parseInt(product.count!) >= 1 ? true : false;
   }
-  async createItem(input: CartItem): Promise<Partial<CartItem[]>> {
+  async createItem(input: CartItem[]): Promise<Partial<CartItem[]>> {
     const createItemQuery = this.create(input as any);
-    const removeProductFromCartIfExist =
-      input.quantity - input.prevQuantity! === 0
-        ? db
-            .delete(couponCartItems)
-            .where(
-              and(
-                eq(couponCartItems.productId, input.productId!),
-                eq(couponCartItems.cartId, input.cartId)
-              )
-            )
-        : null;
+    // const removeProductFromCartIfExist =
+    //   input.quantity - input.prevQuantity! === 0
+    //     ? db
+    //         .delete(couponCartItems)
+    //         .where(
+    //           and(
+    //             eq(couponCartItems.productId, input.productId!),
+    //             eq(couponCartItems.cartId, input.cartId)
+    //           )
+    //         )
+    //     : null;
 
-    const queries = [createItemQuery];
-    if (removeProductFromCartIfExist) {
-      queries.push(removeProductFromCartIfExist as any);
-    }
+    // const queries = [createItemQuery];
+    // if (removeProductFromCartIfExist) {
+    //   queries.push(removeProductFromCartIfExist as any);
+    // }
 
-    const [cartItemCreated] = await Promise.all(queries);
-    return cartItemCreated;
+    return await createItemQuery;
+  }
+
+  async getCartItems(cartId:string):Promise<CartItem[]>{
+    return this.getAll({where:eq(cartDetails.cartId,cartId)});
   }
 
   async getItems({ cartId }: { cartId: string }): Promise<CartItemQuery> {
@@ -100,23 +118,30 @@ class CartRepositoryImpl
       .select({
         quantity: sql<number>`SUM(${cartDetails.quantity})`.mapWith(Number),
         productId: product.id,
+        deviceId: devices.id,
         name: product.name,
         price: product.price,
         coverImage: product.coverImage,
         configurationImage: sql<string>`MAX(${configurationimage.imageUrl})::varchar`,
-        configurationId: configurationimage.id,
+        configurationId: cartDetails.configurationId,
         productType: product.productType,
         device: {
           id: devices.id,
           name: devices.name,
         },
-        inStock:productDevices.inStock,
+        inStock: productDevices.inStock,
         colorId: cartDetails.colorId,
       })
       .from(cartDetails)
-      .leftJoin(product, eq(cartDetails.productId, product.id))
-      .leftJoin(devices, eq(cartDetails.deviceId, devices.id))
-      .leftJoin(productDevices, eq(productDevices.productId, cartDetails.productId))
+      .innerJoin(product, eq(cartDetails.productId, product.id))
+      .innerJoin(devices, eq(cartDetails.deviceId, devices.id))
+      .innerJoin(
+        productDevices,
+        and(
+          eq(productDevices.productId, cartDetails.productId),
+          eq(productDevices.deviceId, cartDetails.deviceId)
+        )
+      )
       .leftJoin(
         configurationimage,
         eq(cartDetails.configurationId, configurationimage.id)
@@ -124,48 +149,23 @@ class CartRepositoryImpl
       .where(eq(cartDetails.cartId, cartId))
       .groupBy(
         product.id,
+        product.name,
+        product.price,
+        product.coverImage,
+        product.productType,
         devices.id,
-        cartDetails.cartId,
-        cartDetails.colorId,
+        devices.name,
         configurationimage.id,
         cartDetails.configurationId,
+        cartDetails.colorId,
         productDevices.inStock
       )
-      .having(
-        sql`SUM(${cartDetails.quantity}) >= 1 AND 
-             (NOT (${product.productType} = 'CUSTOM_CASE_MATERIAL' AND ${cartDetails.configurationId} IS NULL))`
-      );
+      .having(sql`SUM(${cartDetails.quantity}) > 0`)
+      .orderBy(product.name, devices.name);
 
     return {
       cartId,
       items: data,
-    };
-  }
-
-  async getTotalCart(cartId: string): Promise<CartTotal> {
-    const totalsInCart = await this.db
-      .select({
-        total:
-          sql<number>`SUM(COALESCE(${cartDetails.quantity} * ${product.price},0))`.mapWith(
-            Number
-          ),
-      })
-      .from(cartDetails)
-      .leftJoin(product, eq(cartDetails.productId, product.id))
-      .where(
-        sql`${cartDetails.cartId} = ${cartId} AND 
-             NOT (${product.productType} = 'CUSTOM_CASE_MATERIAL' AND ${cartDetails.configurationId} IS NULL)`
-      );
-    
-    const grossTotal = totalsInCart.total;
-    const itebis = grossTotal * 0.18;
-
-    
-    return {
-      grossTotal,
-      itebis,
-      total: grossTotal + itebis,
-      shipping: 0,
     };
   }
 

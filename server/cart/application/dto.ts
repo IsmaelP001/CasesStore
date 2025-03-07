@@ -5,7 +5,6 @@ export interface CartItemDto{
     deviceId: string;
     quantity: number;
     colorId?: string | null;
-    isAddItemFirstTime?:boolean
     configurationId?: string | null;
   }
 

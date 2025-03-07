@@ -179,6 +179,7 @@ class DefaultProductRepositoryImpl
         ...item.devices,
         inStock: item.inStock,
       }));
+
       const product = { ...rest, devices };
       return product as ProductById;
     }
