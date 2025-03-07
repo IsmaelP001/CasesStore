@@ -8,6 +8,20 @@
       "when": 1741099055978,
       "tag": "0000_old_karen_page",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1741382724162,
+      "tag": "0001_loud_talos",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741382907113,
+      "tag": "0002_0001_loud_talos",
+      "breakpoints": true
     }
   ]
 }
