@@ -38,10 +38,10 @@ const CreateOrderBtn = () => {
     trpc.order.createOrder.useMutation({
       onSuccess: (data) => {
         utils.cart.getItems.invalidate();
-        utils.cart.getTotalCart.invalidate();
         router.push("/thanks");
       },
       onError: (err) => {
+        console.log('err',err)
         const orderZodErrors= err.data?.zodError?.fieldErrors
         if(orderZodErrors){
           dispath(setErrors(orderZodErrors))
