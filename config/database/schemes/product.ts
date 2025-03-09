@@ -12,6 +12,7 @@ export const product = pgTable("products", {
 	price: integer("price").notNull(),
     discountPrice:integer('discountPrice'),
     productType:productTypeEnum('product_type').notNull(),
+    description:text('description'),
     isConfigurable:boolean('isConfigurable').default(false),
 	collectionId: uuid("collectionId").references(() => collection.id),
     printPatternId:uuid('printPatternId').references(()=>printPattern.id),
