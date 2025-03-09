@@ -20,12 +20,6 @@ const FilterSearch = () => {
     }
   );
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      router.push(`?q=${query}`);
-      setQuery('')
-    }
-  };
 
 
   return (
@@ -35,7 +29,6 @@ const FilterSearch = () => {
         className="w-full"
         placeholder="Buscar por nombre, dispositivo o colecciones..."
         onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={handleKeyDown}
       />
 
       {isPending && query && (
@@ -52,22 +45,20 @@ const FilterSearch = () => {
         </div>
       )}
 
-      {data && query && data.length > 0 && (
-        <ul className="absolute z-20 mt-2 w-full border px-2 py-3 space-y-2 border-gray-300 rounded-md bg-white shadow-lg">
-          {data.map((product) => (
-            <li key={product.id}>
-              <Link
-                href={`/cases/${product.id}`}
-                className="px-4 py-2 cursor-pointer hover:bg-gray-200 space-x-2"
-              >
-                <span>{product.name}</span>,
-                <span>{product.collection}</span>
-
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+{data && query && data.length > 0 && (
+  <ul className="absolute z-20 mt-2 flex flex-col w-full border px-2 py-3 space-y-2 border-gray-300 rounded-md bg-white shadow-lg">
+    {data.map((product) => (
+      <li key={product.id} className="w-full">
+        <Link
+          href={`/cases/${product.id}`}
+          className="px-4 py-2 cursor-pointer block w-full hover:bg-gray-200 space-x-2"
+        >
+          <span>{product.name}</span>, <span>{product.collection?.name}</span>
+        </Link>
+      </li>
+    ))}
+  </ul>
+)}
 
       {data && query && data.length === 0 && (
         <div className="absolute z-20 mt-2 w-full border border-gray-300 rounded-md bg-white shadow-lg">

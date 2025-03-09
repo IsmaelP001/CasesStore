@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import moment from "moment";
 import "moment/locale/es";
+
+
 // import { getCookie } from "./cookies";
 import { extractPayload, PayloadCart } from "./token";
 export function cn(...inputs: ClassValue[]) {
