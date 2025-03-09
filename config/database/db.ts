@@ -9,9 +9,7 @@ import { VARIABLES_CONFIG } from "@/lib/utils/utils";
 config({ path: ".env.local" });
 
 const queryClient = postgres(VARIABLES_CONFIG.API_URL!);
-const db =
-  process.env.NODE_ENV === "development"
-    ? drizzle(queryClient, { schema })
-    : drizzleVercel(sql, { schema });
+const db =drizzle(queryClient, { schema })
+
 
 export { db };

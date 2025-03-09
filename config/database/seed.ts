@@ -18,6 +18,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Escudo Celestial",
+    description: "Un escudo elegante y resistente, diseñado para proteger con estilo. Perfecto para quienes buscan combinar funcionalidad y diseño.",
     price: 1000,
     discountPrice: 900,
     productType: "CASE",
@@ -33,6 +34,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Amuleto Fugaz",
+    description: "Un amuleto mágico que brilla con intensidad. Ideal para aquellos que buscan un toque de misterio y elegancia.",
     price: 1100,
     discountPrice: 950,
     productType: "ACCESORY",
@@ -46,8 +48,9 @@ const manualProductsArray = [
     updatedAt: new Date("2023-01-02"),
   },
   {
-    id:uuidv4(),
+    id: uuidv4(),
     name: "Armadura Estelar",
+    description: "Una armadura robusta y personalizable, inspirada en las estrellas. Perfecta para quienes buscan protección y estilo único.",
     price: 1200,
     discountPrice: 1000,
     productType: "CUSTOM_CASE_MATERIAL",
@@ -61,8 +64,9 @@ const manualProductsArray = [
     updatedAt: new Date("2023-01-03"),
   },
   {
-    id:uuidv4(),
+    id: uuidv4(),
     name: "Escudo Crepúsculo",
+    description: "Un escudo con un diseño inspirado en los colores del atardecer. Ideal para quienes aprecian la belleza de la naturaleza.",
     price: 1300,
     discountPrice: 1150,
     productType: "CASE",
@@ -78,6 +82,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Piedra Infinita",
+    description: "Una piedra mística que parece contener la energía del universo. Perfecta para aquellos que buscan un accesorio con un toque de magia.",
     price: 1400,
     discountPrice: 1200,
     productType: "ACCESORY",
@@ -93,6 +98,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Guardian Nocturno",
+    description: "Un escudo diseñado para proteger en las horas más oscuras. Ideal para quienes buscan seguridad y un diseño imponente.",
     price: 1500,
     discountPrice: 1300,
     productType: "CASE",
@@ -106,8 +112,9 @@ const manualProductsArray = [
     updatedAt: new Date("2023-01-06"),
   },
   {
-    id:uuidv4(),
+    id: uuidv4(),
     name: "Cuerda Astral",
+    description: "Una cuerda resistente y elegante, inspirada en las constelaciones. Perfecta para quienes buscan un accesorio con un toque celestial.",
     price: 1600,
     discountPrice: 1400,
     productType: "ACCESORY",
@@ -123,6 +130,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Coraza Legendaria",
+    description: "Una coraza personalizable que evoca la fuerza de los héroes antiguos. Ideal para quienes buscan un diseño épico y funcional.",
     price: 1700,
     discountPrice: 1500,
     productType: "CUSTOM_CASE_MATERIAL",
@@ -138,6 +146,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Escudo Lunar",
+    description: "Un escudo con un diseño inspirado en la luna. Perfecto para quienes buscan un toque de serenidad y protección.",
     price: 1800,
     discountPrice: 1600,
     productType: "CASE",
@@ -153,6 +162,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Gema Brillante",
+    description: "Una gema que deslumbra con su brillo. Ideal para aquellos que buscan un accesorio que llame la atención.",
     price: 1900,
     discountPrice: 1700,
     productType: "ACCESORY",
@@ -168,6 +178,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Escudo Solar",
+    description: "Un escudo que brilla con la energía del sol. Perfecto para quienes buscan protección y un diseño radiante.",
     price: 2000,
     discountPrice: 1800,
     productType: "CASE",
@@ -183,6 +194,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Colgante Estrella",
+    description: "Un colgante con forma de estrella que brilla en la oscuridad. Ideal para quienes buscan un accesorio con un toque mágico.",
     price: 2100,
     discountPrice: 1900,
     productType: "ACCESORY",
@@ -198,6 +210,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Armadura Dorada",
+    description: "Una armadura dorada que deslumbra con su brillo. Perfecta para quienes buscan un diseño lujoso y protector.",
     price: 2200,
     discountPrice: 2000,
     productType: "CUSTOM_CASE_MATERIAL",
@@ -213,6 +226,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Escudo Aurora",
+    description: "Un escudo inspirado en los colores de la aurora boreal. Ideal para quienes buscan un diseño único y llamativo.",
     price: 2300,
     discountPrice: 2100,
     productType: "CASE",
@@ -228,6 +242,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Piedra Estelar",
+    description: "Una piedra que parece contener la energía de las estrellas. Perfecta para quienes buscan un accesorio con un toque cósmico.",
     price: 2400,
     discountPrice: 2200,
     productType: "ACCESORY",
@@ -243,6 +258,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Escudo Galáctico",
+    description: "Un escudo que evoca la inmensidad del espacio. Ideal para quienes buscan un diseño futurista y protector.",
     price: 2500,
     discountPrice: 2300,
     productType: "CASE",
@@ -258,6 +274,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Cuerda Mística",
+    description: "Una cuerda con un diseño enigmático y resistente. Perfecta para quienes buscan un accesorio con un toque de misterio.",
     price: 2600,
     discountPrice: 2400,
     productType: "ACCESORY",
@@ -273,6 +290,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Coraza Radiante",
+    description: "Una coraza que brilla con una luz propia. Ideal para quienes buscan un diseño impresionante y protector.",
     price: 2700,
     discountPrice: 2500,
     productType: "CUSTOM_CASE_MATERIAL",
@@ -288,6 +306,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Escudo Nebuloso",
+    description: "Un escudo con un diseño que evoca las nebulosas del espacio. Perfecto para quienes buscan un toque de misterio y protección.",
     price: 2800,
     discountPrice: 2600,
     productType: "CASE",
@@ -303,6 +322,7 @@ const manualProductsArray = [
   {
     id: uuidv4(),
     name: "Gema Lunar",
+    description: "Una gema que brilla con la luz de la luna. Ideal para quienes buscan un accesorio con un toque de magia y elegancia.",
     price: 2900,
     discountPrice: 2700,
     productType: "ACCESORY",
@@ -316,6 +336,7 @@ const manualProductsArray = [
     updatedAt: new Date("2023-01-20"),
   },
 ];
+
 
 const productImagesArray = [
   // Book 1
