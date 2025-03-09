@@ -903,7 +903,7 @@ export async function seed() {
       const productDevice =randomDevices.map(device=>({
         id:uuidv4(),
         productId:item.id,
-        stock:faker.number.int({min:0,max:100}),
+        stock:Math.floor(Math.random() * 100),
         deviceId:device.id
       }))
       acc.push(productDevice)

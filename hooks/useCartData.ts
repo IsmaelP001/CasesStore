@@ -8,17 +8,17 @@ const useCartData = () => {
     data: cartItems,
     isFetching: isFetchingCartItems,
     isError,
-    refetch,
   } = trpc.cart.getItems.useQuery(undefined, {});
   const renderFirstTime = useRef(true);
   const seccion = useSession();
+  const utils = trpc.useUtils()
   useEffect(() => {
     if (renderFirstTime.current) {
       renderFirstTime.current = false;
       return;
     }
-    refetch();
-  }, [seccion?.status]);
+    utils.cart.getItems.invalidate()
+  }, [seccion,utils]);
 
   const calculateGrossTotalFromDb = useCallback(() => {
     if (cartItems?.items) {
@@ -29,6 +29,11 @@ const useCartData = () => {
     }
     return 0;
   }, [cartItems?.items]);
+
+  const inCartQuantity = useMemo(()=>{
+    if(!cartItems?.items?.length)return 0
+    return cartItems.items.reduce((acc,item)=> acc += item.quantity,0) || 0
+  },[cartItems])
 
   const inCartTotals = useMemo(() => {
     let grossTotal = calculateGrossTotalFromDb();
@@ -43,11 +48,11 @@ const useCartData = () => {
     };
   }, [calculateGrossTotalFromDb, cartItems]);
 
-  const isPending = isFetchingCartItems || status === "loading";
+  const isPending = isFetchingCartItems || seccion?.status === "loading";
 
   return {
     cartItems: cartItems?.items,
-    count: cartItems?.items?.length || 0,
+    count: inCartQuantity,
     isPending,
     isError,
     total: inCartTotals,

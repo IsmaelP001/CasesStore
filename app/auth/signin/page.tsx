@@ -204,7 +204,7 @@ const LoginPage = () => {
                       <Input
                         className="w-full"
                         type="password"
-                        placeholder="shadcn"
+                        placeholder="Ej: Tu contraseña"
                         {...field}
                       />
                     </FormControl>

@@ -13,7 +13,6 @@ export default defineConfig({
         url:process.env.NODE_ENV === "development"
         ? process.env.DB_URL!
         : process.env.POSTGRES_URL!,
-        ssl:false
     },
     verbose:true,
     strict:true

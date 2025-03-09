@@ -21,4 +21,6 @@ export const productFilterSchema = z.object({
     .string()
     .transform((data) => (data ? data.split("%") : []))
     .optional(),
+  page:z.coerce.number().optional(),
+  pageSize:z.coerce.number().optional()
 }).optional()

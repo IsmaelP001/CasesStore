@@ -11,4 +11,5 @@ config({ path: ".env.local" });
 const queryClient = postgres(VARIABLES_CONFIG.API_URL!);
 const db =drizzle(queryClient, { schema })
 
+
 export { db };
