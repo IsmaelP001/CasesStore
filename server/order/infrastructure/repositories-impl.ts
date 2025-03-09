@@ -36,7 +36,7 @@ export class DefaultOrderRepositoryImpl
 
       const markCartAsCheckout = tx
         .update(cart)
-        .set({ hasCheckout: true })
+        .set({status:'CHECKED_OUT'})
         .where(eq(cart.id, order.cartId));
 
       const reduceQuantityInStockPromises = orderItems.map((item) => {
