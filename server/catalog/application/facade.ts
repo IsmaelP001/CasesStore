@@ -9,6 +9,7 @@ import {
   ProductById,
   ProductFilters,
   ProductSearchCriteria,
+  ProductsResponse,
   ProductTypeEnum,
 } from "../domain/product.model";
 import { defaultCollectionService } from "./collection-service";
@@ -37,7 +38,7 @@ class CatalogsServiceFacadeImpl {
     private printPatternService: IPrintPatternService
   ) {}
 
-  async getAllProductsBy(filter: ProductFilters): Promise<Product[]> {
+  async getAllProductsBy(filter: ProductFilters): Promise<ProductsResponse> {
     try {
       return await this.productService.getAll({ ...filter });
     } catch (error) {
@@ -110,7 +111,7 @@ class CatalogsServiceFacadeImpl {
 
   async getProductsBySearchCriteria(
     query: string
-  ): Promise<ProductSearchCriteria[]> {
+  ): Promise<Product[]> {
     return this.productService.getProductsBySearchCriteria(query);
   }
 

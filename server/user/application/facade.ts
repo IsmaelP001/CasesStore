@@ -26,11 +26,10 @@ export class AuthFacade {
 
   async authUserExternalProvider(user: User): Promise<User> {
     try {
-      const userDb = await this.authService.findOrCreateUser(user);
+      const userDb = await this.authService.findOrCreateUser(user);      
        this.cartServiceFacade.mergeCart(userDb?.id!);
       return userDb;
     } catch (error) {
-      console.log('erro sign in',error)
       throw new Error("Error finding or creating user" + error);
     }
   }
@@ -38,7 +37,7 @@ export class AuthFacade {
   async register(userData: User): Promise<User> {
     try {
       const isEmailExist = await this.authService.getUserByEmailLocalProvider(
-        userData?.email
+        userData?.email.toLocaleLowerCase()
       );
       if (isEmailExist) {
         throw new TRPCError({
@@ -49,6 +48,7 @@ export class AuthFacade {
       const hashedPassword = await hashPassword(userData.password!);
       return await this.authService.register({
         ...userData,
+        email:userData.email.toLocaleLowerCase(),
         password: hashedPassword,
       });
     } catch (error) {
@@ -58,7 +58,7 @@ export class AuthFacade {
 
   async authUserLocalDb({ email, password }: AuthSignin): Promise<User> {
     try {
-      const userDb = await this.authService.getUserByEmailLocalProvider(email);
+      const userDb = await this.authService.getUserByEmailLocalProvider(email.toLocaleLowerCase());
       if (!userDb) {
         throw new Error("email/Usuario no encontrado");
       }

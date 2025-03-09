@@ -82,11 +82,11 @@ const MobileNavbar: React.FC = () => {
             <FaBars className="text-xl" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" >
+        <SheetContent side="left">
           <SheetHeader>
             <SheetTitle>Menú</SheetTitle>
           </SheetHeader>
-          <nav className="mt-14 space-y-3 max-w-[250px] m-auto" >
+          <nav className="mt-14 space-y-3 max-w-[250px] m-auto">
             <SheetClose asChild>
               <Link href={"/"} className="block text-lg font-medium">
                 Inicio
@@ -202,7 +202,7 @@ export default function Navbar() {
   }
 
   return (
-    <NavigationMenu.Root  className="NavigationMenuRoot">
+    <NavigationMenu.Root className="NavigationMenuRoot">
       <div className="NavigationMenuContainer  bg-transparent ">
         <div className="NavigationMenuStart list-none">
           <NavigationMenu.Item>
@@ -237,12 +237,14 @@ export default function Navbar() {
                     ))}
                   </ul>
                   <div className="fles justify-center items-center  text-center py-1">
-                    <Link
-                      href={"/cases"}
-                      className={cn(buttonVariants({ variant: "link" }))}
-                    >
-                      Ver todos
-                    </Link>
+                    <NavigationMenu.Link asChild>
+                      <Link
+                        href={"/cases"}
+                        className={cn(buttonVariants({ variant: "link" }))}
+                      >
+                        Ver todos
+                      </Link>
+                    </NavigationMenu.Link>
                   </div>
                 </div>
               </NavigationMenu.Content>
@@ -255,7 +257,7 @@ export default function Navbar() {
               <NavigationMenu.Content className="NavigationMenuContent p-5">
                 <h3 className="text-xl font-bold">Colecciones</h3>
                 <ul className="w-[600px] grid gap-4 grid-cols-[repeat(auto-fit,minmax(150px,1fr))] p-4">
-                {collections?.map((collection) => (
+                  {collections?.map((collection) => (
                     <ListItem
                       href={`/cases?collection=${collection?.name}`}
                       key={collection?.id}
@@ -328,12 +330,12 @@ const ListItem = React.forwardRef<
   }
 >(({ className, href, children, title, ...props }) => (
   <li {...props}>
-     <NavigationMenu.Link asChild>
-     <Link href={href || ""}>
-      <p className="text-base font-bold leading-none mb-1">{title}</p>
-      {children}
-    </Link>
-     </NavigationMenu.Link>
+    <NavigationMenu.Link asChild>
+      <Link href={href || ""}>
+        <p className="text-base font-bold leading-none mb-1">{title}</p>
+        {children}
+      </Link>
+    </NavigationMenu.Link>
   </li>
 ));
 ListItem.displayName = "ListItem";

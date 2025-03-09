@@ -38,6 +38,7 @@ class DefaultCartFacade implements ICartServiceFacade {
       return;
     }
     const cartItems = await this.cartService.getCartItems(cartToken?.cart.id!);
+    if(!cartItems?.length)return
     const carItemsMap = cartItems.map(({ id, cartId, ...rest }) => ({
       cartId: activeCart.id,
       ...rest,

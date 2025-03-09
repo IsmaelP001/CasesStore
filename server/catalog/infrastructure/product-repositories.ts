@@ -13,7 +13,7 @@ import {
   productDevices,
   product,
 } from "@/config/database/schemes";
-import { and, count, desc, eq, ilike, inArray, ne, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, ilike, inArray, like, ne, or, sql } from "drizzle-orm";
 import { BaseRepository } from "@/server/shared/repositories/BaseRepository";
 import {
   CreateProduct,
@@ -22,6 +22,7 @@ import {
   ProductById,
   ProductFilters,
   ProductSearchCriteria,
+  ProductsResponse,
   ProductTypeEnum,
 } from "../domain/product.model";
 import { db } from "@/config/database/db";
@@ -36,10 +37,14 @@ class DefaultProductRepositoryImpl
     super(productTable, "product");
   }
 
-  async getProducts(filter: ProductFilters): Promise<Product[]> {
-    const { device, collection, pattern, color, material } = filter;
-
-    let query = this.db
+  async getProducts(
+    filter: ProductFilters,
+ 
+  ): Promise<ProductsResponse> {
+    const { device, collection, pattern, color, material, q,page = 1,pageSize = 10 } = filter;
+  
+    // Consulta base para obtener productos filtrados
+    let baseQuery = this.db
       .select({
         id: productTable.id,
         name: productTable.name,
@@ -51,19 +56,18 @@ class DefaultProductRepositoryImpl
         },
       })
       .from(productTable)
-
       .leftJoin(
         collectionTable,
         eq(collectionTable.id, productTable.collectionId)
-      )
-
+      );
+  
     const filterConditions: any[] = [];
     const groupByColumns: any[] = [productTable.id, collectionTable.id];
-
+  
     filterConditions.push(ne(productTable.productType, 'CUSTOM_CASE_MATERIAL'));
-
+  
     if (device?.length) {
-      query
+      baseQuery = baseQuery
         .leftJoin(
           productDevicesTable,
           eq(productDevicesTable.productId, productTable.id)
@@ -75,42 +79,74 @@ class DefaultProductRepositoryImpl
       filterConditions.push(inArray(devicesTable.name, device));
       groupByColumns.push(devicesTable.name);
     }
-
+  
     if (collection?.length) {
       filterConditions.push(inArray(collectionTable.name, collection));
     }
-
+  
     if (pattern?.length) {
-      query.leftJoin(
+      baseQuery = baseQuery.leftJoin(
         printPatternTable,
         eq(printPatternTable.id, productTable.printPatternId)
       );
       filterConditions.push(inArray(printPatternTable.name, pattern));
       groupByColumns.push(printPatternTable.name);
     }
-
+  
     if (color?.length) {
-      query.leftJoin(colorTable, eq(colorTable.id, productTable.colorId));
+      baseQuery = baseQuery.leftJoin(colorTable, eq(colorTable.id, productTable.colorId));
       filterConditions.push(inArray(colorTable.name, color));
       groupByColumns.push(colorTable.name);
     }
-
+  
     if (material?.length) {
-      query.leftJoin(
+      baseQuery = baseQuery.leftJoin(
         materialTable,
         eq(materialTable.id, productTable.materialId)
       );
       filterConditions.push(inArray(materialTable.name, material));
       groupByColumns.push(materialTable.name);
     }
-
-    if (filterConditions.length) {
-      query.where(and(...filterConditions));
+  
+    if (q) {
+      filterConditions.push(like(productTable.name, `%${q}%`));
     }
-
-    query.groupBy(...groupByColumns);
-
-    return (await query) as Product[];
+  
+    if (filterConditions.length) {
+      baseQuery = baseQuery.where(and(...filterConditions));
+    }
+  
+    baseQuery = baseQuery.groupBy(...groupByColumns);
+  
+    // Consulta para contar el total de items
+    const countQuery = this.db
+      .select({ count: count() })
+      .from(baseQuery.as("filteredProducts"));
+  
+    // Consulta para obtener los productos con paginación
+    const paginatedQuery = baseQuery
+      .limit(pageSize)
+      .offset((page - 1) * pageSize);
+  
+    // Ejecutar ambas consultas
+    const [totalResults, paginatedProducts] = await Promise.all([
+      countQuery,
+      paginatedQuery,
+    ]);
+  
+    const totalItems = Number(totalResults[0]?.count || 0);
+    const totalPages = Math.ceil(totalItems / pageSize);
+  
+    return {
+      items: paginatedProducts as Product[],
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: page,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
   }
   
 
@@ -219,12 +255,17 @@ class DefaultProductRepositoryImpl
     return await this.db.query.product.findMany({where:eq(product.productType,productType)})
   }
 
-  async getProductsBy(query: string): Promise<ProductSearchCriteria[]> {
+  async getProductsBy(query: string): Promise<Product[]> {
     let result = this.db
       .select({
         id: productTable.id,
         name: productTable.name,
-        collection: collectionTable.name,
+        price: productTable.price,
+        coverImage: productTable.coverImage,
+        collection: {
+          id: collectionTable.id,
+          name: collectionTable.name,
+        },
       })
       .from(productTable)
       .leftJoin(
@@ -245,7 +286,7 @@ class DefaultProductRepositoryImpl
       )
       .groupBy(product.id,collectionTable.id)
 
-    return result as ProductSearchCriteria[];
+    return result as Product[];
   }
 
   async getNewProducts(): Promise<Product[]> {

@@ -10,6 +10,7 @@ const FilterParams = () => {
   const { searchParamsObj, setRemoveConsecutiveParam } = useHandleParams();
 
   const paramsArray = searchParamsObj
+    .filter(([key]) => key !== "page")
     ?.map(([key, value]) => {
       return value.split("%").map((item) => {
         return [[key], [item]];
@@ -25,7 +26,7 @@ const FilterParams = () => {
           onClick={() =>
             setRemoveConsecutiveParam(key.toString(), value.toString())
           }
-          className="h-6 rounded-2xl bg-transparent border-2 flex justify-between w-fit hover:text-white text-black border-primary"
+          className="h-6 max-w-[150px] rounded-2xl bg-transparent border-2 flex justify-between  hover:text-white text-black border-primary"
         >
           <p className="capitalize text-xs  font-semibold truncate">{value}</p>
           <X />

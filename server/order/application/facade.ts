@@ -10,7 +10,8 @@ import {
   Pagination,
   TotalOrderRevenue,
 } from "../domain/models";
-import { deleteCookie } from "@/lib/utils/cookies";
+import { cookies } from "next/headers";
+import { VARIABLES_CONFIG } from "@/lib/utils/utils";
 
 class OrderFacadeImpl {
   constructor(
@@ -22,7 +23,7 @@ class OrderFacadeImpl {
     try {
       await this.orderService.save(orderDto);
       await this.cartService.markCartAsCheckedOut(orderDto.cartId);
-      await deleteCookie({cookieName:'CART_ID'})
+      cookies().delete(VARIABLES_CONFIG.CART_TOKEN!);
     } catch (error) {
       handleError(error);
     }
