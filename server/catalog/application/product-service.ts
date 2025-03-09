@@ -4,6 +4,7 @@ import {
   ProductById,
   ProductFilters,
   ProductSearchCriteria,
+  ProductsResponse,
   ProductTypeEnum,
 } from "../domain/product.model";
 import { IProductRepository } from "../domain/repositories";
@@ -14,7 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 class ProductService implements IProductService {
   constructor(private productRepository: IProductRepository) {}
 
-  async getAll(filter: ProductFilters): Promise<Product[]> {
+  async getAll(filter: ProductFilters): Promise<ProductsResponse> {
     return await this.productRepository.getProducts(filter);
   }
 
@@ -36,7 +37,7 @@ class ProductService implements IProductService {
 
   async getProductsBySearchCriteria(
     query: string
-  ): Promise<ProductSearchCriteria[]> {
+  ): Promise<Product[]> {
     return this.productRepository.getProductsBy(query);
   }
 

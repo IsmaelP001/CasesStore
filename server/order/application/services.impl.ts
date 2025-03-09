@@ -28,7 +28,7 @@ class OrderServiceImpl {
     const [defaultUserAddress, cartItems, couponDiscountInCart] =
       await Promise.all([
         this.defaultAddressService.getActiveUserAddressId(dto.userId),
-        this.defaultCartService.getCartItems(dto.cartId!),
+        this.defaultCartService.getInCartItems(dto.cartId!),
         this.discountCodeService.getCouponsInCart({
           cartId: dto.cartId,
           includeCouponItem: true,
