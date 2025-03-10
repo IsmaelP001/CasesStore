@@ -102,6 +102,7 @@ export interface ProductById {
   discountPrice: number;
   coverImage: string;
   images: Images[];
+  description?:string;
   collection: {
     id: string;
     name: string;

@@ -22,6 +22,7 @@ export interface FindProductInCart {
   productId: string;
   cartId: string;
   deviceId: string;
+  configurationId?:string
 }
 
 // export interface CartItemQueryElement{

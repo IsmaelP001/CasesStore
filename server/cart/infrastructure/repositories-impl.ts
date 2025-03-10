@@ -7,7 +7,7 @@ import {
   product,
   productDevices,
 } from "@/config/database/schemes";
-import { and, eq, inArray, max, sql, sum } from "drizzle-orm";
+import { and, eq, gt, inArray, max, sql, sum } from "drizzle-orm";
 import { UpdateCartItem } from "@/lib/schemas/updateCartItem";
 import { BaseRepository } from "@/server/shared/repositories/BaseRepository";
 import {
@@ -72,6 +72,7 @@ class CartRepositoryImpl
     deviceId,
     productId,
     cartId,
+    configurationId
   }: FindProductInCart): Promise<boolean> {
     const [product] = await db
       .select({
@@ -82,7 +83,8 @@ class CartRepositoryImpl
         and(
           eq(cartDetails.productId, productId),
           eq(cartDetails.cartId, cartId),
-          eq(cartDetails.deviceId, deviceId)
+          eq(cartDetails.deviceId, deviceId),
+          configurationId ? eq(cartDetails.configurationId,configurationId):undefined
         )
       );
     return parseInt(product.count!) >= 1 ? true : false;
@@ -135,7 +137,7 @@ class CartRepositoryImpl
       .from(cartDetails)
       .innerJoin(product, eq(cartDetails.productId, product.id))
       .innerJoin(devices, eq(cartDetails.deviceId, devices.id))
-      .innerJoin(
+      .fullJoin( // Cambia a LEFT JOIN aquí
         productDevices,
         and(
           eq(productDevices.productId, cartDetails.productId),
@@ -155,14 +157,14 @@ class CartRepositoryImpl
         product.productType,
         devices.id,
         devices.name,
-        configurationimage.id,
         cartDetails.configurationId,
+        configurationimage.id, // Asegúrate que este campo esté incluido correctamente
         cartDetails.colorId,
         productDevices.inStock
       )
       .having(sql`SUM(${cartDetails.quantity}) > 0`)
       .orderBy(product.name, devices.name);
-
+  
     return {
       cartId,
       items: data,
