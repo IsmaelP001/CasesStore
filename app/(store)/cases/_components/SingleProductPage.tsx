@@ -59,6 +59,7 @@ const SingleProductPage = ({ id }: { id: string }) => {
     devices,
     coverImage,
     discountPrice,
+    description
   } = product || {};
 
   const inStock = useMemo(() => {
@@ -76,7 +77,7 @@ const SingleProductPage = ({ id }: { id: string }) => {
     <section className=" md:pt-4  md:px-5 lg:mx-10 mb-5 min-h-dvh">
       <div className="mb-3 ml-6 hidden md:block">
         <Breadcrumb>
-          <BreadcrumbList className=" font-medium text-sm ">
+          <BreadcrumbList className=" font-medium text-base ">
             {[...BREAD_CRUBS_ITEMS, currentBreadCrumItem]?.map((item) => (
               <>
                 <BreadcrumbItem>
@@ -98,8 +99,8 @@ const SingleProductPage = ({ id }: { id: string }) => {
           <SliderImages images={images!} />
         </div>
 
-        <div className=" grid grid-rows-[1fr_auto] gap-y-10 md:min-h-[73svh] md:col-span-4 lg:col-span-4 px-6 md:px-2 w-full ">
-          <div className="md:space-y-10">
+        <div className=" grid grid-rows-[auto_1fr_auto] gap-y-6 md:min-h-[73svh] md:col-span-4 lg:col-span-4 px-6 md:px-2 w-full ">
+          <div className="md:space-y-6">
             <header className="space-y-0">
               <h2 className="quicksand text-3xl font-medium">
                 Cover <span>{name}</span>
@@ -143,7 +144,7 @@ const SingleProductPage = ({ id }: { id: string }) => {
             </div>
             <div>
               <div className="">
-                <Label className=" block text-base font-semibold mb-5">
+                <Label className=" block text-base font-semibold mb-2">
                   Selecciona tu modelo
                 </Label>
                 <Select
@@ -172,6 +173,9 @@ const SingleProductPage = ({ id }: { id: string }) => {
                 </Select>
               </div>
             </div>
+          </div>
+          <div>
+            <p className="font-light">{description}</p>
           </div>
           <div className="space-y-2 ">
             <Button

@@ -70,10 +70,10 @@ const CreateEditUserGift = () => {
               <FormItem>
                 <FormLabel>Tu nombre completo</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="Ej: Maria Ramires Alvarez" {...field} />
                 </FormControl>
                 <FormDescription>
-                  This is your public display name.
+                  Este nombre se mostrara en el regalo
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -115,7 +115,6 @@ const CreateEditUserGift = () => {
                 <FormLabel className="font-semibold">Mensaje</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Tell us a little bit about yourself"
                     className="resize-none"
                     {...field}
                   />
