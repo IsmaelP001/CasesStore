@@ -1,5 +1,6 @@
 "use client";
 import { trpc } from "@/lib/trpc/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -8,17 +9,22 @@ const useCartData = () => {
     data: cartItems,
     isFetching: isFetchingCartItems,
     isError,
-  } = trpc.cart.getItems.useQuery(undefined, {});
+  } = trpc.cart.getItems.useQuery(undefined, {
+    refetchOnMount:false,
+    refetchOnWindowFocus:false,
+    staleTime:60 * 60 * 15,
+    placeholderData:(prev)=>prev
+  });
   const renderFirstTime = useRef(true);
   const seccion = useSession();
-  const utils = trpc.useUtils()
+  const utils = trpc.useUtils();
   useEffect(() => {
     if (renderFirstTime.current) {
       renderFirstTime.current = false;
       return;
     }
     utils.cart.getItems.invalidate()
-  }, [seccion,utils]);
+  }, [seccion]);
 
   const calculateGrossTotalFromDb = useCallback(() => {
     if (cartItems?.items) {

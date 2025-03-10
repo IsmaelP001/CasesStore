@@ -1,6 +1,5 @@
 import { defineConfig } from "drizzle-kit";
 import { config } from 'dotenv';
-import { VARIABLES_CONFIG } from "./lib/utils/utils";
 config({ path: '.env.local' }); // or .env
 
 
