@@ -100,7 +100,7 @@ export const ConfigurationPanel = () => {
       className=" w-[350px] 
                    max-h-[80dvh]
                    h-full
-    space-y-3 grid grid-rows-[1fr_auto] shadow-gray-300 shadow-[0_0_15px_5px_rgba(0,0,0,0.3)] px-3 pt-4 pb-2 rounded-2xl"
+    space-y-3 grid grid-rows-[1fr_auto] shadow-gray-300 shadow-[0_0_15px_5px_rgba(0,0,0,0.3)] px-3 pt-4 pb-2 rounded-2xl overflow-hidden"
     >
       <Tabs className=" min-h-[400px]  overflow-y-scroll" defaultValue="text">
         <TabsList className="flex w-full h-fit py-0 px-0 rounded-2xl">

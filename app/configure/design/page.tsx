@@ -1,24 +1,22 @@
+import { serverHelpers } from "@/lib/trpc/serverHelper";
+import DesignConfigurator from "./_components/DesignConfigurator";
+import { DesignProvider } from "./hooks/useDesign-context";
+export const revalidate = 0;
 
-
-import { serverHelpers } from "@/lib/trpc/serverHelper"
-import DesignConfigurator from "./_components/DesignConfigurator"
-export const revalidate = 0
-
-const page = async() => {
-
+const page = async () => {
   serverHelpers.catalog.getProductsByType.prefetch({
-      productType: "CUSTOM_CASE_MATERIAL",
-    });
+    productType: "CUSTOM_CASE_MATERIAL",
+  });
 
   serverHelpers.catalog.getDevices.prefetch();
-  
-  
 
   return (
     <>
-        <DesignConfigurator/>
+      <DesignProvider>
+        <DesignConfigurator />
+      </DesignProvider>
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;

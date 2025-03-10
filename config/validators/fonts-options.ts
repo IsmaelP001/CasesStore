@@ -142,7 +142,6 @@ const CUSTOM_FONTS = [
   },
   { id: 11, name: "Amatic SC", fontFamily: amaticSC.style.fontFamily },
   { id: 9, name: "Satisfy", fontFamily: satisfy.style.fontFamily },
-  { id: 11, name: "Amatic SC", fontFamily: amaticSC.style.fontFamily },
   { id: 4, name: "Rubik Vinyl", fontFamily: rubikVinyl.style.fontFamily },
   { id: 5, name: "Kavoon", fontFamily: kavoon.style.fontFamily },
 

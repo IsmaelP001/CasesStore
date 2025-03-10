@@ -56,13 +56,11 @@ const ProviderClient = ({ children }: { children: ReactNode }) => {
     <ReduxProvider store={store}>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <NextAuthProvider>
-          <DesignProvider>
             <QueryClientProvider client={queryClient}>
               {children}
               <ShadcnToaster />
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
-          </DesignProvider>
         </NextAuthProvider>
       </trpc.Provider>
     </ReduxProvider>

@@ -78,11 +78,10 @@ const DesignPreview = ({ configuration }: any) => {
               </div>
             </div>
             <div >
-            <Button className="block w-full mb-2 bg-accent rounded-3xl font-medium" disabled={isPending} onClick={async()=>await handleSubmit()}>Añadir al carrito</Button>
+            <Button className="block w-full mb-2 bg-accent rounded-3xl font-medium hover:bg-accent/80" disabled={isPending} onClick={async()=>await handleSubmit()}>Añadir al carrito</Button>
             <Button className="block w-full rounded-3xl font-medium" disabled={isPending || isPendingCart} onClick={async()=>{
-             await handleSubmit()
-              router.push(`/checkout?cartId=${activeCartId}`);
-            }} >Comprar ahora</Button>
+              router.push(`/cases`);
+            }} >Seguir comprando</Button>
             </div>
           </div>
         </div>
