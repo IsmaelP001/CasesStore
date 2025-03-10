@@ -119,17 +119,11 @@ const UserPhonenumberModal = () => {
                 )}
               />
               <div className="flex gap-5 mt-5">
-                <Button
-                  type="button"
-                  className="bg-secondary text-primary hover:text-secondary"
-                  onClick={() => setOpen(false)}
-                >
-                  Atras
-                </Button>
+             
                 <Button
                   disabled={!isInputChanged || isPendingMutation}
                   type="submit"
-                  className=""
+                  className="w-full"
                 >
                   {isPendingMutation ? <p>Guardando...</p> : <p>Guardar</p>}
                 </Button>

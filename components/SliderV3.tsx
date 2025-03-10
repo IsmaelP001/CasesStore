@@ -86,10 +86,10 @@ const Slider: React.FC<SliderProps> = ({ children, step = 1 }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
-    }, 8000);
+    }, 7000);
 
     return () => clearInterval(interval);
-  }, [currentSlide]); 
+  }, [currentSlide,ref.current?.scrollLeft]); 
 
   return (
     <div className="relative w-full pb-10">
