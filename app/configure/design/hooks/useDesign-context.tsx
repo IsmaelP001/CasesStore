@@ -108,7 +108,7 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
   const [textState, setTextState] = useState<TextState>({
     content: "",
     position: { x: 0, y: 0},
-    size: { width: 200, height: 200},
+    size: { width: 220, height: 200},
     direction: "horizontal",
     font: CUSTOM_FONTS[0].fontFamily,
     color: FONT_COLORS[0],

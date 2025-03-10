@@ -83,7 +83,7 @@ export default function TextOrientationConfiguration() {
 
   return (
     <div>
-      {/* <Label className="font-semibold text-base">Orientación</Label>
+      <Label className="font-semibold text-base">Orientación</Label>
       <div className="flex gap-4 mt-1">
         <button
           className={cn(
@@ -116,7 +116,7 @@ export default function TextOrientationConfiguration() {
         >
           TT
         </button>
-      </div> */}
+      </div>
     </div>
   );
 }
