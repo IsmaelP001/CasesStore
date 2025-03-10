@@ -10,7 +10,7 @@ interface DraggableImageProps {
   image: ImageState;
 }
 export const DraggableImage = ({ image }: DraggableImageProps) => {
-  const { imagesState, setImagesState, selectedElement, setSelectedElement } =
+  const {setImagesState, selectedElement, setSelectedElement } =
     useDesign();
 
   const handleDelete = (url: string) => {

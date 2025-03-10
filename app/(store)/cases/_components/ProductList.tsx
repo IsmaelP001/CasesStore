@@ -67,7 +67,6 @@ const ProductList = ({ searchParams }: { searchParams: SearchParams }) => {
           </h2>
         </div>
       )}
-      <div className="flex justify-end">
       {products?.pagination?.totalPages > 1 && (
         <Pagination
           currentPage={parseInt(searchParams?.page) || 1}
@@ -79,7 +78,6 @@ const ProductList = ({ searchParams }: { searchParams: SearchParams }) => {
           }}
         />
       )}
-      </div>
     </div>
   );
 };

@@ -60,12 +60,12 @@ const CartItem = ({ item }: CartItemProps) => {
         <figure className="w-20 h-20 relative flex justify-center">
           {configurationImage ? (
             <Phone
-              imgSrc={configurationImage}
+              imgSrc={configurationImage || '/'}
               className="absolute inset-0 w-9 h-[74px] m-auto"
             />
           ) : (
             <Image
-              src={coverImage || "./mock.phone.png"}
+              src={coverImage || "/mock.phone.png"}
               className="h-full w-full rounded-md object-cover"
               fill
               alt={`${name} cart item image`}
@@ -74,7 +74,7 @@ const CartItem = ({ item }: CartItemProps) => {
         </figure>
 
         {/* PRODUCT-INFO */}
-        <div className="flex flex-col col-span-2 capitalize pt-3">
+        <div className="flex flex-col col-span-2 capitalize pt-3 ">
           <div className="flex gap-1">
             <h4 className="text-sm font-extrabold text-neutral text-left truncate text-ellipsis">
               {name}
@@ -135,6 +135,8 @@ const CartItem = ({ item }: CartItemProps) => {
               +
             </button>
           </form>
+          {inStock <= newQuantity && inStock ? <p className="text-[0.7rem]">Solo {inStock} Disponible</p>:null}
+
         </div>
       </div>
     </article>

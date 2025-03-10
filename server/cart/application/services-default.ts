@@ -24,7 +24,9 @@ class DefaultCartServiceImpl implements ICartService {
       deviceId: input.deviceId,
       cartId: input.cartId,
       productId: input.productId!,
+      configurationId:input?.configurationId  as string
     });
+    console.log('is prodduct in cart',isProductInCart)
     if (isProductInCart) return [];
 
     const result = await this.cartRepository.createItem(input);

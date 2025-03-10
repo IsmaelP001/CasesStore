@@ -50,6 +50,8 @@ export const DraggableText = () => {
         setSelectedElement("text");
       }}
       bounds="parent"
+      className="relative"
+      lockAspectRatio
     >
       <TextContent />
     </Rnd>
@@ -62,12 +64,13 @@ const TextContent = () => {
   return (
     <div
       ref={textContainerRef}
-      className="w-full h-full flex items-center justify-center select-none"
+      className="w-full h-full absolute inset-0 flex items-center justify-center select-none"
     >
       <Textfit
         mode={textState.direction === "vertical" ? "multi" : "single"}
         forceSingleModeWidth={textState.direction !== "vertical"}
         max={textState.direction === "vertical" ? 1000 : 270}
+        defaultValue={150}
         className="px-5 select-none"
         style={{
           width: "100%",

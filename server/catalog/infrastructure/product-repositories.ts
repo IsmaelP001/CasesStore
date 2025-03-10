@@ -13,7 +13,18 @@ import {
   productDevices,
   product,
 } from "@/config/database/schemes";
-import { and, count, desc, eq, ilike, inArray, like, ne, or, sql } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  ilike,
+  inArray,
+  like,
+  ne,
+  or,
+  sql,
+} from "drizzle-orm";
 import { BaseRepository } from "@/server/shared/repositories/BaseRepository";
 import {
   CreateProduct,
@@ -28,7 +39,6 @@ import {
 import { db } from "@/config/database/db";
 import { IProductRepository } from "../domain/repositories";
 
-
 class DefaultProductRepositoryImpl
   extends BaseRepository<typeof productTable, "product">
   implements IProductRepository
@@ -37,12 +47,18 @@ class DefaultProductRepositoryImpl
     super(productTable, "product");
   }
 
-  async getProducts(
-    filter: ProductFilters,
- 
-  ): Promise<ProductsResponse> {
-    const { device, collection, pattern, color, material, q,page = 1,pageSize = 10 } = filter;
-  
+  async getProducts(filter: ProductFilters): Promise<ProductsResponse> {
+    const {
+      device,
+      collection,
+      pattern,
+      color,
+      material,
+      q,
+      page = 1,
+      pageSize = 10,
+    } = filter;
+
     // Consulta base para obtener productos filtrados
     let baseQuery = this.db
       .select({
@@ -60,12 +76,12 @@ class DefaultProductRepositoryImpl
         collectionTable,
         eq(collectionTable.id, productTable.collectionId)
       );
-  
+
     const filterConditions: any[] = [];
     const groupByColumns: any[] = [productTable.id, collectionTable.id];
-  
-    filterConditions.push(ne(productTable.productType, 'CUSTOM_CASE_MATERIAL'));
-  
+
+    filterConditions.push(ne(productTable.productType, "CUSTOM_CASE_MATERIAL"));
+
     if (device?.length) {
       baseQuery = baseQuery
         .leftJoin(
@@ -79,11 +95,11 @@ class DefaultProductRepositoryImpl
       filterConditions.push(inArray(devicesTable.name, device));
       groupByColumns.push(devicesTable.name);
     }
-  
+
     if (collection?.length) {
       filterConditions.push(inArray(collectionTable.name, collection));
     }
-  
+
     if (pattern?.length) {
       baseQuery = baseQuery.leftJoin(
         printPatternTable,
@@ -92,13 +108,16 @@ class DefaultProductRepositoryImpl
       filterConditions.push(inArray(printPatternTable.name, pattern));
       groupByColumns.push(printPatternTable.name);
     }
-  
+
     if (color?.length) {
-      baseQuery = baseQuery.leftJoin(colorTable, eq(colorTable.id, productTable.colorId));
+      baseQuery = baseQuery.leftJoin(
+        colorTable,
+        eq(colorTable.id, productTable.colorId)
+      );
       filterConditions.push(inArray(colorTable.name, color));
       groupByColumns.push(colorTable.name);
     }
-  
+
     if (material?.length) {
       baseQuery = baseQuery.leftJoin(
         materialTable,
@@ -107,36 +126,36 @@ class DefaultProductRepositoryImpl
       filterConditions.push(inArray(materialTable.name, material));
       groupByColumns.push(materialTable.name);
     }
-  
+
     if (q) {
       filterConditions.push(like(productTable.name, `%${q}%`));
     }
-  
+
     if (filterConditions.length) {
       baseQuery = baseQuery.where(and(...filterConditions));
     }
-  
+
     baseQuery = baseQuery.groupBy(...groupByColumns);
-  
+
     // Consulta para contar el total de items
     const countQuery = this.db
       .select({ count: count() })
       .from(baseQuery.as("filteredProducts"));
-  
+
     // Consulta para obtener los productos con paginación
     const paginatedQuery = baseQuery
       .limit(pageSize)
       .offset((page - 1) * pageSize);
-  
+
     // Ejecutar ambas consultas
     const [totalResults, paginatedProducts] = await Promise.all([
       countQuery,
       paginatedQuery,
     ]);
-  
+
     const totalItems = Number(totalResults[0]?.count || 0);
     const totalPages = Math.ceil(totalItems / pageSize);
-  
+
     return {
       items: paginatedProducts as Product[],
       pagination: {
@@ -148,7 +167,6 @@ class DefaultProductRepositoryImpl
       },
     };
   }
-  
 
   async getProductById(productId: string): Promise<ProductById | null> {
     const result = await this.getFirst({
@@ -160,6 +178,7 @@ class DefaultProductRepositoryImpl
         price: true,
         isConfigurable: true,
         coverImage: true,
+        description:true
       },
       with: {
         images: {
@@ -231,7 +250,7 @@ class DefaultProductRepositoryImpl
       productId: product.id,
     }));
 
-    const newProduct = await db.transaction(async (tx:any) => {
+    const newProduct = await db.transaction(async (tx: any) => {
       const [newProduct] = await Promise.all([
         this.create({ ...product, coverImage: images[0] }, { tx }),
         tx.insert(productDevices).values(selectedProducts as any),
@@ -251,8 +270,21 @@ class DefaultProductRepositoryImpl
   //   return data as CreateProduct[];
   // }
 
-  async getProductsByType(productType:ProductTypeEnum):Promise<Product[]>{
-    return await this.db.query.product.findMany({where:eq(product.productType,productType)})
+  async getProductsByType(productType: ProductTypeEnum): Promise<Product[]> {
+    return (await this.getAll({
+      columns: {
+        id: true,
+        name: true,
+        price: true,
+        coverImage: true,
+        discountPrice: true,
+        isConfigurable: true,
+        materialId: true,
+        collectionId: true,
+        colorId: true,
+      },
+      where: eq(product.productType, productType),
+    })) as any[];
   }
 
   async getProductsBy(query: string): Promise<Product[]> {
@@ -284,7 +316,7 @@ class DefaultProductRepositoryImpl
           ilike(collectionTable.name, `%${query}%`)
         )
       )
-      .groupBy(product.id,collectionTable.id)
+      .groupBy(product.id, collectionTable.id);
 
     return result as Product[];
   }
@@ -296,7 +328,7 @@ class DefaultProductRepositoryImpl
         name: true,
         price: true,
         coverImage: true,
-        productType:true
+        productType: true,
       },
       with: {
         collection: {
@@ -308,47 +340,49 @@ class DefaultProductRepositoryImpl
       },
       orderBy: desc(productTable.createdAt),
       limit: 8,
-      where:ne(productTable.productType,'CUSTOM_CASE_MATERIAL')
+      where: ne(productTable.productType, "CUSTOM_CASE_MATERIAL"),
     });
 
     return result as Product[];
   }
 
-  async getMostOrderedProducts({includeCollections=true}:MostOrderedProductQuery): Promise<Product[]> {
+  async getMostOrderedProducts({
+    includeCollections = true,
+  }: MostOrderedProductQuery): Promise<Product[]> {
     let query = db
       .select({
         id: productTable.id,
         name: productTable.name,
         price: productTable.price,
         coverImage: productTable.coverImage,
-        productType:productTable.productType,
+        productType: productTable.productType,
         ...(includeCollections && {
-          collection:{
+          collection: {
             id: collectionTable.id,
             name: collectionTable.name,
-          }
+          },
         }),
         count: count(orderDetails.id),
       })
       .from(productTable)
-     
+
       .groupBy(productTable.id, collectionTable.id)
       .leftJoin(orderDetails, eq(orderDetails.productId, productTable.id))
       .orderBy(desc(count(orderDetails.id)))
       .limit(8)
-      .where(ne(product.productType,'CUSTOM_CASE_MATERIAL'))
-      .$dynamic()
-      
-      if(includeCollections){
-        query.leftJoin(
-          collectionTable,
-          eq(collectionTable.id, productTable.collectionId)
-        )
-      }
+      .where(ne(product.productType, "CUSTOM_CASE_MATERIAL"))
+      .$dynamic();
 
-    const data = await query as Product[];
+    if (includeCollections) {
+      query.leftJoin(
+        collectionTable,
+        eq(collectionTable.id, productTable.collectionId)
+      );
+    }
 
-    return data
+    const data = (await query) as Product[];
+
+    return data;
   }
 }
 
