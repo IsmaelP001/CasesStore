@@ -5,8 +5,6 @@ import {
 } from "@/config/redux/features/cart/cartSlice";
 import { setIsCartOpen } from "@/config/redux/features/order/orderSlice";
 import { trpc } from "@/lib/trpc/client";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
 interface ProductUpdate {
@@ -31,27 +29,16 @@ const useCartItemsActions = (
   const utils = trpc.useUtils();
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const { status } = useSession();
-  const router = useRouter();
   const {
     mutate: addCartItemMutation,
     mutateAsync: addCartItemMutationAsync,
     isPending,
   } = trpc.cart.addItem.useMutation({
     onSuccess(data) {
-      const [newItem] = data;
       if (!isCartItemUpdate) {
         dispatch(setIsCartOpen({ isCartOpen: true }));
       }
-      if(!newItem)return
-      utils.cart.getItems.setData(undefined, (oldData: any) => {
-        if (!oldData) return oldData;
-        return {
-          ...oldData,
-          items: [...oldData.items, newItem],
-        };
-      });
-      
+      utils.cart.getItems.invalidate();
     },
     onError(err) {
       toast({
