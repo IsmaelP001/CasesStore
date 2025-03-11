@@ -135,7 +135,7 @@ const CartItem = ({ item }: CartItemProps) => {
               +
             </button>
           </form>
-          {inStock <= newQuantity && inStock ? <p className="text-[0.7rem]">Solo {inStock} Disponible</p>:null}
+          {inStock <= newQuantity && inStock ? <p className="text-[0.7rem] font-semibold text-red-500">{inStock} Disponible</p>:null}
 
         </div>
       </div>
