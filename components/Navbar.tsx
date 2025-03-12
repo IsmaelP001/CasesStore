@@ -342,6 +342,12 @@ ListItem.displayName = "ListItem";
 
 function UseAuthOptions() {
   const { data, status }: any = useSession();
+  const utils =  trpc.useUtils();
+
+  const handleSignout=()=>{
+    signOut();
+    utils.cart.getItems.invalidate();
+  }
 
   return (
     <DropdownMenu>
@@ -387,7 +393,7 @@ function UseAuthOptions() {
                 <span>Favoritos</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => signOut()}>
+            <DropdownMenuItem onClick={handleSignout}>
               <LogOut className="mr-2 h-4 w-4" />
               Cerrar sesión
             </DropdownMenuItem>
