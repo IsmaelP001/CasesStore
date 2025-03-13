@@ -56,6 +56,8 @@ class OrderServiceImpl {
       shipping -
       (couponDiscountInCart?.discountValue || 0);
 
+      console.log('default values',total)
+
     const orderId = uuidv4();
     const order: Order = {
       id: orderId,
