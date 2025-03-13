@@ -25,6 +25,7 @@ class OrderFacadeImpl {
       await this.cartService.markCartAsCheckedOut(orderDto.cartId);
       cookies().delete(VARIABLES_CONFIG.CART_TOKEN!);
     } catch (error) {
+      console.log('error saving order' + error)
       handleError(error);
     }
   }
