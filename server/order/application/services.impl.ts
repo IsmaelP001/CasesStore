@@ -40,6 +40,8 @@ class OrderServiceImpl {
       couponDiscountInCart.coupon.validateCouponLimits();
     }
 
+    console.log('default options',defaultAddressService,cartItems,couponDiscountInCart)
+
     const grossTotal =
       cartItems?.items.reduce(
         (acc, { price, quantity }) => acc + parseFloat(price) * quantity,
