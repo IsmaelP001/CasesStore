@@ -12,10 +12,10 @@ const CheckoutTotals = () => {
     return searchParams?.get("cartId")!;
   }, [searchParams]);
   const utils = trpc.useUtils();
-  const {total,isPending:isPendingTotals,activeCartId}=useCartData()
+  const { total, isPending: isPendingTotals } = useCartData();
 
   const [couponsInCart] = trpc.discountCode.getCouponsInCart.useSuspenseQuery(
-    { cartId:activeCartId},
+    undefined,
     {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
@@ -35,26 +35,27 @@ const CheckoutTotals = () => {
   return (
     <div className="border border-primary rounded-md p-2  border-b">
       <div>
-       {
-        couponsInCart?.discountCode && (
+        {couponsInCart?.discountCode && (
           <article className="flex justify-between text-sm font-semibold">
-          <span>{couponsInCart.discountCode}</span>
-          <div>
-            <span>{formatPrice(couponsInCart.discountValue || 0)}</span>
-            <Button
-              size="icon"
-              variant="destructive"
-              onClick={() =>
-                removeCouponMutation({ discountId: couponsInCart.discountId!, cartId })
-              }
-              className="w-5 h-5 ml-1 rounded-full"
-            >
-              X
-            </Button>
-          </div>
-        </article>
-        )
-       }
+            <span>{couponsInCart.discountCode}</span>
+            <div>
+              <span>{formatPrice(couponsInCart.discountValue || 0)}</span>
+              <Button
+                size="icon"
+                variant="destructive"
+                onClick={() =>
+                  removeCouponMutation({
+                    discountId: couponsInCart.discountId!,
+                    cartId,
+                  })
+                }
+                className="w-5 h-5 ml-1 rounded-full"
+              >
+                X
+              </Button>
+            </div>
+          </article>
+        )}
       </div>
       <div className="text-base font-semibold flex justify-between ">
         <span className="">Sub total</span>
@@ -64,7 +65,7 @@ const CheckoutTotals = () => {
         <span className="">Envio</span>
         <span>{formatPrice(total.shipping)}</span>
       </div>
-      {couponsInCart?.discountValue  && (
+      {couponsInCart?.discountValue && (
         <div className="text-base font-semibold flex justify-between ">
           <span className="">Total descuentos</span>
           <span>{formatPrice(couponsInCart.discountValue)}</span>
@@ -76,7 +77,11 @@ const CheckoutTotals = () => {
       </div>
       <div className="text-xl font-semibold flex justify-between mt-3">
         <span className="">Total</span>
-        <span>{formatPrice((total.subTotal || 0) - (couponsInCart.discountValue || 0))}</span>
+        <span>
+          {formatPrice(
+            (total.subTotal || 0) - (couponsInCart.discountValue || 0)
+          )}
+        </span>
       </div>
     </div>
   );

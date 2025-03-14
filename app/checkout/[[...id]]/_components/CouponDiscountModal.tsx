@@ -7,7 +7,6 @@ import {
 } from "../../../../components/ui/dialog";
 import { Label } from "../../../../components/ui/label";
 import { Input } from "../../../../components/ui/input";
-import { MdKeyboardArrowRight } from "react-icons/md";
 import { Button } from "../../../../components/ui/button";
 import { MdOutlineDiscount } from "react-icons/md";
 import { useToast } from "../../../../components/ui/use-toast";
