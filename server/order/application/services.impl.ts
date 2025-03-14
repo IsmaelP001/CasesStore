@@ -15,8 +15,9 @@ import { defaultAddressService } from "@/server/user/application/address-service
 import { defaultCartService } from "@/server/cart/application/services-default";
 import { ICouponService } from "@/server/coupon/application/services";
 import { defaultDiscountService } from "@/server/coupon/application/services-impl";
+import { IOrderService } from "./services";
 
-class OrderServiceImpl {
+class OrderServiceImpl implements IOrderService {
   constructor(
     private orderRepository: IOrderRepository,
     private defaultAddressService: IAddressService,
@@ -24,13 +25,13 @@ class OrderServiceImpl {
     private discountCodeService: ICouponService
   ) {}
 
-  async save(dto: OrderDto) {
+  async save(dto: OrderDto,cartId:string) {
     const [defaultUserAddress, cartItems, couponDiscountInCart] =
       await Promise.all([
         this.defaultAddressService.getActiveUserAddressId(dto.userId),
-        this.defaultCartService.getInCartItems(dto.cartId!),
+        this.defaultCartService.getInCartItems(cartId),
         this.discountCodeService.getCouponsInCart({
-          cartId: dto.cartId,
+          cartId,
           includeCouponItem: true,
         }),
       ]);
@@ -62,6 +63,7 @@ class OrderServiceImpl {
       grossTotal,
       total,
       shipping,
+      cartId,
       totalDiscounts: couponDiscountInCart?.discountValue || 0,
       discountId: couponDiscountInCart?.discountId,
       addressId: defaultUserAddress.addressId!,

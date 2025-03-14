@@ -26,7 +26,6 @@ class DefaultCartServiceImpl implements ICartService {
       productId: input.productId!,
       configurationId:input?.configurationId  as string
     });
-    console.log('is prodduct in cart',isProductInCart)
     if (isProductInCart) return [];
 
     const result = await this.cartRepository.createItem(input);
@@ -54,8 +53,8 @@ class DefaultCartServiceImpl implements ICartService {
     return this.cartRepository.updateCart(cartId, input);
   }
 
-  async markCartAsCheckedOut(cartId: string): Promise<Cart> {
-    return this.cartRepository.updateCart(cartId, { status: "CHECKED_OUT" });
+  async markCartAs(cartId: string,status:CartStatus): Promise<Cart> {
+    return this.cartRepository.updateCart(cartId, { status });
   }
 
   async findOrCreateCart(userId?: string): Promise<Cart> {

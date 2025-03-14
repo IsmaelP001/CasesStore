@@ -1,5 +1,5 @@
 import { UpdateCartItem } from "@/lib/schemas/updateCartItem";
-import { ApplicableProduct, ApplicableProductCouponDto, ApplyCouponCartDto, Cart, CartItem, CartItemQuery, CartTotal, CustomCaseCartDetails } from "../domain/models";
+import { ApplicableProduct, ApplicableProductCouponDto, ApplyCouponCartDto, Cart, CartItem, CartItemQuery, CartStatus, CartTotal, CustomCaseCartDetails } from "../domain/models";
 import { CartItemDto } from "./dto";
 
 export interface ICartService {
@@ -10,7 +10,7 @@ export interface ICartService {
   getApplicableCouponProduct(params:ApplicableProductCouponDto):Promise<ApplicableProduct>
   findActiveCart(userId:string): Promise<Cart>
   createCart(userId?:string): Promise<Cart>
-  markCartAsCheckedOut(cartId:string): Promise<Cart>
+  markCartAs(cartId:string,status:CartStatus): Promise<Cart>
   updateItemQuantity(input: CartItem): Promise<CartItem[]>
   findCart(cartId: string): Promise<{ cartId: string }>
   updateCart(cartId: string,input:Partial<Cart>): Promise<Cart>
