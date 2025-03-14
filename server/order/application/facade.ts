@@ -3,7 +3,6 @@ import { IOrderService } from "./services";
 import { OrderDto } from "./dto";
 import { defaultOrderService } from "./services.impl";
 import { ICartService } from "@/server/cart/application/services";
-import { defaultCartService } from "@/server/cart/application/services-default";
 import {
   MonthlyOrdersTotal,
   Order,
@@ -12,17 +11,19 @@ import {
 } from "../domain/models";
 import { cookies } from "next/headers";
 import { VARIABLES_CONFIG } from "@/lib/utils/utils";
+import { defaultCartService } from "@/server/cart/application/services-default";
 
 class OrderFacadeImpl {
   constructor(
     private orderService: IOrderService,
-    private cartService: ICartService
+    private cartServive: ICartService
   ) {}
 
   async save(orderDto: OrderDto) {
     try {
-      await this.orderService.save(orderDto);
-      await this.cartService.markCartAsCheckedOut(orderDto.cartId);
+      const cartId = await this.cartServive.findActiveCart(orderDto.userId)
+      await this.orderService.save(orderDto,cartId.id);
+      await this.cartServive.markCartAs(cartId.id,'CHECKED_OUT')
       cookies().delete(VARIABLES_CONFIG.CART_TOKEN!);
     } catch (error) {
       console.log('error saving order' + error)

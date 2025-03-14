@@ -3,6 +3,5 @@ export interface OrderDto {
     scheduledDate?: Date;
     paymentMethod: string;
     userId:string,
-    cartId:string
     discountId?:string
   }

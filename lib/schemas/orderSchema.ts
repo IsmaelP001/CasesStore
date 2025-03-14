@@ -7,7 +7,6 @@ export const orderSchema = z
     deliveryType: z.enum(["standard", "scheduled"], {
       message: "Tipo de entrega no válido",
     }),
-    cartId:z.string().length(36,{message:'Cart id no valido'}),
     deliveryHour: z.string().optional(),
     discountId:z.string().optional(),
     scheduledDate: z

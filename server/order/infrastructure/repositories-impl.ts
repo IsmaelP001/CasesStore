@@ -34,11 +34,6 @@ export class DefaultOrderRepositoryImpl
         { tx }
       );
 
-      const markCartAsCheckout = tx
-        .update(cart)
-        .set({status:'CHECKED_OUT'})
-        .where(eq(cart.id, order.cartId));
-
       const reduceQuantityInStockPromises = orderItems.map((item) => {
         return tx
           .update(productDevices)
@@ -54,7 +49,6 @@ export class DefaultOrderRepositoryImpl
       const promises = [
         newOrderPromise,
         orderItemsPromises,
-        markCartAsCheckout,
         ...reduceQuantityInStockPromises,
       ];
 
