@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {  ChevronRight } from "lucide-react";
 const CartTotalBtn = () => {
-  const { total, activeCartId, isPending } = useCartData();
+  const { total, isPending } = useCartData();
   const router = useRouter();
 
   const { status } = useSession();
@@ -19,7 +19,7 @@ const CartTotalBtn = () => {
             router.push("/auth/signin?callback=/checkout");
             return;
           }
-          router.push(`/checkout?cartId=${activeCartId}`);
+          router.push(`/checkout`);
         }}
         className={cn("flex w-full px-3 justify-between items-center bg-primary  h-7  box-border rounded-2xl text-primary-foreground hover:bg-slate-700 transition-300",status === "unauthenticated" && 'flex-row-reverse')}
       >

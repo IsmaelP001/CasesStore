@@ -5,21 +5,16 @@ import {
 import Link from "next/link";
 import CheckoutShippingDetails from "./_components/CheckoutShippingDetails";
 import CheckoutOrderSummary from "./_components/CheckoutOrderSummary";
-import { Params, SearchParams } from "@/types";
 import { serverHelpers } from "@/lib/trpc/serverHelper";
 import { ChevronLeft } from "lucide-react";
-import { notFound } from "next/navigation";
 
-const CheckoutPage = async ({ searchParams }: { searchParams: SearchParams }) => {
+const CheckoutPage = async () => {
 
-
-  const cartId=searchParams?.cartId
-  if(!cartId)return notFound()
     
   serverHelpers.user.getUser.prefetch();
   serverHelpers.userFeatures.gift.getDefaultGift.prefetch();
   serverHelpers.userFeatures.address.getDefaultAddress.prefetch();
-  serverHelpers.discountCode.getCouponsInCart.prefetch({cartId});
+  serverHelpers.discountCode.getCouponsInCart.prefetch();
   serverHelpers.cart.getItems.prefetch();
 
 
