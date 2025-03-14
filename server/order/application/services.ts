@@ -2,7 +2,7 @@ import { MonthlyOrdersTotal, Order, OrderItems, Pagination, TotalOrderRevenue } 
 import { OrderDto } from "./dto";
 
 export interface IOrderService{
-     save(dto:OrderDto):Promise<void> 
+     save(dto:OrderDto,cartId:string):Promise<void> 
      getOrders(param:Pagination):Promise<Order[]>
      getTotalOrderRevenue():Promise<TotalOrderRevenue>
      getMonthlyOrdersTotal():Promise<MonthlyOrdersTotal[]>

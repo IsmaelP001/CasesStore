@@ -18,6 +18,7 @@ class DefaultCartFacade implements ICartServiceFacade {
       handleError(error);
     }
   }
+  
 
   private get getCartCookie() {
     const cookieStore = cookies();
@@ -25,6 +26,7 @@ class DefaultCartFacade implements ICartServiceFacade {
     const payload = cartToken ? extractPayload(cartToken) : null;
     return payload;
   }
+
   async mergeCart(userId: string): Promise<void> {
    try {
     const cartToken = this.getCartCookie as any;
