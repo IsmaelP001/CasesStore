@@ -78,10 +78,8 @@ export const discountCodeRouter = router({
     }),
     getCouponsInCart: publicProcedure
     .use(AuthMiddleware)
-    .input(z.object({
-      cartId:z.string()
-    }))
     .query(async ({input,ctx}) => {
-      return await discountServiceFacade.getCouponsInCart(input.cartId) || {}
+      const userId=ctx?.session?.user?.id
+      return await discountServiceFacade.getCouponsInCart(userId)
     }),
 });
