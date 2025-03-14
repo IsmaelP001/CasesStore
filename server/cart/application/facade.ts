@@ -49,7 +49,7 @@ class DefaultCartFacade implements ICartServiceFacade {
         userId,
         status:'VERIFIED_USER',
       }),
-    ]);
+    ])
     this.saveCartToken(activeCart);
    } catch (error) {
     console.log('Error syncing cart',error)

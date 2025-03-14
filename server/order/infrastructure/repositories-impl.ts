@@ -27,7 +27,7 @@ export class DefaultOrderRepositoryImpl
 
   async save(order: Order, orderItems: OrderItems[]): Promise<void> {
     await this.db.transaction(async (tx: any) => {
-      const newOrderPromise = this.create(order as any, { tx });
+      const newOrderPromise = await this.create(order as any, { tx });
 
       const orderItemsPromises = this.orderDetailsRepository.create(
         orderItems,

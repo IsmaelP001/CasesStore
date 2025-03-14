@@ -9,9 +9,11 @@ import {
 import { ICouponService } from "./services";
 import { defaultDiscountService } from "./services-impl";
 import { ApplyCouponToCartDto, RemoveDiscountCodeDto } from "./dto";
+import { ICartServiceFacade } from "@/server/cart/application/services";
+import { defaultCartFacade } from "@/server/cart/application/facade";
 
 class DefaultDiscountFacade {
-  constructor(private discountService: ICouponService) {}
+  constructor(private discountService: ICouponService,private cartServiceFacade:ICartServiceFacade) {}
 
   async getCouponOrThrow(code: string): Promise<Coupon> {
     try {
@@ -78,9 +80,10 @@ class DefaultDiscountFacade {
     }
   }
 
-  async getCouponsInCart(cartId: string): Promise<CouponInCartItem> {
+  async getCouponsInCart(userId?:string): Promise<CouponInCartItem> {
     try {
-      return await this.discountService.getCouponsInCart({cartId});
+      const cartId = await this.cartServiceFacade.getOrCreateActiveUserCart(userId)
+      return await this.discountService.getCouponsInCart(cartId);
     } catch (error) {
       handleError(error);
     }
@@ -88,5 +91,6 @@ class DefaultDiscountFacade {
 }
 
 export const discountServiceFacade = new DefaultDiscountFacade(
-  defaultDiscountService
+  defaultDiscountService,
+  defaultCartFacade
 );
