@@ -37,6 +37,7 @@ export interface TextState {
   direction: "horizontal" | "vertical" | "smallVertical";
   font: string;
   color: { name: string; hex: string };
+  style:React.CSSProperties | null
 }
 
 interface StickersState {
@@ -108,10 +109,11 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
   const [textState, setTextState] = useState<TextState>({
     content: "",
     position: { x: 0, y: 0},
-    size: { width: 220, height: 200},
+    size: { width: 230, height: 140},
     direction: "horizontal",
     font: CUSTOM_FONTS[0].fontFamily,
     color: FONT_COLORS[0],
+    style:null
   });
 
   const [stickersState, setStickersState] = useState<StickersState>({
