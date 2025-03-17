@@ -7,6 +7,7 @@ import NewProducts from "@/components/landing/NewProducts";
 import { Smartphone } from "lucide-react";
 import Link from "next/link";
 import DevicesList from "@/components/landing/DevicesList";
+import { Reviews } from "@/components/landing/Reviews";
 export const revalidate = 86400; // Revalida cada 24 horas
 export const dynamic = "force-static";
 
