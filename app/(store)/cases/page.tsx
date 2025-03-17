@@ -26,7 +26,7 @@ const page = async ({
 
   return (
     <HydrationBoundary state={dehydrate(serverHelpers.queryClient)}>
-      <div className="space-y-1 px-2 md:px-5  flex pt-2">
+      <div className="space-y-1 px-2 md:px-5  flex pt-2 min-h-[90svh]">
         <SidebarProvider defaultOpen>
           <FilterSidebar />
           <div className=" w-full min-h-screen gap-5 ">

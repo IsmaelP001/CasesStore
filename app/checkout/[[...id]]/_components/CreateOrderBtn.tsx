@@ -27,14 +27,14 @@ const CreateOrderBtn = () => {
   }, [searchParams]);
 
   const [couponInCart] = trpc.discountCode.getCouponsInCart.useSuspenseQuery(
-    { cartId },
+    undefined,
     {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
     }
   );
 
-  const { mutate: createOrderAction, isPending: isPendingCreateNewOrder } =
+  const { mutate: createOrderAction, isPending: isPendingCreateNewOrder ,isSuccess:isSuccessOrder} =
     trpc.order.createOrder.useMutation({
       onSuccess: (data) => {
         utils.cart.getItems.invalidate();
@@ -62,8 +62,8 @@ const CreateOrderBtn = () => {
     });
 
   useEffect(() => {
-    if (isFetchingTotalCart || isPendingCreateNewOrder) return;
-    if (cartItems?.length === 0) {
+    if (isFetchingTotalCart || isPendingCreateNewOrder || isSuccessOrder) return;
+    if (cartItems?.length === 0  ) {
       router.push("/");
     }
   }, [cartItems, isFetchingTotalCart, isPendingCreateNewOrder, router]);
@@ -77,7 +77,6 @@ const CreateOrderBtn = () => {
             paymentMethod: paymentMethod?.value! as any,
             scheduledDate: scheduledDate?.date,
             deliveryType: scheduledDate?.deliveryType || ("standard" as any),
-            cartId,
             discountId: couponInCart?.discountId,
           })
         }

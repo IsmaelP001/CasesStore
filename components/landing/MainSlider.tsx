@@ -9,12 +9,13 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 
 // import required modules
-import { EffectCoverflow, Pagination,Autoplay } from "swiper/modules";
+import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 import Image from "next/image";
 import { Button, buttonVariants } from "../ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils/utils";
-import 'swiper/css/autoplay';
+import "swiper/css/autoplay";
+import { Reviews } from "./Reviews";
 
 export default function MainSlider() {
   return (
@@ -25,8 +26,8 @@ export default function MainSlider() {
         centeredSlides={true}
         slidesPerView={"auto"}
         autoplay={{
-          delay: 10000, 
-          disableOnInteraction: false, 
+          delay: 10000,
+          disableOnInteraction: false,
         }}
         speed={1500}
         loop={true}
@@ -41,14 +42,53 @@ export default function MainSlider() {
         modules={[EffectCoverflow, Pagination]}
         className="mt-1"
       >
+        {" "}
+        <SwiperSlide className=" max-w-[90dvw]    quicksand ">
+          <div className="bg-gray-100 h-[65svh] md:h-[75svh] grid grid-rows-10 m-auto md:grid-rows-1  md:grid-cols-10 overflow-hidden  ">
+            <div className=" text-center m-auto md:text-left inset-0 p-5 row-span-4 md:col-span-5 flex items-center z-50">
+              <div className=" px-2 md:px-5 w-fit rounded-xl">
+                <h2 className=" sedgwick_ave text-3xl md:text-5xl mb-2 font-black ">
+                  Diseña tu propio Cover,<br/> Personalizado Hoy
+                </h2>
+                <p className=" text-sm font-light tracking-wider">
+                  Convierte tus selfies, mascotas o momentos favoritos en
+                  caricaturas y personaliza tu funda en minutos.
+                </p>
+                <div className="flex gap-2 mt-4 justify-center md:justify-start">
+                  <Link
+                    href="/configure/design"
+                    className={cn(
+                      buttonVariants({ variant: "default" }),
+                      "font-semibold z-50"
+                    )}
+                  >
+                    Iniciar
+                  </Link>
+                  <Link
+                    href="/cases"
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      " text-primary bg-transparent font-semibold z-50"
+                    )}
+                  >
+                    Explorar
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="relative row-span-6 md:col-span-5 h-full px-10 ">
+              <Reviews />
+            </div>
+          </div>
+        </SwiperSlide>
         <SwiperSlide className=" max-w-[90dvw]    quicksand ">
           <div className="bg-gray-100 h-[65svh] md:h-[75svh] grid grid-rows-10 m-auto md:grid-rows-1  md:grid-cols-10 overflow-hidden  ">
             <div className=" text-center m-auto md:text-left inset-0 p-5 row-span-5 md:col-span-4 flex items-center z-50">
               <div className=" p-5 w-fit rounded-xl">
-                <h2 className="text-2xl mb-2 font-black ">
+                <h2 className=" sedgwick_ave text-2xl md:text-5xl mb-2 font-black  tracking-wider">
                   Amplio catalogo de colecciones
                 </h2>
-                <p className="  tracking-wider">
+                <p className="font-light">
                   Los personajes que amas, siempre contigo
                 </p>
                 <Link
@@ -111,7 +151,7 @@ export default function MainSlider() {
             </div>
             <div className="row-span-1 md:col-span-1 px-10 flex flex-col justify-center items-center text-center md:items-start md:text-left">
               <div>
-                <h2 className=" text-2xl md:text-3xl mb-2 font-bold">
+                <h2 className=" sedgwick_ave text-2xl md:text-5xl mb-2 font-black ">
                   Protege tu pantalla al máximo
                 </h2>
                 <p className="font-light">
@@ -131,13 +171,12 @@ export default function MainSlider() {
             </div>
           </div>
         </SwiperSlide>
-
         <SwiperSlide className="max-w-[90dvw] ">
           <div className="bg-gray-100 h-[65svh] md:h-[75svh]  grid place-items-center grid-rows-2 md:grid-rows-1 md:grid-cols-2">
             <div className="row-span-1 md:col-span-1 p-5 flex flex-col justify-center items-center text-center md:items-start md:text-left">
               <div>
-                <h2 className="text-2xl md:text-3xl  mb-2 font-bold">
-                  Amplio catalogo disponible
+              <h2 className=" sedgwick_ave text-2xl md:text-5xl mb-2 font-black ">
+              Amplio catalogo disponible
                 </h2>
                 <p className="font-light">
                   Protectores para casi todos los modelos de iphones.

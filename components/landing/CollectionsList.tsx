@@ -4,14 +4,18 @@ import Link from "next/link";
 import { serverHelpers } from "@/lib/trpc/serverHelper";
 
 const CollectionsList = async () => {
-  const collections = await serverHelpers.catalog.getCollections.fetch({limit:8});
+  const collections = await serverHelpers.catalog.getCollections.fetch({
+    limit: 8,
+  });
 
   return (
     <div>
-      <h2 className="sedgwick_ave font-semibold text-center text-3xl md:text-[2.60rem]   text-gray-900">
-        <span className="text-accent">Colecciones</span> recientes
-      </h2>
-
+      <header>
+        <h2 className="sedgwick_ave font-semibold  text-3xl md:text-[2.60rem]   text-gray-900">
+          <span className="text-primary">Colecciones</span> recientes
+        </h2>
+        <p className="font-light">Nuevos looks, nuevas historias. </p>
+      </header>
       <section
         className="py-5 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4
           auto-rows-[50px] md:auto-rows-[50px] lg:auto-rows-[70px]
@@ -44,7 +48,8 @@ const CollectionsList = async () => {
                     {name}
                   </p>
                   <p className="font-light text-sm md:text-base space-x-2">
-                    <span>{products_count}</span><span>Articulos</span>
+                    <span>{products_count}</span>
+                    <span>Articulos</span>
                   </p>
                 </div>
                 <Image
