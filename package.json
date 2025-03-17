@@ -57,6 +57,7 @@
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.31.4",
     "fabricjs-react": "^1.2.2",
+    "framer-motion": "^12.5.0",
     "html-to-image": "^1.11.11",
     "i": "^0.3.7",
     "jsonwebtoken": "^9.0.2",
