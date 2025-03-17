@@ -33,10 +33,7 @@ class DefaultCartFacade implements ICartServiceFacade {
     if (cartToken?.cart?.state !== "PENDING") return;
     let activeCart = await this.cartService.findActiveCart(userId);
     if (!activeCart) {
-      activeCart = await this.cartService.updateCart(cartToken?.cart?.id, {
-        status: "ACTIVE",
-        userId,
-      });
+      activeCart = await this.cartService.markCartAs(cartToken?.cart.id,'VERIFIED_USER')
       return;
     }
     const cartItems = await this.cartService.getCartItems(cartToken?.cart.id!);
