@@ -94,7 +94,7 @@ export default function TextOrientationConfiguration() {
             setTextState({
               ...textState,
               direction: "horizontal",
-              size: { ...textState.size, width: 200, height: 200 },
+              size: { ...textState.size, width: textState.size.height, height: textState.size.width },
             })
           }
         >
@@ -110,7 +110,7 @@ export default function TextOrientationConfiguration() {
             setTextState({
               ...textState,
               direction: "vertical",
-              size: { ...textState.size, height: textState.size.width },
+              size: { ...textState.size, width: textState.size.height, height: textState.size.width },
             })
           }
         >

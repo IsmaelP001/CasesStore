@@ -98,19 +98,19 @@ const Slider: React.FC<SliderProps> = ({ children, step = 1 }) => {
           <button
             onClick={prevSlide}
             className={cn(
-              "border border-[#CCCACA] grid place-content-center rounded-2xl px-6 py-2 z-10 ",
+              "border border-[#CCCACA] grid place-content-center rounded-full px-2 py-2 z-10 ",
               isAtStart && "bg-gray-200"
             )}
           >
-            <MoveLeft className="size-[20px]" />
+            <ChevronLeft className="size-[20px]" />
           </button>
           <button
             onClick={nextSlide}
             className={cn(
-              "border border-[#CCCACA] rounded-2xl px-6 py-2 z-10 grid place-content-center bg-foreground text-white",
+              "border border-[#CCCACA] rounded-full px-2 py-2 z-10 grid place-content-center  text-black",
             )}
           >
-            <MoveRight className="size-[20px]" />
+            <ChevronRight className="size-[20px]" />
           </button>
         </div>
       </div>

@@ -35,6 +35,7 @@ export default function TextCustomConfigurator() {
             <Input
               type="text"
               className="rounded-xl"
+              autoFocus
               value={textState.content}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setTextState({ ...textState, content: e.target.value })
