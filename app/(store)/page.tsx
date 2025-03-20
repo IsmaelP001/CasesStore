@@ -1,49 +1,84 @@
-import MainSlider from "@/components/landing/MainSlider";
-import CollectionsList from "@/components/landing/CollectionsList";
-import ProductsFavorites from "@/components/landing/ProductsFavorites";
+import React, { lazy, Suspense } from "react";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import CustomCaseLayer from "@/components/landing/CustomCaseLayer";
-import NewProducts from "@/components/landing/NewProducts";
-import { Smartphone } from "lucide-react";
-import Link from "next/link";
-import DevicesList from "@/components/landing/DevicesList";
-import { Reviews } from "@/components/landing/Reviews";
-export const revalidate = 86400; // Revalida cada 24 horas
+
+const MainSlider = lazy(() => import("@/components/landing/MainSlider"));
+const DevicesList = lazy(() => import("@/components/landing/DevicesList"));
+const CollectionsList = lazy(
+  () => import("@/components/landing/CollectionsList")
+);
+const ProductsFavorites = lazy(
+  () => import("@/components/landing/ProductsFavorites")
+);
+const CustomCaseLayer = lazy(
+  () => import("@/components/landing/CustomCaseLayer")
+);
+const NewProducts = lazy(() => import("@/components/landing/NewProducts"));
+
+export const revalidate = 86400;
 export const dynamic = "force-static";
 
 const HomePage = async () => {
   return (
     <div className="space-y-10">
       <div className="relative">
-        <MainSlider />
-      </div>
-      <div>
-        <MaxWidthWrapper>
-        <DevicesList/>
-        </MaxWidthWrapper>
-      </div>
-      <div>
-        <MaxWidthWrapper>
-          <CollectionsList />
-        </MaxWidthWrapper>
+        <ErrorBoundary>
+          <Suspense>
+            <MaxWidthWrapper>
+              <MainSlider />
+            </MaxWidthWrapper>
+          </Suspense>
+        </ErrorBoundary>
       </div>
 
       <div>
-        <MaxWidthWrapper>
-          <ProductsFavorites />
-        </MaxWidthWrapper>
+        <ErrorBoundary>
+          <Suspense>
+            <MaxWidthWrapper>
+              <DevicesList />
+            </MaxWidthWrapper>
+          </Suspense>
+        </ErrorBoundary>
+      </div>
+
+      <div>
+        <ErrorBoundary>
+          <Suspense>
+            <MaxWidthWrapper>
+              <CollectionsList />
+            </MaxWidthWrapper>
+          </Suspense>
+        </ErrorBoundary>
+      </div>
+
+      <div>
+        <ErrorBoundary>
+          <Suspense>
+            <MaxWidthWrapper>
+              <ProductsFavorites />
+            </MaxWidthWrapper>
+          </Suspense>
+        </ErrorBoundary>
       </div>
 
       <div className="bg-white">
-        <MaxWidthWrapper>
-          <CustomCaseLayer />
-        </MaxWidthWrapper>
+        <ErrorBoundary>
+          <Suspense>
+            <MaxWidthWrapper>
+              <CustomCaseLayer />
+            </MaxWidthWrapper>
+          </Suspense>
+        </ErrorBoundary>
       </div>
 
       <div>
-        <MaxWidthWrapper>
-          <NewProducts />
-        </MaxWidthWrapper>
+        <ErrorBoundary>
+          <Suspense>
+            <MaxWidthWrapper>
+              <NewProducts />
+            </MaxWidthWrapper>
+          </Suspense>
+        </ErrorBoundary>
       </div>
     </div>
   );
