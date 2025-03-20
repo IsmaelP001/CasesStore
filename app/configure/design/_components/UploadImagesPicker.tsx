@@ -322,7 +322,10 @@ export function PreviewModal({
     error,
     data: prediction,
     mutate: handleTransformImage,
+    cancel
   } = useTransformImages();
+
+  console.log("is pending CREATE",isPending)
 
   useEffect(() => {
     if (prediction?.output) {
@@ -333,6 +336,7 @@ export function PreviewModal({
       } as any);
     }
   }, [prediction]);
+
 
   if (!previewImage) return null;
 
@@ -418,7 +422,7 @@ export function PreviewModal({
                 Añadir
               </Button>
               <DrawerClose asChild>
-                <Button variant="outline" className="w-full rounded-2xl">
+                <Button onClick={cancel} variant="outline" className="w-full rounded-2xl">
                   Cancelar
                 </Button>
               </DrawerClose>
@@ -478,7 +482,10 @@ export function PreviewModal({
             size="sm"
             className="w-full"
             variant="outline"
-            onClick={() => setIsPreviewOpen(false)}
+            onClick={() =>{
+              cancel();
+              setIsPreviewOpen(false);
+            }}
           >
             Cancelar
           </Button>
