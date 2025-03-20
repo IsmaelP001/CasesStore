@@ -2,6 +2,7 @@
 import { ModelType } from "@/app/api/predictions/route";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import { useRef } from "react";
 
 export interface AnimationStyle {
   type: "animate" | "removeBg";
@@ -51,66 +52,99 @@ const modelConfigs: ModelConfigs = {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-async function transformImage({ file, animationStyle }: { file: File; animationStyle: AnimationStyle }) {
-  const modelItem = animationStyle.type === "removeBg" ? animationStyle.type : animationStyle.animateType;
-  const modelConfig = modelConfigs?.[modelItem as keyof ModelConfigs];
-  const prompt = `${modelConfig.prompt} ${animationStyle.subAnimateType || ""} ${animationStyle.animateType || ""}`;
-
-  const formData = new FormData();
-  formData.append("image", file);
-  formData.append("modelType", modelConfig.model);
-  formData.append("prompt", prompt);
-  if (modelConfig?.negativePrompt) formData.append("negativePrompt", modelConfig.negativePrompt);
-
-  const loadingToast = toast.loading("Procesando imagen...");
-
-  try {
-    const response = await fetch("/api/predictions", { method: "POST", body: formData });
-    let prediction = await response.json();
-
-    if (response.status !== 201 || prediction.status === "failed") {
-      throw new Error(prediction.error || prediction.detail || "Error en la predicción");
-    }
-
-    let result = { id: prediction.id, status: prediction.status, output: "" };
-
-    toast.loading("Generando imagen con IA...", { id: loadingToast });
-
-    while (prediction.status !== "succeeded" && prediction.status !== "failed") {
-      await sleep(1000);
-      const pollResponse = await fetch(`/api/predictions/${prediction.id}`);
-      prediction = await pollResponse.json();
-
-      if (pollResponse.status !== 200) {
-        throw new Error(prediction.error || prediction.detail || "Error en la consulta");
-      }
-
-      if (prediction.status === "failed") {
-        throw new Error(prediction.error || prediction.detail || "Error en el procesamiento");
-      }
-
-      result = {
-        ...prediction,
-        status: prediction.status,
-        output: Array.isArray(prediction.output) ? prediction.output[0] : prediction.output || "",
-      };
-    }
-
-    toast.success("¡Imagen generada con éxito!", { id: loadingToast });
-    return result;
-  } catch (error: any) {
-    throw error;
-  }
-}
-
 export default function useTransformImages() {
-  return useMutation({
-    mutationFn: transformImage,
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: async ({ file, animationStyle }: { file: File; animationStyle: AnimationStyle }) => {
+      abortControllerRef.current = new AbortController();
+      const signal = abortControllerRef.current.signal;
+      
+      const modelItem = animationStyle.type === "removeBg" ? animationStyle.type : animationStyle.animateType;
+      const modelConfig = modelConfigs?.[modelItem as keyof ModelConfigs];
+      const prompt = `${modelConfig.prompt} ${animationStyle.subAnimateType || ""} ${animationStyle.animateType || ""}`;
+
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("modelType", modelConfig.model);
+      formData.append("prompt", prompt);
+      if (modelConfig?.negativePrompt) formData.append("negativePrompt", modelConfig.negativePrompt);
+
+      const loadingToast = toast.loading("Procesando imagen...");
+
+      try {
+        if (signal.aborted) {
+          toast.error("Operación cancelada por el usuario", { id: loadingToast });
+          throw new DOMException("La operación ha sido cancelada", "AbortError");
+        }
+
+        const response = await fetch("/api/predictions", { 
+          method: "POST", 
+          body: formData,
+          signal
+        });
+        
+        let prediction = await response.json();
+
+        if (response.status !== 201 || prediction.status === "failed") {
+          throw new Error(prediction.error || prediction.detail || "Error en la predicción");
+        }
+
+        let result = { id: prediction.id, status: prediction.status, output: "" };
+
+        toast.loading("Generando imagen con IA...", { id: loadingToast });
+
+        while (prediction.status !== "succeeded" && prediction.status !== "failed") {
+          if (signal.aborted) {
+            try {
+              await fetch(`/api/predictions/${prediction.id}/cancel`, { 
+                method: "POST",
+              });
+            } catch (cancelError) {
+              console.warn("No se pudo cancelar la predicción en el servidor", cancelError);
+            }
+            
+            toast.error("Operación cancelada por el usuario", { id: loadingToast });
+            throw new DOMException("La operación ha sido cancelada", "AbortError");
+          }
+
+          await sleep(1000);
+          
+          const pollResponse = await fetch(`/api/predictions/${prediction.id}`, { signal });
+          prediction = await pollResponse.json();
+
+          if (pollResponse.status !== 200) {
+            throw new Error(prediction.error || prediction.detail || "Error en la consulta");
+          }
+
+          if (prediction.status === "failed") {
+            throw new Error(prediction.error || prediction.detail || "Error en el procesamiento");
+          }
+
+          result = {
+            ...prediction,
+            status: prediction.status,
+            output: Array.isArray(prediction.output) ? prediction.output[0] : prediction.output || "",
+          };
+        }
+
+        toast.success("¡Imagen generada con éxito!", { id: loadingToast });
+        return result;
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          toast.dismiss(loadingToast);
+          throw error;
+        }
+        throw error;
+      }
+    },
     onError: (error: Error) => {
+      if (error.name === "AbortError") {
+        return;
+      }
+      
       const errorMessage = error.message;
-      if (
-        errorMessage.includes("cannot identify image file")
-      ) {
+      if (errorMessage.includes("cannot identify image file")) {
         toast.error(
           "No se detectó un rostro. Asegúrate de que sea visible o usa una imagen de mejor calidad."
         );
@@ -120,10 +154,21 @@ export default function useTransformImages() {
         );
       }
     },
-    onSuccess: (data) => {
-      console.log("Transformación exitosa:", data);
-    },
   });
+
+  const cancel = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      
+      toast.dismiss(); 
+      toast("Operación cancelada", { icon: '⚠️' });
+      
+      mutation.reset();
+    }
+  };
+
+  return {
+    ...mutation,
+    cancel
+  };
 }
-
-
