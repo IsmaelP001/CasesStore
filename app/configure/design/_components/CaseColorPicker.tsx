@@ -3,8 +3,8 @@ import ColorPicker from "@/components/ColorPicker";
 import { RadioGroup } from "@headlessui/react";
 import React from "react";
 import { useDesign } from "../hooks/useDesign-context";
-import { FONT_COLORS } from "@/config/validators/fonts-options";
 import { cn } from "@/lib/utils/utils";
+import { COVER_BACKGROUND_COLORS } from "@/config/validators/option-validator";
 
 export default function CaseColorPicker() {
   const { designOptions, setDesignOptions } = useDesign();
@@ -15,7 +15,7 @@ export default function CaseColorPicker() {
           onChange={(color) => setDesignOptions((prev) => ({ ...prev, color }))}
           className="flex flex-col gap-2"
         >
-          {FONT_COLORS.map((color) => (
+          {COVER_BACKGROUND_COLORS.map((color) => (
             <RadioGroup.Option
               key={color.name}
               value={color}

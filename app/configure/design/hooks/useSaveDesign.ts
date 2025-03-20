@@ -1,3 +1,4 @@
+'use client'
 import { useUploadThing } from "@/lib/uploadthings";
 import { useDesign } from "./useDesign-context";
 import { startTransition } from "react";
@@ -14,27 +15,25 @@ export const useSaveDesign = () => {
     stickersState,
     caseDimensions,
     textContainerRef,
-    setOpenSelectDeviceSidebar
+    setOpenSelectDeviceSidebar,
   } = useDesign();
-  const {toast}=useToast()
+  const { toast } = useToast();
 
   const { startUpload, isUploading } = useUploadThing("imageUploader", {
     onClientUploadComplete: ([data]) => {
       const configId = data.serverData.configId;
-      if(!designOptions.device.id || !designOptions.material.id){
-        setOpenSelectDeviceSidebar(true)
-        return
-      }
       startTransition(() => {
-        router.push(`/preview?id=${configId}&deviceId=${designOptions.device.id}&materialId=${designOptions.material.id}`);
+        router.push(
+          `/preview?id=${configId}&deviceId=${designOptions.device.id}&materialId=${designOptions.material.id}`
+        );
       });
     },
     onUploadError: (err) => {
       toast({
-        title:'Error',
-        description:"Algo salio mal, intentelo mas tarde.",
-        variant:"destructive"
-      })
+        title: "Error",
+        description: "Algo salio mal, intentelo mas tarde.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -68,7 +67,28 @@ export const useSaveDesign = () => {
             };
           });
         });
-        await Promise.all(imagesPromises)
+        await Promise.all(imagesPromises);
+      }
+
+      if (stickersState.items.length) {
+        const stickerPromises = stickersState.items.map((sticker) => {
+          return new Promise<void>((resolve) => {
+            const stickerImage = new Image();
+            stickerImage.crossOrigin = "anonymous";
+            stickerImage.src = sticker.image.src;
+            stickerImage.onload = () => {
+              ctx?.drawImage(
+                stickerImage,
+                (sticker.x - leftOffset) * scaleFactor,
+                (sticker.y - topOffset) * scaleFactor,
+                sticker.width * scaleFactor,
+                sticker.height * scaleFactor
+              );
+              resolve();
+            };
+          });
+        });
+        await Promise.all(stickerPromises);
       }
 
       if (textContainerRef.current) {
@@ -93,28 +113,6 @@ export const useSaveDesign = () => {
         );
       }
 
-      if (stickersState.items.length) {
-        const stickerPromises = stickersState.items.map((sticker) => {
-          return new Promise<void>((resolve) => {
-            const stickerImage = new Image();
-            stickerImage.crossOrigin = "anonymous";
-            stickerImage.src = sticker.image.src;
-            stickerImage.onload = () => {
-              ctx?.drawImage(
-                stickerImage,
-                (sticker.x - leftOffset) * scaleFactor,
-                (sticker.y - topOffset) * scaleFactor,
-                sticker.width * scaleFactor,
-                sticker.height * scaleFactor
-              );
-              resolve();
-            };
-          });
-        });
-        await Promise.all(stickerPromises)
-      }
-
-
       canvas.toBlob(async (blob) => {
         if (blob) {
           const file = new File([blob], "filename.png", { type: "image/png" });
@@ -122,7 +120,7 @@ export const useSaveDesign = () => {
         }
       });
     } catch (err) {
-      throw new Error('Error uploading images')
+      throw new Error("Error uploading images");
     }
   };
 

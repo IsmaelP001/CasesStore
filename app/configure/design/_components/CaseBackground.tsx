@@ -1,20 +1,21 @@
 "use client";
 
+import { cn } from "@/lib/utils/utils";
 import { useDesign } from "../hooks/useDesign-context";
 
 export const CaseBackground = () => {
-  const { designOptions, phoneCaseRef } = useDesign();
+  const { designOptions,showSurrondingImage } = useDesign();
 
-return (
+  return (
     <>
-      <div className="absolute z-40 inset-0 overflow-hidden  shadow-[0_0_0_99999px_rgba(229,231,235,0.6)]" />
+      <div className={cn("absolute z-40 inset-0 left-[3px] top-px right-[3px] bottom-px rounded-[32px]",showSurrondingImage ? 'shadow-[0_0_0_99999px_rgba(245,245,245,0.6)]' :'shadow-[0_0_0_99999px_rgba(245,245,245,1)]')} />
       <div
         style={{
           backgroundColor: designOptions.color.hex,
-          borderRadius: '13%/8%'
+          borderRadius: "13%/8%",
         }}
         className="absolute inset-0 left-[1px] top-px right-[1px] bottom-px  overflow-hidden"
-        />
+      />
     </>
   );
 };
