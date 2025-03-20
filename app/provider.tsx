@@ -15,6 +15,7 @@ import { trpc } from "@/lib/trpc/client";
 import SuperJSON from "superjson";
 import { store } from "@/config/redux/storeRedux";
 import { DesignProvider } from "./configure/design/hooks/useDesign-context";
+import { Toaster } from "react-hot-toast";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; //browser whould use relative url
@@ -59,6 +60,7 @@ const ProviderClient = ({ children }: { children: ReactNode }) => {
             <QueryClientProvider client={queryClient}>
               {children}
               <ShadcnToaster />
+              <Toaster position='top-center'/>
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
         </NextAuthProvider>

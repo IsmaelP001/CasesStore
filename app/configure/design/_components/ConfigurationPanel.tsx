@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import UploadImagesPicker from "./UploadImagesPicker";
 import FontTypePicker from "./FontTypePicker";
 import { Images, LetterText, Signature, Type } from "lucide-react";
-import FontStylePicker from "./FontStylePicker";
 
 const ImagesTabs = () => {
   return (

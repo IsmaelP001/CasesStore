@@ -61,6 +61,7 @@ export default function useCasesRef(props:UseCasesRefProps) {
         !phoneCaseRef.current.contains(event.target as Node) &&
         !(event.target as HTMLElement).closest(".resizable-element") && 
         !(event.target as HTMLElement).closest(".handle-component")
+        
       ) {
         setSelectedElement('');
       }

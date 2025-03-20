@@ -1,4 +1,3 @@
-// contexts/design-context.tsx
 "use client";
 
 import { CUSTOM_FONTS, FONT_COLORS } from "@/config/validators/fonts-options";
@@ -77,6 +76,7 @@ type DesignState = {
   selectedElement:any,
   caseDimensions:any
   openSelectDeviceSidebar:boolean
+  showSurrondingImage:boolean
 };
 
 type DesignActions = {
@@ -86,6 +86,7 @@ type DesignActions = {
   setStickersState: React.Dispatch<React.SetStateAction<StickersState>>
   setSelectedElement:React.Dispatch<React.SetStateAction<string>>;
   setOpenSelectDeviceSidebar:React.Dispatch<React.SetStateAction<boolean>>;
+  setShowSurrondingImage:React.Dispatch<React.SetStateAction<boolean>>;
 
 };
 
@@ -105,11 +106,12 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
 
   const [imagesState, setImagesState] = useState<ImageState[]>([]);
   const [openSelectDeviceSidebar,setOpenSelectDeviceSidebar]=useState<boolean>(false)
-  
+  const [showSurrondingImage,setShowSurrondingImage]=useState<boolean>(true);
+
   const [textState, setTextState] = useState<TextState>({
     content: "",
     position: { x: 0, y: 0},
-    size: { width: 230, height: 140},
+    size: { width: 230, height: 180},
     direction: "horizontal",
     font: CUSTOM_FONTS[0].fontFamily,
     color: FONT_COLORS[0],
@@ -150,7 +152,9 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
       removeCustomImage,
       removeSticker,
       setOpenSelectDeviceSidebar,
-      openSelectDeviceSidebar
+      openSelectDeviceSidebar,
+      showSurrondingImage,
+      setShowSurrondingImage
     }}>
       {children}
     </DesignContext.Provider>

@@ -182,10 +182,10 @@ const CUSTOM_FONTS = [
 const FONT_COLORS = [
   { id: 1, name: "Blanco", hex: "#FFFFFF" },
   { id: 2, name: "Negro", hex: "#000000" },
-  { id: 3, name: "Rojo", hex: "#FF0000" },
-  { id: 4, name: "Azul", hex: "#0000FF" },
-  { id: 5, name: "Verde", hex: "#008000" },
-  { id: 6, name: "Amarillo", hex: "#FFFF00" },
+  { id: 3, name: "Carmín", hex: "#DC143C" },
+  { id: 4, name: "Azul Real", hex: "#4169E1" }, 
+  { id: 5, name: "Verde Esmeralda", hex: "#50C878" },
+  { id: 6, name: "Dorado", hex: "#FFD700" }, 
 ];
 
 export { CUSTOM_FONTS, FONT_COLORS };

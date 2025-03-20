@@ -40,107 +40,107 @@ export const MODELS = {
     {
       label: 'iPhone X',
       value: 'iphonex',
-      image: 'https://example.com/images/iphonex.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphonex.png', 
     },
     
     {
       label: 'iPhone XS Max',
       value: 'iphonexsmax',
-      image: 'https://example.com/images/iphonexsmax.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphonexsmax.png', 
     },
     {
       label: 'iPhone 11',
       value: 'iphone11',
-      image: 'https://example.com/images/iphone11.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone11.png', 
     },
     {
       label: 'iPhone 11 Pro',
       value: 'iphone11pro',
-      image: 'https://example.com/images/iphone11pro.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone11pro.png', 
     },
     {
       label: 'iPhone 11 Pro Max',
       value: 'iphone11promax',
-      image: 'https://example.com/images/iphone11promax.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone11promax.png', 
     },
     {
       label: 'iPhone SE (2nd generation)',
       value: 'iphonese2',
-      image: 'https://example.com/images/iphonese2.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphonese2.png', 
     },
     {
       label: 'iPhone 12',
       value: 'iphone12',
-      image: 'https://example.com/images/iphone12.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone12.png', 
     },
     {
       label: 'iPhone 12 Pro',
       value: 'iphone12pro',
-      image: 'https://example.com/images/iphone12pro.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone12pro.png', 
     },
     {
       label: 'iPhone 12 Pro Max',
       value: 'iphone12promax',
-      image: 'https://example.com/images/iphone12promax.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone12promax.png', 
     },
     {
       label: 'iPhone 13',
       value: 'iphone13',
-      image: 'https://example.com/images/iphone13.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone13.png', 
     },
     {
       label: 'iPhone 13 Pro',
       value: 'iphone13pro',
-      image: 'https://example.com/images/iphone13pro.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone13pro.png', 
     },
     {
       label: 'iPhone 13 Pro Max',
       value: 'iphone13promax',
-      image: 'https://example.com/images/iphone13promax.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone13promax.png', 
     },
     {
       label: 'iPhone SE (3rd generation)',
       value: 'iphonese3',
-      image: 'https://example.com/images/iphonese3.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphonese3.png', 
     },
     {
       label: 'iPhone 14',
       value: 'iphone14',
-      image: 'https://example.com/images/iphone14.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone14.png', 
     },
     {
       label: 'iPhone 14 Plus',
       value: 'iphone14plus',
-      image: 'https://example.com/images/iphone14plus.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone14plus.png', 
     },
     {
       label: 'iPhone 14 Pro',
       value: 'iphone14pro',
-      image: 'https://example.com/images/iphone14pro.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone14pro.png', 
     },
     {
       label: 'iPhone 14 Pro Max',
       value: 'iphone14promax',
-      image: 'https://example.com/images/iphone14promax.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone14promax.png', 
     },
     {
       label: 'iPhone 15',
       value: 'iphone15',
-      image: 'https://example.com/images/iphone15.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone15.png', 
     },
     {
       label: 'iPhone 15 Pro',
       value: 'iphone15pro',
-      image: 'https://example.com/images/iphone15pro.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone15pro.png', 
     },
     {
       label: 'iPhone 15 Pro Max',
       value: 'iphone15promax',
-      image: 'https://example.com/images/iphone15promax.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone15promax.png', 
     },{
       label: 'iPhone 16',
       value: 'iphone16',
-      image: 'https://example.com/images/iphone16.png', // Reemplaza con la URL real
+      image: 'https://example.com/images/iphone16.png', 
     },
     {
       label: 'iPhone 16 Pro',
@@ -176,25 +176,18 @@ export const MATERIALS = {
   ],
 } as const
 
-// export const FINISHES = {
-//   name: 'finish',
-//   options: [
-//     {
-//       label: 'Smooth Finish',
-//       value: 'smooth',
-//       description: undefined,
-//       price: PRODUCT_PRICES.finish.smooth,
 
-//     },
-//     {
-//       label: 'Textured Finish',
-//       value: 'textured',
-//       description: 'Soft grippy texture',
-//       price: PRODUCT_PRICES.finish.textured,
-
-//     },
-//   ],
-// } as const
+export const COVER_BACKGROUND_COLORS = [
+  { id: 1, name: "Negro Carbón", hex: "#2C2C2C" },       
+  { id: 2, name: "Blanco Nieve", hex: "#FFFFFF" },  
+  { id: 11, name: "Gris Espacial", hex: "#3B3B3D" },         
+  { id: 10, name: "Plateado", hex: "#C0C0C0" },            
+  { id: 4, name: "Azul Medianoche", hex: "#191970" },         
+  { id: 8, name: "Morado Profundo", hex: "#4B0082" },       
+  { id: 12, name: "Oro", hex: "#D4AF37" },                   
+  { id: 13, name: "Rojo Producto", hex: "#FF3B30" },          
+  { id: 14, name: "Azul Pacífico", hex: "#007AFF" },       
+];
 
 
 export const STIKERS_OPTIONS= [
