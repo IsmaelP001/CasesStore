@@ -81,13 +81,14 @@ export const DraggableSticker = ({ sticker }: DraggableStickerProps) => {
       onClick={(e: any) => {
         setSelectedElement(`sticker-${sticker.id}`);
       }}
+      className="z-0"
     >
-      <div className="relative w-full h-full">
+      <div className="relative w-full h-full z-0">
         <NextImage
           src={sticker.image.src}
           fill
           alt="sticker"
-          className="pointer-events-none object-cover"
+          className="pointer-events-none object-cover z-0"
         />
       </div>
     </Rnd>

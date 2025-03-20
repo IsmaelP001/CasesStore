@@ -1,6 +1,6 @@
 import { serverHelpers } from "@/lib/trpc/serverHelper";
-import DesignConfigurator from "./_components/DesignConfigurator";
 import { DesignProvider } from "./hooks/useDesign-context";
+import DesignConfiguratorContainer from "./_components/DesignConfiguratorContainer";
 export const revalidate = 0;
 
 const page = async () => {
@@ -13,7 +13,7 @@ const page = async () => {
   return (
     <>
       <DesignProvider>
-        <DesignConfigurator />
+        <DesignConfiguratorContainer />
       </DesignProvider>
     </>
   );

@@ -75,13 +75,14 @@ export const DraggableImage = ({ image }: DraggableImageProps) => {
       onClick={(e: any) => {
         setSelectedElement(`image-${image.url}`);
       }}
+      className="z-0"
     >
       <div className="relative w-full h-full">
         <NextImage
           src={image.url!}
           fill
           alt="your image"
-          className="pointer-events-none object-cover"
+          className="pointer-events-none object-cover z-0    "
         />
       </div>
     </Rnd>
