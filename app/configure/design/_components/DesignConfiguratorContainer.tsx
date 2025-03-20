@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { ConfigurationPanelV2 } from "./ConfigurationPanelV2";
 import { PhoneCasePreview } from "./PhoneCasePreview";
 import { ChevronLeft } from "lucide-react";
-import { SelectModelDialog } from "./SelectModelDialog";
 import Link from "next/link";
 import Image from "next/image";
 
