@@ -3,6 +3,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { serverHelpers } from "@/lib/trpc/serverHelper";
 import OrderList from "./_components/OrderList";
 export const dynamic = "force-dynamic";
+export const runtime = "edge"
 
 const page = async () => {
   await serverHelpers.order.getOrder.prefetch();

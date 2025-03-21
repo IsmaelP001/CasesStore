@@ -3,6 +3,7 @@ import { serverHelpers } from "@/lib/trpc/serverHelper";
 import { notFound } from "next/navigation";
 import { SearchParams, Params } from "@/types";
 import SingleProductPage from "../_components/SingleProductPage";
+export const runtime = "edge"
 
 interface PageProps {
   params: Params;
