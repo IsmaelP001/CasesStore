@@ -5,6 +5,7 @@ import { Quicksand } from "next/font/google";
 import ProviderClient from "./provider";
 import { ReactNode } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata = {
   title: "Create Next App",
@@ -35,6 +36,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className={`${quicksand.variable}  ${shadowsIntoLight.variable} ${lato.className}`}>
         <ProviderClient>{children}</ProviderClient>
+        <SpeedInsights/>
+        <Analytics/>
       </body>
     </html>
   );
