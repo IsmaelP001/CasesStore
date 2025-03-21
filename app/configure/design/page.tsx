@@ -3,7 +3,6 @@ import { DesignProvider } from "./hooks/useDesign-context";
 import DesignConfiguratorContainer from "./_components/DesignConfiguratorContainer";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 export const revalidate = 0;
-export const runtime = "edge"
 
 const page = async () => {
   serverHelpers.catalog.getProductsByType.prefetch({

@@ -7,7 +7,6 @@ import {
 } from "@tanstack/react-query";
 import { serverHelpers } from "@/lib/trpc/serverHelper";
 import dynamic from "next/dynamic";
-export const runtime = "edge"
 
 const DesignPreview = dynamic(() => import("./DesignPreview"), {
   ssr: false,
