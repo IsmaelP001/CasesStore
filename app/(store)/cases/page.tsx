@@ -10,7 +10,6 @@ import SidebarFilterTrigger from "./_components/SidebarFilterTrigger";
 import { Suspense } from "react";
 import ProductListSkeleton from "./_components/ProductListSkeleton";
 import ProductList from "./_components/ProductList";
-export const runtime = "edge"
 
 const page = async ({
   searchParams,
