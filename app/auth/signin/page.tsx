@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils/utils";
+export const runtime = "edge"
 
 interface AuthProvider {
   id: string;

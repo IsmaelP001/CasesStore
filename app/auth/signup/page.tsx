@@ -21,6 +21,7 @@ import { trpc } from "@/lib/trpc/client";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils/utils";
 
+export const runtime = "edge"
 
 
 const SignupPage = () => {

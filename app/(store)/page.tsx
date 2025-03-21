@@ -2,6 +2,8 @@ import React, { lazy, Suspense } from "react";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 
+export const runtime = "edge"
+
 const MainSlider = lazy(() => import("@/components/landing/MainSlider"));
 const DevicesList = lazy(() => import("@/components/landing/DevicesList"));
 const CollectionsList = lazy(
