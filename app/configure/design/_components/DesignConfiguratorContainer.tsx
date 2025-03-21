@@ -2,10 +2,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { ConfigurationPanelV2 } from "./ConfigurationPanelV2";
-import { PhoneCasePreview } from "./PhoneCasePreview";
 import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import { PhoneCasePreview } from "./PhoneCasePreview";
 
 const DesignConfiguratorContainer = () => {
   const router = useRouter();

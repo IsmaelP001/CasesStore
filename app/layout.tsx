@@ -4,6 +4,7 @@ import { Quicksand } from "next/font/google";
 
 import ProviderClient from "./provider";
 import { ReactNode } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata = {
   title: "Create Next App",
