@@ -47,6 +47,7 @@
     "@types/react-textfit": "^1.1.4",
     "@types/textfit": "^2.4.5",
     "@uploadthing/react": "^6.5.3",
+    "@vercel/analytics": "^1.5.0",
     "@vercel/postgres": "^0.10.0",
     "@vercel/speed-insights": "^1.2.0",
     "@visx/text": "^3.12.0",
