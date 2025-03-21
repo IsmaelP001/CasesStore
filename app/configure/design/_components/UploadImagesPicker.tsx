@@ -42,6 +42,7 @@ import {
   subCategories,
 } from "@/config/validators/transform-images-options";
 import { cn } from "@/lib/utils/utils";
+import { featureFlags } from "@/config/featureflags";
 
 export interface ImagePreview {
   uploadedUrl: string;
@@ -267,29 +268,36 @@ const ActionButtonsAnimate = ({
   isMobile: boolean;
 }) => (
   <div className="flex justify-center gap-x-4">
-    <Button
-      variant={
-        selectedEditOption?.type === "removeBg" ? "secondary" : "outline"
-      }
-      className="rounded-2xl"
-      size="sm"
-      onClick={handleRemoverClick}
-    >
-      <Eraser />
-      Remover Fondo
-    </Button>
-    <Button
-      variant={selectedEditOption?.type === "animate" ? "secondary" : "outline"}
-      className="rounded-2xl"
-      size="sm"
-      onClick={handleAnimarClick}
-    >
-      <ImageOff />
-      Animar{" "}
-    </Button>
-    {selectedEditOption && (
+    {featureFlags.enableBackgroundRemoval && (
       <Button
-        disabled={!selectedEditOption.type || isPending}
+        variant={
+          selectedEditOption?.type === "removeBg" ? "secondary" : "outline"
+        }
+        className="rounded-2xl"
+        size="sm"
+        onClick={handleRemoverClick}
+      >
+        <Eraser />
+        Remover Fondo
+      </Button>
+    )}
+    {featureFlags.enableAnimations && (
+      <Button
+        variant={
+          selectedEditOption?.type === "animate" ? "secondary" : "outline"
+        }
+        className="rounded-2xl"
+        size="sm"
+        onClick={handleAnimarClick}
+      >
+        <ImageOff />
+        Animar{" "}
+      </Button>
+    )}
+    {selectedEditOption &&
+    (featureFlags.enableAnimations || featureFlags.enableBackgroundRemoval) ? (
+      <Button
+        disabled={!selectedEditOption?.type || isPending}
         onClick={() =>
           handleTransformImage({
             file: previewImage.file,
@@ -302,7 +310,7 @@ const ActionButtonsAnimate = ({
         {isPending ? "Generando" : "Generar"}
         {isPending ? <Loading /> : <ChevronRight />}
       </Button>
-    )}
+    ) : null}
   </div>
 );
 
@@ -322,10 +330,8 @@ export function PreviewModal({
     error,
     data: prediction,
     mutate: handleTransformImage,
-    cancel
+    cancel,
   } = useTransformImages();
-
-  console.log("is pending CREATE",isPending)
 
   useEffect(() => {
     if (prediction?.output) {
@@ -337,14 +343,15 @@ export function PreviewModal({
     }
   }, [prediction]);
 
-
   if (!previewImage) return null;
 
   const handleAnimarClick = () => {
+    if (!featureFlags.enableAnimations) return;
     setSelectedEditOption({ ...selectedEditOption, type: "animate" });
   };
 
   const handleRemoverClick = () => {
+    if (!featureFlags.enableBackgroundRemoval) return;
     setSelectedEditOption({ ...selectedEditOption, type: "removeBg" });
   };
 
@@ -373,9 +380,10 @@ export function PreviewModal({
               <DrawerTitle>Vista previa de imagen</DrawerTitle>
 
               <div className="flex justify-between items-center text-center">
-                <DrawerDescription className="text-center">
-                  Personaliza tu imagen: anímala, elimina el fondo o súbela tal
-                  cual.
+                <DrawerDescription className="text-center pt-0.5">
+                  {featureFlags.enableAnimations
+                    ? "Personaliza tu imagen: anímala, elimina el fondo o súbela tal cual."
+                    : "Previsualización de imagen."}
                 </DrawerDescription>
                 <div>
                   <ToggleImageButton
@@ -394,11 +402,13 @@ export function PreviewModal({
                   isMobile={isMobile}
                 />
 
-                <AnimationOptions
-                  selectedEditOption={selectedEditOption}
-                  setSelectedEditOption={setSelectedEditOption}
-                  isMobile={isMobile}
-                />
+                {featureFlags.enableAnimations && (
+                  <AnimationOptions
+                    selectedEditOption={selectedEditOption}
+                    setSelectedEditOption={setSelectedEditOption}
+                    isMobile={isMobile}
+                  />
+                )}
               </div>
 
               <ActionButtonsAnimate
@@ -422,7 +432,11 @@ export function PreviewModal({
                 Añadir
               </Button>
               <DrawerClose asChild>
-                <Button onClick={cancel} variant="outline" className="w-full rounded-2xl">
+                <Button
+                  onClick={cancel}
+                  variant="outline"
+                  className="w-full rounded-2xl"
+                >
                   Cancelar
                 </Button>
               </DrawerClose>
@@ -435,69 +449,75 @@ export function PreviewModal({
 
   return (
     <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-      <DialogContent className="sm:max-w-md max-h-[97svh]  overflow-y-auto">
-        <DialogHeader>
-          <div className="flex justify-between items-center">
-            <div>
-              <DialogTitle>Vista previa de imagen</DialogTitle>
-              <DialogDescription className="pt-1">
-                Personaliza tu imagen: anímala, elimina el fondo o súbela tal
-                cual.
-              </DialogDescription>
+      <DialogContent className="sm:max-w-md ">
+        <div className="max-h-[85svh] space-y-3 overflow-y-auto">
+          <DialogHeader>
+            <div className="flex justify-around items-center">
+              <div>
+                <DialogTitle>Vista previa de imagen</DialogTitle>
+                <DrawerDescription className="text-center pt-0.5">
+                  {featureFlags.enableAnimations
+                    ? "Personaliza tu imagen: anímala, elimina el fondo o súbela tal cual."
+                    : "Previsualización de imagen."}
+                </DrawerDescription>
+              </div>
+              {featureFlags.enableAnimations ||
+              featureFlags.enableBackgroundRemoval ? (
+                <div>
+                  <ToggleImageButton
+                    previewImage={previewImage}
+                    tooglePreviewImage={tooglePreviewImage}
+                  />
+                </div>
+              ) : null}
             </div>
-            <div>
-              <ToggleImageButton
-                previewImage={previewImage}
-                tooglePreviewImage={tooglePreviewImage}
-              />
-            </div>
-          </div>
-        </DialogHeader>
+          </DialogHeader>
 
-        <ImagePreview
-          previewImage={previewImage}
-          isPending={isPending}
-          isMobile={isMobile}
-        />
+          <ImagePreview
+            previewImage={previewImage}
+            isPending={isPending}
+            isMobile={isMobile}
+          />
 
-        <AnimationOptions
-          selectedEditOption={selectedEditOption}
-          setSelectedEditOption={setSelectedEditOption}
-          isMobile={isMobile}
-        />
+          <AnimationOptions
+            selectedEditOption={selectedEditOption}
+            setSelectedEditOption={setSelectedEditOption}
+            isMobile={isMobile}
+          />
 
-        <ActionButtonsAnimate
-          selectedEditOption={selectedEditOption}
-          setSelectedEditOption={setSelectedEditOption}
-          handleRemoverClick={handleRemoverClick}
-          handleAnimarClick={handleAnimarClick}
-          isPending={isPending}
-          previewImage={previewImage}
-          handleTransformImage={handleTransformImage}
-          isMobile={isMobile}
-        />
+          <ActionButtonsAnimate
+            selectedEditOption={selectedEditOption}
+            setSelectedEditOption={setSelectedEditOption}
+            handleRemoverClick={handleRemoverClick}
+            handleAnimarClick={handleAnimarClick}
+            isPending={isPending}
+            previewImage={previewImage}
+            handleTransformImage={handleTransformImage}
+            isMobile={isMobile}
+          />
 
-        <DialogFooter>
-          <Button
-            size="sm"
-            className="w-full"
-            variant="outline"
-            onClick={() =>{
-              cancel();
-              setIsPreviewOpen(false);
-            }}
-          >
-            Cancelar
-          </Button>
-          <Button
-            size="sm"
-            disabled={isPending}
-            className="w-full"
-            onClick={() => handleSaveImage(previewImage.imagePreviewUrl)}
-          >
-            Agregar
-          </Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button
+              size="sm"
+              className="w-full"
+              variant="outline"
+              onClick={() => {
+                cancel();
+                setIsPreviewOpen(false);
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              size="sm"
+              disabled={isPending}
+              className="w-full"
+              onClick={() => handleSaveImage(previewImage.imagePreviewUrl)}
+            >
+              Agregar
+            </Button>
+          </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -7,13 +7,13 @@ import { useDesign } from "../hooks/useDesign-context";
 import { DraggableText } from "./DraggableText";
 import { DraggableImage } from "./DraggableImage";
 import { DraggableSticker } from "./DraggableSticker";
-import { SelectModelDialog } from "./SelectModelDialog";
 import CaseColorPicker from "./CaseColorPicker";
 import { SaveButton } from "./SaveButton";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Image as ImageIcon, ImageOff } from "lucide-react";
 import Image from "next/image";
+import { SelectModelDialog } from "./SelectModelDialog";
 
 export const PhoneCasePreview = () => {
   const {
@@ -34,7 +34,7 @@ export const PhoneCasePreview = () => {
                   gap-2 md:gap-5 bg-transparent
                   rounded-lg px-12 py-6 text-center md:h-[100svh] flex flex-col items-center justify-center "
     >
-      {/* <SelectModelDialog /> */}
+      <SelectModelDialog />
 
       <div
         className="relative 

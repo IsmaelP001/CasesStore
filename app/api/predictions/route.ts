@@ -38,9 +38,10 @@ export async function POST(request: NextRequest) {
           modelVersion = "a07f252abbbd832009640b27f063ea52d87d7a23a185ca165bec23b5adc8deaf";
           input = {
             image: dataURI,
-            style: "Clay",
+            style: 'Clay',
             prompt: prompt,
-            instant_id_strength: 0.8
+            instant_id_strength: 0.8,
+            negative_prompt:negativePrompt
           };
           break; 
           case "bytedance":
