@@ -7,6 +7,7 @@ import { Button } from "../../../components/ui/button";
 import { serverHelpers } from "@/lib/trpc/serverHelper";
 import { SidebarCreateCoupon } from "./components/SidebarCreateCoupon";
 export const dynamic = "force-dynamic";
+export const runtime = "edge"
 
 const page = async () => {
   await serverHelpers.discountCode.getActiveCoupons.prefetch()

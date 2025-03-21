@@ -85,3 +85,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({error:'Fail to convert image',details:error},{status:500})
     }
   }
+
+  export const maxDuration = 30;
+

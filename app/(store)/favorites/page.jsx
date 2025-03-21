@@ -6,6 +6,7 @@ import FavoritesPage from "./FavoritesPage";
 import { serverHelpers } from "@/lib/trpc/serverHelper";
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge"
 
 const page = async () => { 
 

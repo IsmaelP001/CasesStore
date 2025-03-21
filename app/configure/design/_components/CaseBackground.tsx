@@ -14,7 +14,7 @@ export const CaseBackground = () => {
           backgroundColor: designOptions.color.hex,
           borderRadius: "13%/8%",
         }}
-        className="absolute inset-0 left-[1px] top-px right-[1px] bottom-px  overflow-hidden"
+        className="absolute shiny-background inset-0   overflow-hidden"
       />
     </>
   );

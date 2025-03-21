@@ -7,6 +7,7 @@ import CheckoutShippingDetails from "./_components/CheckoutShippingDetails";
 import CheckoutOrderSummary from "./_components/CheckoutOrderSummary";
 import { serverHelpers } from "@/lib/trpc/serverHelper";
 import { ChevronLeft } from "lucide-react";
+export const runtime = "edge"
 
 const CheckoutPage = async () => {
 
