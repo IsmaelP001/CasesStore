@@ -27,23 +27,23 @@ interface ModelConfigs {
 const modelConfigs: ModelConfigs = {
   avatar: { model: "photomaker-style", prompt: "" },
   hero: {
-    model: "bytedance",
+    model: "photomaker-style",
     prompt:
       "Ultra-realistic portrait, hyper-detailed, photorealistic, 8K resolution, cinematic lighting, realistic skin textures, dynamic pose.",
     negativePrompt:
       "lowres, bad anatomy, extra limbs, deformed, poorly drawn face, cartoonish, anime, blurry, oversaturated, watermark, text.",
   },
   anime: {
-    model: "bytedance",
+    model: "photomaker-style",
     prompt:
       "Ultra-detailed 2D anime illustration, vibrant colors, smooth shading, cinematic atmosphere, precise line art, dynamic composition.",
     negativePrompt:
       "3D, CGI, low quality, blurry, pixelated, distorted features, realistic textures, glitch effects, watermark, text.",
   },
   cartoon: {
-    model: "bytedance",
+    model: "faceToMany",
     prompt:
-      "Highly detailed Pixar-style animated avatar, vibrant colors, ultra-sharp rendering, smooth skin, expressive eyes, cinematic lighting.",
+      "Highly detailed Pixar-style animated avatar, vibrant colors, ultra-sharp rendering, smooth skin, expressive eyes, cinematic lighting img",
     negativePrompt:
       "low quality, blurry, deformed, extra limbs, uncanny valley, noisy background, poor lighting, watermark, text.",
   },
@@ -114,10 +114,12 @@ export default function useTransformImages() {
           prediction = await pollResponse.json();
 
           if (pollResponse.status !== 200) {
+            toast.dismiss(loadingToast);
             throw new Error(prediction.error || prediction.detail || "Error en la consulta");
           }
 
           if (prediction.status === "failed") {
+            toast.dismiss(loadingToast);
             throw new Error(prediction.error || prediction.detail || "Error en el procesamiento");
           }
 
@@ -138,6 +140,7 @@ export default function useTransformImages() {
         throw error;
       }
     },
+    retry:0,
     onError: (error: Error) => {
       if (error.name === "AbortError") {
         return;
@@ -154,6 +157,7 @@ export default function useTransformImages() {
         );
       }
     },
+    
   });
 
   const cancel = () => {
