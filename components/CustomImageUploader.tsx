@@ -24,6 +24,9 @@ const CustomImageUploader: React.FC<CustomImageUploaderProps> = ({
     const file = event.target.files?.[0];
     if (file) {
       onFileSelect(file);
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
     }
   };
 
@@ -67,7 +70,7 @@ const CustomImageUploader: React.FC<CustomImageUploaderProps> = ({
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      className={`border-2 border-dashed  rounded-lg p-4 transition-all ${
+      className={`border-2 border-dashed rounded-lg p-4 transition-all ${
         isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
       }`}
     >
