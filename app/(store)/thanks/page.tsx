@@ -2,7 +2,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils/utils";
 import Link from "next/link";
 import { MdMarkEmailRead } from "react-icons/md";
-export const runtime = "edge"
 
 const ThanksPage = () => {
   return (

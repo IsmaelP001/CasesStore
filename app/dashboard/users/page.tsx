@@ -1,7 +1,6 @@
 import { serverHelpers } from "@/lib/trpc/serverHelper"
 import CustomerList from "./_components/CustomerList"
 export const dynamic = "force-dynamic";
-export const runtime = "edge"
 
 const page = async () => {
 
