@@ -25,7 +25,7 @@ export const getUserSession = async () => {
 };
 
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const hashPassword = async (password: string): Promise<string> => {
   const saltRounds = 10; 
