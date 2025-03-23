@@ -3,7 +3,6 @@ import ProductList from './_component/ProductList'
 import {serverHelpers}from '../../../lib/trpc/serverHelper'
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 export const dynamic = "force-dynamic";
-export const runtime = "edge"
 
 const ProductPage = async () => {
  await serverHelpers.catalog.getProducts.prefetch()
