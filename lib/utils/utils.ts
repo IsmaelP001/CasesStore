@@ -18,7 +18,7 @@ export const VARIABLES_CONFIG = {
   APP_URL:
     process.env.NODE_ENV === "development"
       ? process.env.DEV_APP_URL
-      : process.env.VERCEL_URL,
+      : process.env.URL,
   API_URL:
     process.env.NODE_ENV === "development"
       ? process.env.DB_URL
