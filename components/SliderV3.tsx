@@ -34,7 +34,7 @@ const SliderContent = forwardRef<HTMLDivElement, SliderContentProps>(
 
 SliderContent.displayName = "SliderContent"; 
 
-const Slider: React.FC<SliderProps> = ({ children, step = 1 }) => {
+const Slider: React.FC<SliderProps> = ({ children, step = 1 ,...props}) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAtStart, setIsAtStart] = useState(false);
@@ -116,7 +116,7 @@ const Slider: React.FC<SliderProps> = ({ children, step = 1 }) => {
       </div>
 
       {/* Slider content */}
-      {React.cloneElement(children as React.ReactElement, { ref })}
+      {React.cloneElement(children as React.ReactElement, { props,ref })}
     </div>
   );
 };
