@@ -17,6 +17,9 @@ importers:
       '@kennethormandy/react-fittext':
         specifier: ^0.6.0
         version: 0.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@neondatabase/serverless':
+        specifier: ^0.10.4
+        version: 0.10.4
       '@radix-ui/react-alert-dialog':
         specifier: ^1.1.1
         version: 1.1.6(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -122,6 +125,9 @@ importers:
       '@visx/text':
         specifier: ^3.12.0
         version: 3.12.0(react@18.3.1)
+      bcryptjs:
+        specifier: ^3.0.2
+        version: 3.0.2
       chart.js:
         specifier: ^4.4.3
         version: 4.4.8
@@ -142,7 +148,7 @@ importers:
         version: 16.4.7
       drizzle-orm:
         specifier: ^0.31.4
-        version: 0.31.4(@neondatabase/serverless@0.9.5)(@types/pg@8.11.11)(@types/react@18.3.1)(@vercel/postgres@0.10.0)(mysql2@3.14.0)(pg@8.14.1)(postgres@3.4.5)(react@18.3.1)
+        version: 0.31.4(@neondatabase/serverless@0.10.4)(@types/pg@8.11.11)(@types/react@18.3.1)(@vercel/postgres@0.10.0)(mysql2@3.14.0)(pg@8.14.1)(postgres@3.4.5)(react@18.3.1)
       fabric:
         specifier: ^6.6.1
         version: 6.6.1(bufferutil@4.0.9)
@@ -1733,6 +1739,9 @@ packages:
 
   '@napi-rs/wasm-runtime@0.2.7':
     resolution: {integrity: sha512-5yximcFK5FNompXfJFoWanu5l8v1hNGqNHh9du1xETp9HWk/B/PzvchX55WYOPaIeNglG8++68AAiauBAtbnzw==}
+
+  '@neondatabase/serverless@0.10.4':
+    resolution: {integrity: sha512-2nZuh3VUO9voBauuh+IGYRhGU/MskWHt1IuZvHcJw6GLjDgtqj/KViKo7SIrLdGLdot7vFbiRRw+BgEy3wT9HA==}
 
   '@neondatabase/serverless@0.9.5':
     resolution: {integrity: sha512-siFas6gItqv6wD/pZnvdu34wEqgG3nSE6zWZdq5j2DEsa+VvX8i/5HXJOo06qrw5axPXn+lGCxeR+NLaSPIXug==}
@@ -3453,6 +3462,10 @@ packages:
 
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
+
+  bcryptjs@3.0.2:
+    resolution: {integrity: sha512-k38b3XOZKv60C4E2hVsXTolJWfkGRMbILBIe2IBITXciy5bOsTKot5kDrf3ZfufQtQOUN5mXceUEpU1rTl9Uog==}
+    hasBin: true
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -8902,6 +8915,10 @@ snapshots:
       '@tybys/wasm-util': 0.9.0
     optional: true
 
+  '@neondatabase/serverless@0.10.4':
+    dependencies:
+      '@types/pg': 8.11.6
+
   '@neondatabase/serverless@0.9.5':
     dependencies:
       '@types/pg': 8.11.6
@@ -10888,6 +10905,8 @@ snapshots:
 
   base64-js@1.5.1: {}
 
+  bcryptjs@3.0.2: {}
+
   binary-extensions@2.3.0: {}
 
   bindings@1.5.0:
@@ -11332,9 +11351,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.31.4(@neondatabase/serverless@0.9.5)(@types/pg@8.11.11)(@types/react@18.3.1)(@vercel/postgres@0.10.0)(mysql2@3.14.0)(pg@8.14.1)(postgres@3.4.5)(react@18.3.1):
+  drizzle-orm@0.31.4(@neondatabase/serverless@0.10.4)(@types/pg@8.11.11)(@types/react@18.3.1)(@vercel/postgres@0.10.0)(mysql2@3.14.0)(pg@8.14.1)(postgres@3.4.5)(react@18.3.1):
     optionalDependencies:
-      '@neondatabase/serverless': 0.9.5
+      '@neondatabase/serverless': 0.10.4
       '@types/pg': 8.11.11
       '@types/react': 18.3.1
       '@vercel/postgres': 0.10.0
