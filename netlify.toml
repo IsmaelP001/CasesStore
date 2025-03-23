@@ -1,0 +1,14 @@
+[context.production]
+  command = "npm run build"
+  publish = ".next"
+
+[context.staging]
+  command = "npm run build"
+  publish = ".next" 
+
+[functions]
+  external_node_modules = ["sharp"]
+  included_files = ["node_modules/sharp/**/*"]
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
