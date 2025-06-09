@@ -1,15 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { MATERIALS, MODELS } from "@/config/validators/option-validator";
-import { BackpackIcon, ChevronDown, ChevronLeft } from "lucide-react";
+import {  ChevronDown, ChevronLeft } from "lucide-react";
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useEffect, useRef, useState } from "react";
@@ -48,7 +45,19 @@ export function SelectModelDialog() {
   };
 
   
-
+  const { data: devices ,isPending:isPendingDevices} = trpc.catalog.getDevices.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  })
+  const { data: materials,isPending:isPendingMaterials } = trpc.catalog.getProductsByType.useQuery(
+    {
+      productType: "CUSTOM_CASE_MATERIAL",
+    },
+    {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    }
+  );
   useEffect(()=>{
     if(devices?.length){
       setDesignOptions((prev)=>({...prev,device:devices[0]}))

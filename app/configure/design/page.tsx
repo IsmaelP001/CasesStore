@@ -1,7 +1,7 @@
 import { serverHelpers } from "@/lib/trpc/serverHelper";
-import { DesignProvider } from "./hooks/useDesign-context";
 import DesignConfiguratorContainer from "./_components/DesignConfiguratorContainer";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { DesignProviderV2 } from "./hooks/useDesign-contextV2";
 export const revalidate = 0;
 
 const page = async () => {
@@ -14,9 +14,9 @@ const page = async () => {
   return (
     <>
       <HydrationBoundary state={dehydrate(serverHelpers.queryClient)}>
-        <DesignProvider>
+        <DesignProviderV2>
           <DesignConfiguratorContainer />
-        </DesignProvider>
+        </DesignProviderV2>    
       </HydrationBoundary>
     </>
   );

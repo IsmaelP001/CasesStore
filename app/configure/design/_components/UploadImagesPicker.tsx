@@ -1,10 +1,8 @@
 "use client";
 import { v4 as uuidv4 } from "uuid";
-import { useDesign } from "../hooks/useDesign-context";
 import CustomImageUploader from "@/components/CustomImageUploader";
 import NextImage from "next/image";
 import {
-  ArrowRight,
   ChevronRight,
   Eraser,
   ImageOff,
@@ -43,6 +41,12 @@ import {
 } from "@/config/validators/transform-images-options";
 import { cn } from "@/lib/utils/utils";
 import { featureFlags } from "@/config/featureflags";
+import {
+  ImageElement,
+  useDesignElements,
+  useDesignUI,
+  useDesignV2,
+} from "../hooks/useDesign-contextV2";
 
 export interface ImagePreview {
   uploadedUrl: string;
@@ -609,15 +613,9 @@ export function DesktopGallery({
 }
 
 export default function UploadImagesPicker() {
-  const {
-    imagesState,
-    setImagesState,
-    containerRef,
-    phoneCaseRef,
-    removeCustomImage,
-  } = useDesign();
+  const { setDesignElements, designElements } = useDesignElements();
+  const { configuratorDimensions } = useDesignUI();
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<ImagePreview | null>(null);
 
@@ -637,26 +635,7 @@ export default function UploadImagesPicker() {
   };
 
   const handleSaveImage = (imageUrl: string) => {
-    if (
-      !previewImage ||
-      !previewImage.file ||
-      !phoneCaseRef.current ||
-      !containerRef.current
-    )
-      return;
-
-    const {
-      left: caseLeft,
-      top: caseTop,
-      width: widthContainer,
-      height: heightContainer,
-    } = phoneCaseRef.current.getBoundingClientRect();
-
-    const { left: containerLeft, top: containerTop } =
-      containerRef.current!.getBoundingClientRect();
-
-    const leftOffset = caseLeft - containerLeft;
-    const topOffset = caseTop - containerTop;
+    if (!previewImage || !previewImage.file) return;
 
     const img = new Image();
     img.src = imageUrl;
@@ -664,21 +643,22 @@ export default function UploadImagesPicker() {
     img.onload = () => {
       const originalWidth = img.width;
       const originalHeight = img.height;
-      const scale = heightContainer / originalHeight;
+      const scale = configuratorDimensions.phone.height / originalHeight;
       const width = originalWidth * scale;
-      const height = heightContainer;
-      const x = (widthContainer - width) / 2 + leftOffset;
-      const y = (heightContainer - height) / 2 + topOffset;
+      const height = configuratorDimensions.phone.height;
+      const x = configuratorDimensions.container.width / 2;
+      const y = configuratorDimensions.container.height / 2;
       const id = uuidv4();
-      const newImage = {
+      const designItem: ImageElement = {
         id,
+        type: "image",
         url: imageUrl,
-        width,
-        height,
+        size: { width, height },
         position: { x, y },
+        rotation: 0,
       };
 
-      setImagesState([...imagesState, newImage]);
+      setDesignElements([...designElements, designItem]);
       setIsPreviewOpen(false);
     };
   };
@@ -687,15 +667,15 @@ export default function UploadImagesPicker() {
     <>
       {isMobile ? (
         <MobileGallery
-          imagesState={imagesState}
+          imagesState={[]}
           handleImageUpload={handleImageUpload}
-          removeCustomImage={removeCustomImage}
+          removeCustomImage={()=>false}
         />
       ) : (
         <DesktopGallery
-          imagesState={imagesState}
+          imagesState={[]}
           handleImageUpload={handleImageUpload}
-          removeCustomImage={removeCustomImage}
+          removeCustomImage={()=>false}
         />
       )}
       <PreviewModal
