@@ -1,14 +1,12 @@
 "use client";
 import { Label } from "@/components/ui/label";
 import { CUSTOM_FONTS } from "@/config/validators/fonts-options";
-import React from "react";
-import { useDesign } from "../hooks/useDesign-context";
+import React, { useMemo } from "react";
 import { cn } from "@/lib/utils/utils";
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -16,10 +14,47 @@ import {
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "react-responsive";
 import { Button } from "@/components/ui/button";
+import { TextElement, useDesignElements, useDesignOptions } from "../hooks/useDesign-contextV2";
 
 export default function FontTypePicker() {
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const { setTextState, textState } = useDesign();
+  const {updateDesignElement,selectedElement}=useDesignElements()
+ const {designOptions,setDesignOptions}=useDesignOptions();
+
+ const selectedTextElement:any =
+ selectedElement?.type === "text" ? selectedElement : null
+
+ const defaultFontFamily =useMemo(()=>{
+  if (selectedTextElement) {
+    return selectedTextElement.font.fontFamily;
+  }
+  return designOptions.text.font.fontFamily;
+ },[designOptions,selectedElement])
+
+
+  const handleUpdateFont = (font: string) => {
+    if (selectedTextElement) {
+      updateDesignElement({
+        ...selectedTextElement,
+        font: {
+          ...selectedTextElement.font,
+          fontFamily: font,
+        },
+      });
+      return
+    }
+    setDesignOptions({
+      ...designOptions,
+      text: {
+        ...designOptions.text,
+        font: {
+          ...designOptions.text.font,
+          fontFamily: font,
+        },
+      },
+    });
+  };
+  
 
   if (isMobile) {
     return (
@@ -27,7 +62,7 @@ export default function FontTypePicker() {
         <DrawerTrigger>
           <div
             className="size-10 grid place-content-center border-2 border-blue-500 rounded-xl"
-            style={{ fontFamily: textState.font }}
+            style={{ fontFamily: defaultFontFamily }}
           >
             Aa
           </div>
@@ -42,11 +77,10 @@ export default function FontTypePicker() {
                 <button
                   key={font.id}
                   onClick={() =>
-                    setTextState({ ...textState, font: font.fontFamily })
-                  }
+                    handleUpdateFont(font.fontFamily)}
                   className={cn(
                     "p-3 rounded-lg border-2 text-lg",
-                    textState.font === font.fontFamily
+                    defaultFontFamily === font.fontFamily
                       ? "border-blue-500 bg-blue-50/75"
                       : "border-gray-200 hover:border-blue-200"
                   )}
@@ -74,11 +108,10 @@ export default function FontTypePicker() {
           <button
             key={font.id}
             onClick={() =>
-              setTextState({ ...textState, font: font.fontFamily })
-            }
+              handleUpdateFont(font.fontFamily)}
             className={cn(
               "p-3 rounded-lg border-2 text-lg",
-              textState.font === font.fontFamily
+              defaultFontFamily === font.fontFamily
                 ? "border-blue-500 bg-blue-50/75"
                 : "border-gray-200 hover:border-blue-200"
             )}

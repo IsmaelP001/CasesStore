@@ -87,6 +87,7 @@ export default function useTransformImages() {
         let prediction = await response.json();
 
         if (response.status !== 201 || prediction.status === "failed") {
+          toast.dismiss(loadingToast);
           throw new Error(prediction.error || prediction.detail || "Error en la predicción");
         }
 
@@ -108,7 +109,7 @@ export default function useTransformImages() {
             throw new DOMException("La operación ha sido cancelada", "AbortError");
           }
 
-          await sleep(1000);
+          await sleep(1500);
           
           const pollResponse = await fetch(`/api/predictions/${prediction.id}`, { signal });
           prediction = await pollResponse.json();

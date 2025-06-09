@@ -1,8 +1,7 @@
 // components/SaveButton.tsx
 'use client'
-import { ArrowRight, ChevronRight } from "lucide-react"
+import {ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useDesign } from "../hooks/useDesign-context"
 import { useSaveDesign } from "../hooks/useSaveDesign"
 import { UploadOverlay } from "./UploadOverlay"
 import { cn } from "@/lib/utils/utils"

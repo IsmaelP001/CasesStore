@@ -4,8 +4,9 @@ import { CUSTOM_FONTS, FONT_COLORS } from "@/config/validators/fonts-options";
 import {
   COLORS,
 } from "@/config/validators/option-validator";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 import useCasesRef from "./useCasesRef";
+import { useEffect } from "react";
 
 export interface ImageState {
   id:string
@@ -23,6 +24,13 @@ export interface Device{
 export interface Material{
   id:string;
   name:string
+}
+
+export interface Texture{
+  id:string;
+  src:string;
+  position?:{x:number;y:number}
+  size?:{width:number;height:number}
 }
 
 
@@ -66,6 +74,7 @@ interface DesignOptions {
   };
   device:Device
   material:Material
+  texture:Texture
 }
 
 type DesignState = {
@@ -77,6 +86,7 @@ type DesignState = {
   caseDimensions:any
   openSelectDeviceSidebar:boolean
   showSurrondingImage:boolean
+  canvasRef: React.RefObject<HTMLCanvasElement>;
 };
 
 type DesignActions = {
@@ -102,6 +112,7 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
     color: COLORS[0],
     device: {id:'',name:''},
     material:{id:'',name:''},
+    texture:{id:'',src:''}
   });
 
   const [imagesState, setImagesState] = useState<ImageState[]>([]);
@@ -131,6 +142,17 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
     setStickersState((prev:StickersState)=>({items:prev.items.filter(sticker=>sticker.id !== id)}))
   }
 
+  const canvasRef=useRef(null)
+
+  useEffect(()=>{
+    if(document){
+      const canvas=document.createElement('canvas')
+      canvas.width=920
+      canvas.height=1900
+      canvasRef.current=canvas!
+    }
+  },[document])
+
   const {textContainerRef,containerRef,phoneCaseRef,caseDimensions}=useCasesRef({setTextState,setSelectedElement})
 
   return (
@@ -154,7 +176,8 @@ export function DesignProvider({ children }: { children: React.ReactNode }) {
       setOpenSelectDeviceSidebar,
       openSelectDeviceSidebar,
       showSurrondingImage,
-      setShowSurrondingImage
+      setShowSurrondingImage,
+      canvasRef
     }}>
       {children}
     </DesignContext.Provider>

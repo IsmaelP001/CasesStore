@@ -1,128 +1,41 @@
-'use client'
-import { useUploadThing } from "@/lib/uploadthings";
-import { useDesign } from "./useDesign-context";
-import { startTransition } from "react";
-import { useRouter } from "next/navigation";
-import { toPng } from "html-to-image";
-import { useToast } from "@/components/ui/use-toast";
+"use client"
+  import { useUploadThing } from "@/lib/uploadthings";
+  import { useDesign } from "./useDesign-context";
+  import { startTransition } from "react";
+  import { useRouter } from "next/navigation";
+  import { toPng } from "html-to-image";
+  import { useToast } from "@/components/ui/use-toast";
+import { useDesignUI } from "./useDesign-contextV2";
 
-export const useSaveDesign = () => {
-  const router = useRouter();
-  const {
-    designOptions,
-    imagesState,
-    textState,
-    stickersState,
-    caseDimensions,
-    textContainerRef,
-    setOpenSelectDeviceSidebar,
-  } = useDesign();
-  const { toast } = useToast();
+  export const useSaveDesign = () => {
+    const router = useRouter();
+    const {getStageImage}=useDesignUI()
+    const { toast } = useToast();
 
-  const { startUpload, isUploading } = useUploadThing("imageUploader", {
-    onClientUploadComplete: ([data]) => {
-      const configId = data.serverData.configId;
-      startTransition(() => {
-        router.push(
-          `/preview?id=${configId}&deviceId=${designOptions.device.id}&materialId=${designOptions.material.id}`
-        );
-      });
-    },
-    onUploadError: (err) => {
-      toast({
-        title: "Error",
-        description: "Algo salio mal, intentelo mas tarde.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const saveConfiguration = async () => {
-    try {
-      const { leftOffset, topOffset, width, height } = caseDimensions!;
-      const scaleFactor = 4;
-      const canvas = document.createElement("canvas");
-      canvas.width = width * scaleFactor;
-      canvas.height = height * scaleFactor;
-      const ctx = canvas.getContext("2d");
-
-      ctx!.fillStyle = designOptions.color.hex;
-      ctx!.fillRect(0, 0, canvas.width, canvas.height);
-
-      if (imagesState?.length) {
-        const imagesPromises = imagesState.map((image) => {
-          return new Promise<void>((resolve) => {
-            const customImage = new Image();
-            customImage.crossOrigin = "anonymous";
-            customImage.src = image.url!;
-            customImage.onload = () => {
-              ctx?.drawImage(
-                customImage,
-                (image.position.x - leftOffset) * scaleFactor,
-                (image.position.y - topOffset) * scaleFactor,
-                image.width * scaleFactor,
-                image.height * scaleFactor
-              );
-              resolve();
-            };
-          });
+    const { startUpload, isUploading } = useUploadThing("imageUploader", {
+      onClientUploadComplete: ([data]) => {
+        const configId = data.serverData.configId;
+        startTransition(() => {
+          router.push(
+            `/preview?id=${configId}&deviceId=${'s'}&materialId=${'33'}`
+          );
         });
-        await Promise.all(imagesPromises);
-      }
-
-      if (stickersState.items.length) {
-        const stickerPromises = stickersState.items.map((sticker) => {
-          return new Promise<void>((resolve) => {
-            const stickerImage = new Image();
-            stickerImage.crossOrigin = "anonymous";
-            stickerImage.src = sticker.image.src;
-            stickerImage.onload = () => {
-              ctx?.drawImage(
-                stickerImage,
-                (sticker.x - leftOffset) * scaleFactor,
-                (sticker.y - topOffset) * scaleFactor,
-                sticker.width * scaleFactor,
-                sticker.height * scaleFactor
-              );
-              resolve();
-            };
-          });
+      },
+      onUploadError: (err) => {
+        toast({
+          title: "Error",
+          description: "Algo salio mal, intentelo mas tarde.",
+          variant: "destructive",
         });
-        await Promise.all(stickerPromises);
-      }
+      },
+    });
+    const saveConfiguration = async () => {
+      const blobImage = await getStageImage();
+      const file = new File([blobImage], "filename.png", { type: "image/png" });
+      await startUpload([file]);
+    };
 
-      if (textContainerRef.current) {
-        const textImageUrl = await toPng(textContainerRef.current, {
-          quality: 1,
-          pixelRatio: 5,
-        });
-        const textImage = new Image();
-        textImage.crossOrigin = "anonymous";
-        textImage.src = textImageUrl;
-
-        await new Promise((resolve) => {
-          textImage.onload = resolve;
-        });
-
-        ctx?.drawImage(
-          textImage,
-          (textState.position.x - leftOffset) * scaleFactor,
-          (textState.position.y - topOffset) * scaleFactor,
-          textState.size.width * scaleFactor,
-          textState.size.height * scaleFactor
-        );
-      }
-
-      canvas.toBlob(async (blob) => {
-        if (blob) {
-          const file = new File([blob], "filename.png", { type: "image/png" });
-          await startUpload([file]);
-        }
-      });
-    } catch (err) {
-      throw new Error("Error uploading images");
-    }
+    return { saveConfiguration, isUploading };
   };
 
-  return { saveConfiguration, isUploading };
-};
+ 

@@ -19,6 +19,7 @@ import { useMediaQuery } from "react-responsive";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { PlusCircle, Trash } from "lucide-react";
+import { ImageElement, useDesignV2 } from "../hooks/useDesign-contextV2";
 
 const StickerItem = ({ sticker, addSticker, removeSticker, isAdded }: any) => {
   return (
@@ -53,43 +54,47 @@ const StickerItem = ({ sticker, addSticker, removeSticker, isAdded }: any) => {
 };
 
 const StickersTabs = () => {
-  const { stickersState, setStickersState, removeSticker, containerRef } =
-    useDesign();
+  const {
+    setDesignElements,
+    designElements,
+    configuratorDimensions,
+    setConfiguratorDimensions,
+    removeDesignElement,
+  } = useDesignV2();
 
   const addSticker = (
     sticker: (typeof STIKERS_OPTIONS)[number]["content"][number]
   ) => {
-    if (!containerRef.current) return;
-
-    const container = containerRef.current;
-    const isStickerAdded = stickersState.items.some(
+    const isStickerAdded = designElements.some(
       (item) => item.id === sticker.id
     );
     if (isStickerAdded) return;
+    const x = configuratorDimensions.container.width / 2;
+      const y = configuratorDimensions.container.height / 2;
 
-    setStickersState((prev) => ({
-      ...prev,
-      items: [
-        ...prev.items,
-        {
-          ...sticker,
-          x: container.offsetWidth / 2 - 50,
-          y: container.offsetHeight / 2 - 50,
-          width: 100,
-          height: 100,
-        },
-      ],
-    }));
+    const newSticker: ImageElement = {
+      ...sticker,
+      url: sticker.image.src,
+      type: "image",
+      position: { x, y },
+      size: { width: sticker.width, height: sticker.height },
+      rotation:0
+    };
+    setDesignElements((prev) => [...prev, newSticker]);
   };
 
   const isStickerAdded = (sticker: any) =>
-    stickersState.items.some((item) => item.id === sticker.id);
+    designElements.some((item) => item.id === sticker.id);
 
   return (
     <Tabs defaultValue={STIKERS_OPTIONS[0].type}>
       <TabsList className="flex w-full rounded-2xl">
         {STIKERS_OPTIONS.map((item) => (
-          <TabsTrigger key={item.type} className="flex-grow rounded-2xl " value={item.type}>
+          <TabsTrigger
+            key={item.type}
+            className="flex-grow rounded-2xl "
+            value={item.type}
+          >
             {item.type}
           </TabsTrigger>
         ))}
@@ -102,7 +107,7 @@ const StickersTabs = () => {
                 key={sticker.id}
                 sticker={sticker}
                 addSticker={addSticker}
-                removeSticker={removeSticker}
+                removeSticker={removeDesignElement}
                 isAdded={isStickerAdded(sticker)}
               />
             ))}
@@ -114,24 +119,14 @@ const StickersTabs = () => {
 };
 
 export default function StickersPicker() {
-  const { stickersState } = useDesign();
 
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  
 
   return isMobile ? (
     <Drawer>
       <DrawerTrigger className="flex gap-2 justify-center items-center flex-nowrap w-full overflow-x-scroll overflow-y-hidden">
         <PlusCircle size={40} />
-        {stickersState.items.map((sticker) => (
-          <article key={sticker.id} className="relative w-[50px] h-[50px]">
-            <Image
-              src={sticker.image.src}
-              fill
-              className="object-cover"
-              alt="sticker image"
-            />
-          </article>
-        ))}
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
